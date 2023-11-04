@@ -1,0 +1,232 @@
+{
+  "accrual_periodicity": "annually",
+  "additional_limitations": "",
+  "citation": "HCAI Patient Discharge Data; HCAI Emergency Department Data",
+  "contact_email": "dataandreports@hcai.ca.gov",
+  "data_collection_tool": "https://hcai.ca.gov/data-and-reports/submit-data/patient-data/",
+  "data_license": "Terms of Use",
+  "de_identification_method": "",
+  "description": "This dataset contains counts of inpatient hospitalizations and emergency department visits for persons experiencing homelessness.",
+  "geo_coverage": "Statewide",
+  "geographic_granularity": "location point",
+  "keywords": [
+    "department of health care access and information",
+    "emergency department visits",
+    "hcai",
+    "homeless",
+    "homelessness",
+    "inpatient hospitalizations",
+    "persons experiencing homelessness"
+  ],
+  "limitations": "Limitations",
+  "name": "hospital-encounters-for-homeless-patients",
+  "program_web_page": "https://hcai.ca.gov/visualizations/",
+  "related_resources": "",
+  "resources": [
+    {
+      "description": "This dataset contains counts of inpatient hospitalizations and emergency department visits for persons experiencing homelessness and non-homeless patients; stratified by age group, race/ethnicity, sex, and expected payer. Note: Unknown age and Unknown sex are not included. Other Payer includes Workers’ Compensation, Other Government, Title V, Disability, VA Plan, Other Payer, invalid, and missing.",
+      "format": "CSV",
+      "hash": "646bfa860242a1f2991d9497ae3c617e",
+      "name": "2019-2020-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility",
+      "path": "2019-2020-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "EncounterType",
+            "type": "string"
+          },
+          {
+            "name": "HospitalCounty",
+            "type": "string"
+          },
+          {
+            "name": "OSHPD_ID",
+            "type": "string"
+          },
+          {
+            "name": "FacilityName",
+            "type": "string"
+          },
+          {
+            "name": "System",
+            "type": "string"
+          },
+          {
+            "name": "Ownership",
+            "type": "string"
+          },
+          {
+            "name": "Urban_Rural",
+            "type": "string"
+          },
+          {
+            "name": "Teaching",
+            "type": "string"
+          },
+          {
+            "name": "LicensedBedSize",
+            "type": "string"
+          },
+          {
+            "name": "PrimaryCareShortageArea",
+            "type": "string"
+          },
+          {
+            "name": "MentalHealthShortageArea",
+            "type": "string"
+          },
+          {
+            "name": "HomelessIndicator",
+            "type": "string"
+          },
+          {
+            "name": "Demographic",
+            "type": "string"
+          },
+          {
+            "name": "DemographicValue",
+            "type": "string"
+          },
+          {
+            "name": "Encounters",
+            "type": "string"
+          },
+          {
+            "name": "TotalEncounters",
+            "type": "string"
+          },
+          {
+            "name": "Percent",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.chhs.ca.gov/dataset/11c64371-5d52-4d08-831a-e553528e661f/resource/f1a5afce-5d94-4126-9b0c-bffefc388337/download/2019-2020-homeless-ip-and-ed-by-facility.csv",
+          "title": "2019-2020 Homeless Hospital Encounters: Age, Race, Sex, Expected Payer By Facility"
+        }
+      ],
+      "title": "2019-2020 Homeless Hospital Encounters: Age, Race, Sex, Expected Payer By Facility"
+    },
+    {
+      "description": "Data dictionary for \"Homeless Hospital Encounters: Age, Race, Sex, Expected Payer By Facility\" data set.",
+      "format": "CSV",
+      "hash": "5028c03a1636592f0d287ff9dc775779",
+      "name": "data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility",
+      "path": "data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "Field Title",
+            "type": "string"
+          },
+          {
+            "name": "Field Name",
+            "type": "string"
+          },
+          {
+            "name": "Data Type",
+            "type": "string"
+          },
+          {
+            "name": "Description",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.chhs.ca.gov/dataset/11c64371-5d52-4d08-831a-e553528e661f/resource/b6eb116e-403f-4c7b-b62c-21aa43d0e780/download/2019-2020-data-dictionary-homeless-ip-and-ed-by-facility.csv",
+          "title": "Data Dictionary-Homeless Hospital Encounters: Age, Race, Sex, Expected Payer By Facility"
+        }
+      ],
+      "title": "Data Dictionary-Homeless Hospital Encounters: Age, Race, Sex, Expected Payer By Facility"
+    },
+    {
+      "description": "This dataset contains Statewide counts of inpatient hospitalizations and emergency department visits for patients experiencing homelessness and all patients; stratified by age group, race/ethnicity, sex, and expected payer.  Note: Unknown age and Unknown sex are not included.  Other Payer includes Workers’ Compensation, Other Government, Title V, Disability, VA Plan, Other Payer, invalid, and missing.",
+      "format": "CSV",
+      "hash": "a526e2b278ad7147e96b357d0ecf6940",
+      "name": "homeless-hospital-encounters-age-race-sex-expected-payer-statewide",
+      "path": "homeless-hospital-encounters-age-race-sex-expected-payer-statewide.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "EncounterType",
+            "type": "string"
+          },
+          {
+            "name": "Demographic",
+            "type": "string"
+          },
+          {
+            "name": "DemographicValue",
+            "type": "string"
+          },
+          {
+            "name": "Year",
+            "type": "string"
+          },
+          {
+            "name": "Homeless",
+            "type": "string"
+          },
+          {
+            "name": "All",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.chhs.ca.gov/dataset/11c64371-5d52-4d08-831a-e553528e661f/resource/6c9d2c9c-1d80-4a6b-84c2-ec7528d69f3e/download/statewide-homeless-ip-and-ed.csv",
+          "title": "Homeless Hospital Encounters: Age, Race, Sex, Expected Payer (Statewide)"
+        }
+      ],
+      "title": "Homeless Hospital Encounters: Age, Race, Sex, Expected Payer (Statewide)"
+    },
+    {
+      "description": "Data dictionary for \"Homeless Hospital Encounters: Age, Race, Sex, Expected Payer (Statewide)\" data set.",
+      "format": "CSV",
+      "hash": "044cabea33d6fdd1c566dfe1fcddd2bb",
+      "name": "data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-statewide",
+      "path": "data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-statewide.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "Field Title",
+            "type": "string"
+          },
+          {
+            "name": "Field Name",
+            "type": "string"
+          },
+          {
+            "name": "Data Type",
+            "type": "string"
+          },
+          {
+            "name": "Description",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "path": "https://data.chhs.ca.gov/dataset/11c64371-5d52-4d08-831a-e553528e661f/resource/d5f1d338-2f72-434f-a3e7-8dd4ef3e7f61/download/data-dictionary-homeless-ip-and-ed.csv",
+          "title": "Data Dictionary-Homeless Hospital Encounters: Age, Race, Sex, Expected Payer (Statewide)"
+        }
+      ],
+      "title": "Data Dictionary-Homeless Hospital Encounters: Age, Race, Sex, Expected Payer (Statewide)"
+    }
+  ],
+  "secondary_sources": "",
+  "sources": [
+    {
+      "name": "Department of Health Care Access and Information, Healthcare Analytics Branch",
+      "web": "https://hcai.ca.gov/data-and-reports/healthcare-utilization/ or https://hcai.ca.gov/visualizations/"
+    }
+  ],
+  "temporal_coverage": "2019-2020",
+  "title": "Hospital Encounters for Homeless Patients"
+}
