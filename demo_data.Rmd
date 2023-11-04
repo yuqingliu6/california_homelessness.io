@@ -1,0 +1,132 @@
+---
+title: "demo_homeless"
+author: "yh"
+date: "2023-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import data
+
+This data set gives annual statistics by age group, race, ethnicity, and gender on the number of people who have benefited from homelessness assistance services. 
+
+The Homelessness Data Integration System (HDIS), an extensive data repository that compiles and examines information from each of California's 44 Continuums of Care (CoC), is the source of this information. Every Community of Communities (CoC) collects and disseminates information on the people it serves via a range of programs, such as those aimed at ending homelessness, offering outreach services to the homeless, assisting with permanent housing solutions, and other projects in line with California's Housing First objectives.
+
+```{r}
+library(tidyverse)
+age_demo = read.csv("./original data/demo/age_demo.csv")
+ethnicity_demo = read.csv("./original data/demo/ethnicity_demo.csv")
+gender_demo = read.csv("./original data/demo/gender_demo.csv")
+race_demo = read.csv("./original data/demo/race_demo.csv")
+head(age_demo)
+head(ethnicity_demo)
+head(gender_demo)
+head(race_demo)
+```
+
+## Clean data
+
+
+```{r}
+library(readr)
+folder_path <- "./original data/demo/"
+csv_files <- list.files(folder_path, pattern = ".csv")
+
+# define a function to process a CSV file
+clean_csv <- function(input_file, output_file) {
+  data <- read.csv(input_file)
+  data_cleaned <- data |> 
+    filter(EXPERIENCING_HOMELESSNESS != "*") |>
+    select(-LOCATION_ID) |>
+    janitor::clean_names() 
+   write.csv(data_cleaned, file = output_file, row.names = FALSE)
+   #return(data_cleaned)
+}
+
+output_folder <- "./processed data/demo/"
+
+# process CSV files using the lapply function
+cleaned_data_list <- lapply(csv_files, function(file) {
+  input_file <- paste0(folder_path, file)
+  output_file <- paste0(output_folder, "cleaned_", file)
+  clean_csv(input_file, output_file)
+})
+
+# import clean data
+age_clean = read.csv("./processed data/demo/cleaned_age_demo.csv")
+ethnicity_clean = read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
+gender_clean = read.csv("./processed data/demo/cleaned_gender_demo.csv")
+race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
+```
+
+## Data visualization
+
+```{r}
+library(plotly)
+age_plot <- age_clean |>
+  select(-location) |>
+  group_by(calendar_year,age_group_public) |>
+  summarise(total_homelessness = sum(experiencing_homelessness))
+
+age_plot |> 
+  mutate(text_label = str_c("Year: ", calendar_year, "\nAge Group: ", age_group_public)) |> 
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~age_group_public, colors = "viridis", text = ~text_label, alpha = 0.8) |>
+    layout(title = "Total Homelessness by Year and Age Group")
+```
+```{r}
+ethnicity_plot <- ethnicity_clean |>
+  select(-location) |>
+  group_by(calendar_year,ethnicity) |>
+  summarise(total_homelessness = sum(experiencing_homelessness))
+
+ethnicity_plot |> 
+  mutate(text_label = str_c("Year: ", calendar_year, "\nEthnicity: ", ethnicity)) |>
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "bar", color = ~ethnicity, colors = "viridis", text = ~text_label, alpha = 0.8) |>
+  layout(
+    title = "Total Homelessness by Year and ethnicity")
+```
+
+```{r}
+gender_plot <- gender_clean |>
+  select(-location) |>
+  group_by(calendar_year,gender) |>
+  summarise(total_homelessness = sum(experiencing_homelessness))
+
+gender_plot  |> 
+  mutate(text_label = str_c("Year: ", calendar_year, "\nGender: ", gender)) |>
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "bar", color = ~gender, colors = "viridis", text = ~text_label, alpha = 0.8) |>
+  layout(
+    title = "Total Homelessness by Year and gender")
+```
+
+```{r}
+race_plot <- race_clean |>
+  select(-location) |>
+  group_by(calendar_year,race) |>
+  summarise(total_homelessness = sum(experiencing_homelessness))
+
+race_plot  |> 
+  mutate(text_label = str_c("Year: ", calendar_year, "\nRace: ", race)) |>
+  plot_ly(x = ~calendar_year, y = ~total_homelessness,  type = "scatter", mode = "line", color = ~race, colors = "viridis", text = ~text_label, alpha = 0.8) |>
+  layout(
+    title = "Total Homelessness by Year and gender" ,
+    legend = list(
+      x = 1,
+      y = 0.5, 
+      traceorder = "normal",
+      bgcolor = "white", 
+      bordercolor = "white",
+      borderwidth = 0.5
+    ))
+
+# pie chart about the race
+race_clean |>
+  group_by(race) |>
+  summarise(total_homelessness = sum(experiencing_homelessness)) |>
+  mutate(percentage = total_homelessness / sum(total_homelessness)) |>
+  plot_ly(labels = ~race, values = ~percentage, type = "pie", hole = 0.4) |>
+   layout(title = "Percentage of Total Homeless by Race")
+```
