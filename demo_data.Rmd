@@ -32,6 +32,11 @@ head(race_demo)
 
 ## Clean data
 
+First, we converted all the variable names to lowercase. 
+
+Then we removed the unneeded variable "location_id", and removed the null value of "experiencing_homelessness".
+
+Finally, we batch export and import the four cleaned csv files into datasets.
 
 ```{r}
 library(readr)
@@ -67,7 +72,10 @@ race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 
 ## Data visualization
 
+The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
+
 ```{r}
+# line plot for "Total Homelessness by Year and Age Group"
 library(plotly)
 age_plot <- age_clean |>
   select(-location) |>
@@ -79,7 +87,9 @@ age_plot |>
   plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~age_group_public, colors = "viridis", text = ~text_label, alpha = 0.8) |>
     layout(title = "Total Homelessness by Year and Age Group")
 ```
+
 ```{r}
+# bar chart for "Total Homelessness by Year and ethnicity"
 ethnicity_plot <- ethnicity_clean |>
   select(-location) |>
   group_by(calendar_year,ethnicity) |>
@@ -93,6 +103,7 @@ ethnicity_plot |>
 ```
 
 ```{r}
+# bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
   select(-location) |>
   group_by(calendar_year,gender) |>
@@ -106,6 +117,7 @@ gender_plot  |>
 ```
 
 ```{r}
+# line plot for "Total Homelessness by Year and gender"
 race_plot <- race_clean |>
   select(-location) |>
   group_by(calendar_year,race) |>
@@ -125,7 +137,7 @@ race_plot  |>
       borderwidth = 0.5
     ))
 
-# pie chart about the race
+# pie chart for "Percentage of Total Homeless by Race"
 race_clean |>
   group_by(race) |>
   summarise(total_homelessness = sum(experiencing_homelessness)) |>
