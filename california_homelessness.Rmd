@@ -1,0 +1,25 @@
+---
+title: "california_homelessness"
+author: "Yuqing Liu"
+date: "2023-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### import datasets
+
+```{r}
+
+df1 <- read.csv("./hospital-encounters-for-homeless-patients-u_fcby /2019-2020-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility.csv")
+
+# df2 <- read.csv("./hospital-encounters-for-homeless-patients-u_fcby /data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-by-facility.csv")
+
+# df3 <- read.csv("./hospital-encounters-for-homeless-patients-u_fcby /data-dictionary-homeless-hospital-encounters-age-race-sex-expected-payer-statewide.csv")
+
+df4 <- read.csv("./hospital-encounters-for-homeless-patients-u_fcby /homeless-hospital-encounters-age-race-sex-expected-payer-statewide.csv")
+
+```
+
