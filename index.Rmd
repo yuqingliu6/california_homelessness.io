@@ -1,0 +1,11 @@
+---
+title: "P8105 Final Project"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+amazing discription and graphs!
+
+Check out [proposal](final-project-proposal.html) on the upper right icon. :)
