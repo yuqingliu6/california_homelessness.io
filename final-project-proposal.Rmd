@@ -1,8 +1,9 @@
 ---
-title: "Proposal for P8105 Final Project"
-author: "Zilin Huang, Yuhan Wang, Yuqing Liu, Yiying Wu, Jiatong Li"
-date: "2023-11-09"
-output: html_document
+title: "My awesome website"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
