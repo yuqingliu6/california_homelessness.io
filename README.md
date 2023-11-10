@@ -1,5 +1,6 @@
 # california_homelessness.io
-The link of our website can be found here: https://yuqingliu6.github.io/california_homelessness.io.
+This is a link to our website: https://yuqingliu6.github.io/california_homelessness.io.
+
 This is a link to our proposal in a google doc file: https://docs.google.com/document/d/1hU7Yb-pK_k2FHlExfuHTmFCg1NjcEf1aRb6yo4mdtK4/edit
 
 * To collaborators: Please remember to pull data first, then make revisions if needed, and then push! :)
