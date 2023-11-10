@@ -6,10 +6,6 @@ output:
     toc_float: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ### The group members (names and UNIs)
 Zilin Huang (zh2596); Yuhan Wang (yw4200); Yuqing Liu (yl5219); Yiying Wu (yw3996); Jiatong Li (jl6647)
 
