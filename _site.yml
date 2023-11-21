@@ -1,0 +1,15 @@
+name: "P8105 Final Project"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Proposal for P8105 Final Project"
+      href: final-project-proposal.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<yl5219@cumc.columbia.edu>
+    - icon: fa-github fa-lg
+      href: https://github.com/yuqingliu6/california_homelessness.io
+
+output:
+  html_document:
+    theme: flatly

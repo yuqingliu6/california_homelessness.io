@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="yh wang" />
+
+<meta name="date" content="2023-11-04" />
+
+<title>demo_homeless</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="final-project-proposal.html">Proposal for P8105 Final Project</a>
+</li>
+<li>
+  <a href="mailto:&lt;yl5219@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/yuqingliu6/california_homelessness.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">demo_homeless</h1>
+<h4 class="author">yh wang</h4>
+<h4 class="date">2023-11-04</h4>
+
+</div>
+
+
+<div id="description-of-datasets-demo" class="section level2">
+<h2>Description of datasets <code>demo</code></h2>
+<p>The <code>demo</code> datasets are defined as “People Receiving
+Homeless Response Services by Age, Race, Ethnicity, and Gender”.</p>
+<p>This data set gives annual statistics by age group, race, ethnicity,
+and gender on the number of people who have benefited from homelessness
+assistance services.</p>
+<p>The Homelessness Data Integration System (HDIS), an extensive data
+repository that compiles and examines information from each of
+California’s 44 Continuums of Care (CoC), is the source of this
+information. Every Community of Communities (CoC) collects and
+disseminates information on the people it serves via a range of
+programs, such as those aimed at ending homelessness, offering outreach
+services to the homeless, assisting with permanent housing solutions,
+and other projects in line with California’s Housing First
+objectives.</p>
+<p>Important Variables:</p>
+<p><code>CALENDAR_YEAR</code>: Calendar Year<br />
+<code>LOCATION</code>: Location<br />
+<code>ETHNICITY</code>: Ethnicity<br />
+<code>AGE_GROUP_PUBLIC</code>: Age Group<br />
+<code>GENDER</code>: Gender<br />
+<code>RACE</code>: Race<br />
+<code>EXPERIENCING_HOMELESSNESS</code>: Number of people receiving
+homelessness services</p>
+</div>
+<div id="data-process" class="section level2">
+<h2>Data Process</h2>
+<p>First, we converted all the variable names to lowercase.</p>
+<p>Then we removed the unneeded variable “location_id”, and removed the
+null value of “experiencing_homelessness”.</p>
+<p>Finally, we batch export and import the four cleaned csv files into
+datasets.</p>
+<pre class="r"><code># import data
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.3     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>age_demo = read.csv(&quot;./original data/demo/age_demo.csv&quot;)
+ethnicity_demo = read.csv(&quot;./original data/demo/ethnicity_demo.csv&quot;)
+gender_demo = read.csv(&quot;./original data/demo/gender_demo.csv&quot;)
+race_demo = read.csv(&quot;./original data/demo/race_demo.csv&quot;)
+head(age_demo)</code></pre>
+<pre><code>##   CALENDAR_YEAR LOCATION_ID   LOCATION AGE_GROUP_PUBLIC
+## 1          2017         All California            18-24
+## 2          2017         All California            25-34
+## 3          2017         All California            35-44
+## 4          2017         All California            45-54
+## 5          2017         All California            55-64
+## 6          2017         All California              65+
+##   EXPERIENCING_HOMELESSNESS
+## 1                     15984
+## 2                     28654
+## 3                     25831
+## 4                     27651
+## 5                     23396
+## 6                      7111</code></pre>
+<pre class="r"><code>head(ethnicity_demo)</code></pre>
+<pre><code>##   CALENDAR_YEAR LOCATION_ID               LOCATION           ETHNICITY
+## 1          2017         All             California     Hispanic/Latinx
+## 2          2017         All             California Not Hispanic/Latinx
+## 3          2017         All             California             Unknown
+## 4          2017      CA-500 Santa Clara County CoC     Hispanic/Latinx
+## 5          2017      CA-500 Santa Clara County CoC Not Hispanic/Latinx
+## 6          2017      CA-500 Santa Clara County CoC             Unknown
+##   EXPERIENCING_HOMELESSNESS
+## 1                     60962
+## 2                    119153
+## 3                      3791
+## 4                      5034
+## 5                      5074
+## 6                        57</code></pre>
+<pre class="r"><code>head(gender_demo)</code></pre>
+<pre><code>##   CALENDAR_YEAR LOCATION_ID   LOCATION              GENDER
+## 1          2017         All California              Female
+## 2          2017         All California                Male
+## 3          2017         All California Non-Singular Gender
+## 4          2017         All California  Questioning Gender
+## 5          2017         All California         Transgender
+## 6          2017         All California             Unknown
+##   EXPERIENCING_HOMELESSNESS
+## 1                     79670
+## 2                    101901
+## 3                       148
+## 4                         *
+## 5                       676
+## 6                      1505</code></pre>
+<pre class="r"><code>head(race_demo)</code></pre>
+<pre><code>##   CALENDAR_YEAR LOCATION_ID   LOCATION
+## 1          2017         All California
+## 2          2017         All California
+## 3          2017         All California
+## 4          2017         All California
+## 5          2017         All California
+## 6          2017         All California
+##                                            RACE EXPERIENCING_HOMELESSNESS
+## 1 American Indian, Alaska Native, or Indigenous                      5638
+## 2                       Asian or Asian American                      3005
+## 3           Black, African American, or African                     57665
+## 4                                Multiple Races                      9048
+## 5           Native Hawaiian or Pacific Islander                      2555
+## 6                                       Unknown                      6391</code></pre>
+<pre class="r"><code># Clean data
+library(readr)
+folder_path &lt;- &quot;./original data/demo/&quot;
+csv_files &lt;- list.files(folder_path, pattern = &quot;.csv&quot;)
+
+# define a function to process a CSV file
+clean_csv &lt;- function(input_file, output_file) {
+  data &lt;- read.csv(input_file)
+  data_cleaned &lt;- data |&gt; 
+    filter(EXPERIENCING_HOMELESSNESS != &quot;*&quot;) |&gt;
+    select(-LOCATION_ID) |&gt;
+    janitor::clean_names() 
+   write.csv(data_cleaned, file = output_file, row.names = FALSE)
+   #return(data_cleaned)
+}
+
+output_folder &lt;- &quot;./processed data/demo/&quot;
+
+# process CSV files using the lapply function
+cleaned_data_list &lt;- lapply(csv_files, function(file) {
+  input_file &lt;- paste0(folder_path, file)
+  output_file &lt;- paste0(output_folder, &quot;cleaned_&quot;, file)
+  clean_csv(input_file, output_file)
+})
+
+# import clean data
+age_clean = read.csv(&quot;./processed data/demo/cleaned_age_demo.csv&quot;)
+ethnicity_clean = read.csv(&quot;./processed data/demo/cleaned_ethnicity_demo.csv&quot;)
+gender_clean = read.csv(&quot;./processed data/demo/cleaned_gender_demo.csv&quot;)
+race_clean = read.csv(&quot;./processed data/demo/cleaned_race_demo.csv&quot;)</code></pre>
+</div>
+<div id="data-visualization" class="section level2">
+<h2>Data visualization</h2>
+<p>The data visualization serves as a foundation for a more in-depth
+investigation by providing us with a preliminary understanding of the
+relationship between the variables (age, gender, ethnicity, and race)
+and the number of homeless people and how that relationship has evolved
+over time.</p>
+<pre class="r"><code># line plot for &quot;Total Homelessness by Year and Age Group&quot;
+library(plotly)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre class="r"><code>age_plot &lt;- age_clean |&gt;
+  select(-location) |&gt;
+  group_by(calendar_year,age_group_public) |&gt;
+  summarise(total_homelessness = sum(experiencing_homelessness))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;calendar_year&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>age_plot |&gt; 
+  mutate(text_label = str_c(&quot;Year: &quot;, calendar_year, &quot;\nAge Group: &quot;, age_group_public)) |&gt; 
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = &quot;scatter&quot;, mode = &quot;line&quot;, color = ~age_group_public, colors = &quot;viridis&quot;, text = ~text_label, alpha = 0.8) |&gt;
+    layout(title = &quot;Total Homelessness by Year and Age Group&quot;)</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a515068c7069babf5810" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-a515068c7069babf5810">{"x":{"visdat":{"184687b33a892":["function () ","plotlyVisDat"]},"cur_data":"184687b33a892","attrs":{"184687b33a892":{"x":{},"y":{},"mode":"line","text":{},"color":{},"colors":"viridis","alpha":0.80000000000000004,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Homelessness by Year and Age Group","xaxis":{"domain":[0,1],"automargin":true,"title":"calendar_year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"total_homelessness"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[32315,37317,40213,40650,42144,50264,38824],"mode":"line","text":["Year: 2017<br />Age Group: 18-24","Year: 2018<br />Age Group: 18-24","Year: 2019<br />Age Group: 18-24","Year: 2020<br />Age Group: 18-24","Year: 2021<br />Age Group: 18-24","Year: 2022<br />Age Group: 18-24","Year: 2023<br />Age Group: 18-24"],"type":"scatter","name":"18-24","marker":{"color":"rgba(68,1,84,0.8)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,0.8)"},"error_y":{"color":"rgba(68,1,84,0.8)"},"error_x":{"color":"rgba(68,1,84,0.8)"},"line":{"color":"rgba(68,1,84,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[58174,68387,78974,83511,90301,110427,86756],"mode":"line","text":["Year: 2017<br />Age Group: 25-34","Year: 2018<br />Age Group: 25-34","Year: 2019<br />Age Group: 25-34","Year: 2020<br />Age Group: 25-34","Year: 2021<br />Age Group: 25-34","Year: 2022<br />Age Group: 25-34","Year: 2023<br />Age Group: 25-34"],"type":"scatter","name":"25-34","marker":{"color":"rgba(70,50,126,0.8)","line":{"color":"rgba(70,50,126,1)"}},"textfont":{"color":"rgba(70,50,126,0.8)"},"error_y":{"color":"rgba(70,50,126,0.8)"},"error_x":{"color":"rgba(70,50,126,0.8)"},"line":{"color":"rgba(70,50,126,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[52481,62051,73216,82655,90565,113398,92021],"mode":"line","text":["Year: 2017<br />Age Group: 35-44","Year: 2018<br />Age Group: 35-44","Year: 2019<br />Age Group: 35-44","Year: 2020<br />Age Group: 35-44","Year: 2021<br />Age Group: 35-44","Year: 2022<br />Age Group: 35-44","Year: 2023<br />Age Group: 35-44"],"type":"scatter","name":"35-44","marker":{"color":"rgba(54,92,141,0.8)","line":{"color":"rgba(54,92,141,1)"}},"textfont":{"color":"rgba(54,92,141,0.8)"},"error_y":{"color":"rgba(54,92,141,0.8)"},"error_x":{"color":"rgba(54,92,141,0.8)"},"line":{"color":"rgba(54,92,141,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[56292,64495,71437,78690,82775,94914,76275],"mode":"line","text":["Year: 2017<br />Age Group: 45-54","Year: 2018<br />Age Group: 45-54","Year: 2019<br />Age Group: 45-54","Year: 2020<br />Age Group: 45-54","Year: 2021<br />Age Group: 45-54","Year: 2022<br />Age Group: 45-54","Year: 2023<br />Age Group: 45-54"],"type":"scatter","name":"45-54","marker":{"color":"rgba(39,127,142,0.8)","line":{"color":"rgba(39,127,142,1)"}},"textfont":{"color":"rgba(39,127,142,0.8)"},"error_y":{"color":"rgba(39,127,142,0.8)"},"error_x":{"color":"rgba(39,127,142,0.8)"},"line":{"color":"rgba(39,127,142,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[47723,57229,66290,77470,82470,90674,71492],"mode":"line","text":["Year: 2017<br />Age Group: 55-64","Year: 2018<br />Age Group: 55-64","Year: 2019<br />Age Group: 55-64","Year: 2020<br />Age Group: 55-64","Year: 2021<br />Age Group: 55-64","Year: 2022<br />Age Group: 55-64","Year: 2023<br />Age Group: 55-64"],"type":"scatter","name":"55-64","marker":{"color":"rgba(31,161,135,0.8)","line":{"color":"rgba(31,161,135,1)"}},"textfont":{"color":"rgba(31,161,135,0.8)"},"error_y":{"color":"rgba(31,161,135,0.8)"},"error_x":{"color":"rgba(31,161,135,0.8)"},"line":{"color":"rgba(31,161,135,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[14546,18465,22958,31094,34550,38434,29638],"mode":"line","text":["Year: 2017<br />Age Group: 65+","Year: 2018<br />Age Group: 65+","Year: 2019<br />Age Group: 65+","Year: 2020<br />Age Group: 65+","Year: 2021<br />Age Group: 65+","Year: 2022<br />Age Group: 65+","Year: 2023<br />Age Group: 65+"],"type":"scatter","name":"65+","marker":{"color":"rgba(74,193,109,0.8)","line":{"color":"rgba(74,193,109,1)"}},"textfont":{"color":"rgba(74,193,109,0.8)"},"error_y":{"color":"rgba(74,193,109,0.8)"},"error_x":{"color":"rgba(74,193,109,0.8)"},"line":{"color":"rgba(74,193,109,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[104286,113509,120444,112239,114407,134483,113905],"mode":"line","text":["Year: 2017<br />Age Group: Under 18","Year: 2018<br />Age Group: Under 18","Year: 2019<br />Age Group: Under 18","Year: 2020<br />Age Group: Under 18","Year: 2021<br />Age Group: Under 18","Year: 2022<br />Age Group: Under 18","Year: 2023<br />Age Group: Under 18"],"type":"scatter","name":"Under 18","marker":{"color":"rgba(159,218,58,0.8)","line":{"color":"rgba(159,218,58,1)"}},"textfont":{"color":"rgba(159,218,58,0.8)"},"error_y":{"color":"rgba(159,218,58,0.8)"},"error_x":{"color":"rgba(159,218,58,0.8)"},"line":{"color":"rgba(159,218,58,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[12077,19042,20075,17670,21534,22217,13913],"mode":"line","text":["Year: 2017<br />Age Group: Unknown","Year: 2018<br />Age Group: Unknown","Year: 2019<br />Age Group: Unknown","Year: 2020<br />Age Group: Unknown","Year: 2021<br />Age Group: Unknown","Year: 2022<br />Age Group: Unknown","Year: 2023<br />Age Group: Unknown"],"type":"scatter","name":"Unknown","marker":{"color":"rgba(253,231,37,0.8)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,0.8)"},"error_y":{"color":"rgba(253,231,37,0.8)"},"error_x":{"color":"rgba(253,231,37,0.8)"},"line":{"color":"rgba(253,231,37,0.8)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>The above graph shows that the majority of homeless individuals who
+have received assistance are under the age of 18. The proportion of
+homeless people who have received assistance overall is higher among
+lower age groups. So we should pay attention to younger group to give
+them broader help. The overall trend of the homeless population
+receiving assistance is rising between 2021 and 2022, which is probably
+because of the potential effects of the COVID-19 pandemic.</p>
+<pre class="r"><code># bar chart for &quot;Total Homelessness by Year and ethnicity&quot;
+ethnicity_plot &lt;- ethnicity_clean |&gt;
+  select(-location) |&gt;
+  group_by(calendar_year,ethnicity) |&gt;
+  summarise(total_homelessness = sum(experiencing_homelessness))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;calendar_year&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>ethnicity_plot |&gt; 
+  mutate(text_label = str_c(&quot;Year: &quot;, calendar_year, &quot;\nEthnicity: &quot;, ethnicity)) |&gt;
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = &quot;bar&quot;, color = ~ethnicity, colors = &quot;viridis&quot;, text = ~text_label, alpha = 0.8) |&gt;
+  layout(
+    title = &quot;Total Homelessness by Year and ethnicity&quot;)</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d092764b4061408c67fb" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d092764b4061408c67fb">{"x":{"visdat":{"184684a136d9d":["function () ","plotlyVisDat"]},"cur_data":"184684a136d9d","attrs":{"184684a136d9d":{"x":{},"y":{},"text":{},"color":{},"colors":"viridis","alpha":0.80000000000000004,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Homelessness by Year and ethnicity","xaxis":{"domain":[0,1],"automargin":true,"title":"calendar_year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"total_homelessness"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[123417,145256,164605,177336,193603,230930,188931],"text":["Year: 2017<br />Ethnicity: Hispanic/Latinx","Year: 2018<br />Ethnicity: Hispanic/Latinx","Year: 2019<br />Ethnicity: Hispanic/Latinx","Year: 2020<br />Ethnicity: Hispanic/Latinx","Year: 2021<br />Ethnicity: Hispanic/Latinx","Year: 2022<br />Ethnicity: Hispanic/Latinx","Year: 2023<br />Ethnicity: Hispanic/Latinx"],"type":"bar","name":"Hispanic/Latinx","marker":{"color":"rgba(68,1,84,0.8)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,0.8)"},"error_y":{"color":"rgba(68,1,84,0.8)"},"error_x":{"color":"rgba(68,1,84,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[242339,279964,311422,322761,335744,386256,308811],"text":["Year: 2017<br />Ethnicity: Not Hispanic/Latinx","Year: 2018<br />Ethnicity: Not Hispanic/Latinx","Year: 2019<br />Ethnicity: Not Hispanic/Latinx","Year: 2020<br />Ethnicity: Not Hispanic/Latinx","Year: 2021<br />Ethnicity: Not Hispanic/Latinx","Year: 2022<br />Ethnicity: Not Hispanic/Latinx","Year: 2023<br />Ethnicity: Not Hispanic/Latinx"],"type":"bar","name":"Not Hispanic/Latinx","marker":{"color":"rgba(33,144,141,0.8)","line":{"color":"rgba(33,144,141,1)"}},"textfont":{"color":"rgba(33,144,141,0.8)"},"error_y":{"color":"rgba(33,144,141,0.8)"},"error_x":{"color":"rgba(33,144,141,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[7525,9343,10022,14659,18180,22884,17090],"text":["Year: 2017<br />Ethnicity: Unknown","Year: 2018<br />Ethnicity: Unknown","Year: 2019<br />Ethnicity: Unknown","Year: 2020<br />Ethnicity: Unknown","Year: 2021<br />Ethnicity: Unknown","Year: 2022<br />Ethnicity: Unknown","Year: 2023<br />Ethnicity: Unknown"],"type":"bar","name":"Unknown","marker":{"color":"rgba(253,231,37,0.8)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,0.8)"},"error_y":{"color":"rgba(253,231,37,0.8)"},"error_x":{"color":"rgba(253,231,37,0.8)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>From the bar chart above we can see that people whose race are
+Hispanic/Latinx make up a large percentage of people receiving homeless
+response services. So we need to focus on the vulnerable groups in
+ethnicity based on the problem of homelessness.</p>
+<pre class="r"><code># bar chart for &quot;Total Homelessness by Year and gender&quot;
+gender_plot &lt;- gender_clean |&gt;
+  select(-location) |&gt;
+  group_by(calendar_year,gender) |&gt;
+  summarise(total_homelessness = sum(experiencing_homelessness))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;calendar_year&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>gender_plot  |&gt; 
+  mutate(text_label = str_c(&quot;Year: &quot;, calendar_year, &quot;\nGender: &quot;, gender)) |&gt;
+  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = &quot;bar&quot;, color = ~gender, colors = &quot;viridis&quot;, text = ~text_label, alpha = 0.8) |&gt;
+  layout(
+    title = &quot;Total Homelessness by Year and gender&quot;)</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5c89cf7f0c769a2a3bcb" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-5c89cf7f0c769a2a3bcb">{"x":{"visdat":{"184681e1c2b18":["function () ","plotlyVisDat"]},"cur_data":"184681e1c2b18","attrs":{"184681e1c2b18":{"x":{},"y":{},"text":{},"color":{},"colors":"viridis","alpha":0.80000000000000004,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Homelessness by Year and gender","xaxis":{"domain":[0,1],"automargin":true,"title":"calendar_year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"total_homelessness"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[161530,186343,205324,212309,226468,269318,218306],"text":["Year: 2017<br />Gender: Female","Year: 2018<br />Gender: Female","Year: 2019<br />Gender: Female","Year: 2020<br />Gender: Female","Year: 2021<br />Gender: Female","Year: 2022<br />Gender: Female","Year: 2023<br />Gender: Female"],"type":"bar","name":"Female","marker":{"color":"rgba(68,1,84,0.8)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,0.8)"},"error_y":{"color":"rgba(68,1,84,0.8)"},"error_x":{"color":"rgba(68,1,84,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[207117,242775,274969,294959,309893,355034,284460],"text":["Year: 2017<br />Gender: Male","Year: 2018<br />Gender: Male","Year: 2019<br />Gender: Male","Year: 2020<br />Gender: Male","Year: 2021<br />Gender: Male","Year: 2022<br />Gender: Male","Year: 2023<br />Gender: Male"],"type":"bar","name":"Male","marker":{"color":"rgba(65,68,135,0.8)","line":{"color":"rgba(65,68,135,1)"}},"textfont":{"color":"rgba(65,68,135,0.8)"},"error_y":{"color":"rgba(65,68,135,0.8)"},"error_x":{"color":"rgba(65,68,135,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[223,388,578,770,1184,1651,1376],"text":["Year: 2017<br />Gender: Non-Singular Gender","Year: 2018<br />Gender: Non-Singular Gender","Year: 2019<br />Gender: Non-Singular Gender","Year: 2020<br />Gender: Non-Singular Gender","Year: 2021<br />Gender: Non-Singular Gender","Year: 2022<br />Gender: Non-Singular Gender","Year: 2023<br />Gender: Non-Singular Gender"],"type":"bar","name":"Non-Singular Gender","marker":{"color":"rgba(42,120,142,0.8)","line":{"color":"rgba(42,120,142,1)"}},"textfont":{"color":"rgba(42,120,142,0.8)"},"error_y":{"color":"rgba(42,120,142,0.8)"},"error_x":{"color":"rgba(42,120,142,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020,2021,2022,2023],"y":[11,25,58,67],"text":["Year: 2020<br />Gender: Questioning Gender","Year: 2021<br />Gender: Questioning Gender","Year: 2022<br />Gender: Questioning Gender","Year: 2023<br />Gender: Questioning Gender"],"type":"bar","name":"Questioning Gender","marker":{"color":"rgba(34,168,132,0.8)","line":{"color":"rgba(34,168,132,1)"}},"textfont":{"color":"rgba(34,168,132,0.8)"},"error_y":{"color":"rgba(34,168,132,0.8)"},"error_x":{"color":"rgba(34,168,132,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[1244,1806,2088,2409,2624,3109,2508],"text":["Year: 2017<br />Gender: Transgender","Year: 2018<br />Gender: Transgender","Year: 2019<br />Gender: Transgender","Year: 2020<br />Gender: Transgender","Year: 2021<br />Gender: Transgender","Year: 2022<br />Gender: Transgender","Year: 2023<br />Gender: Transgender"],"type":"bar","name":"Transgender","marker":{"color":"rgba(122,209,81,0.8)","line":{"color":"rgba(122,209,81,1)"}},"textfont":{"color":"rgba(122,209,81,0.8)"},"error_y":{"color":"rgba(122,209,81,0.8)"},"error_x":{"color":"rgba(122,209,81,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[2957,3062,2848,4048,7066,10579,7806],"text":["Year: 2017<br />Gender: Unknown","Year: 2018<br />Gender: Unknown","Year: 2019<br />Gender: Unknown","Year: 2020<br />Gender: Unknown","Year: 2021<br />Gender: Unknown","Year: 2022<br />Gender: Unknown","Year: 2023<br />Gender: Unknown"],"type":"bar","name":"Unknown","marker":{"color":"rgba(253,231,37,0.8)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,0.8)"},"error_y":{"color":"rgba(253,231,37,0.8)"},"error_x":{"color":"rgba(253,231,37,0.8)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>According to the bar chart by sex, we can know that the majority of
+people in need of assistance who are homeless are women, indicating that
+homelessness is a problem that affects more women than men and is rising
+annually for all genders from 2017 to 2022. The trend is downward and
+more controlled in 2023.</p>
+<pre class="r"><code># line plot for &quot;Total Homelessness by Year and gender&quot;
+race_plot &lt;- race_clean |&gt;
+  select(-location) |&gt;
+  group_by(calendar_year,race) |&gt;
+  summarise(total_homelessness = sum(experiencing_homelessness))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;calendar_year&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>race_plot  |&gt; 
+  mutate(text_label = str_c(&quot;Year: &quot;, calendar_year, &quot;\nRace: &quot;, race)) |&gt;
+  plot_ly(x = ~calendar_year, y = ~total_homelessness,  type = &quot;scatter&quot;, mode = &quot;line&quot;, color = ~race, colors = &quot;viridis&quot;, text = ~text_label, alpha = 0.8) |&gt;
+  layout(
+    title = &quot;Total Homelessness by Year and gender&quot; ,
+    legend = list(
+      x = 1,
+      y = 0.5, 
+      traceorder = &quot;normal&quot;,
+      bgcolor = &quot;white&quot;, 
+      bordercolor = &quot;white&quot;,
+      borderwidth = 0.5
+    ))</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-dad0c599ceca967a4e19" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-dad0c599ceca967a4e19">{"x":{"visdat":{"18468444debf0":["function () ","plotlyVisDat"]},"cur_data":"18468444debf0","attrs":{"18468444debf0":{"x":{},"y":{},"mode":"line","text":{},"color":{},"colors":"viridis","alpha":0.80000000000000004,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Homelessness by Year and gender","legend":{"x":1,"y":0.5,"traceorder":"normal","bgcolor":"white","bordercolor":"white","borderwidth":0.5},"xaxis":{"domain":[0,1],"automargin":true,"title":"calendar_year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"total_homelessness"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[11442,12154,13403,14628,17405,21349,18389],"mode":"line","text":["Year: 2017<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2018<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2019<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2020<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2021<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2022<br />Race: American Indian, Alaska Native, or Indigenous","Year: 2023<br />Race: American Indian, Alaska Native, or Indigenous"],"type":"scatter","name":"American Indian, Alaska Native, or Indigenous","marker":{"color":"rgba(68,1,84,0.8)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,0.8)"},"error_y":{"color":"rgba(68,1,84,0.8)"},"error_x":{"color":"rgba(68,1,84,0.8)"},"line":{"color":"rgba(68,1,84,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[6023,6927,7868,9332,10296,12146,10190],"mode":"line","text":["Year: 2017<br />Race: Asian or Asian American","Year: 2018<br />Race: Asian or Asian American","Year: 2019<br />Race: Asian or Asian American","Year: 2020<br />Race: Asian or Asian American","Year: 2021<br />Race: Asian or Asian American","Year: 2022<br />Race: Asian or Asian American","Year: 2023<br />Race: Asian or Asian American"],"type":"scatter","name":"Asian or Asian American","marker":{"color":"rgba(68,58,131,0.8)","line":{"color":"rgba(68,58,131,1)"}},"textfont":{"color":"rgba(68,58,131,0.8)"},"error_y":{"color":"rgba(68,58,131,0.8)"},"error_x":{"color":"rgba(68,58,131,0.8)"},"line":{"color":"rgba(68,58,131,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[117280,137458,151502,150761,152884,176240,140750],"mode":"line","text":["Year: 2017<br />Race: Black, African American, or African","Year: 2018<br />Race: Black, African American, or African","Year: 2019<br />Race: Black, African American, or African","Year: 2020<br />Race: Black, African American, or African","Year: 2021<br />Race: Black, African American, or African","Year: 2022<br />Race: Black, African American, or African","Year: 2023<br />Race: Black, African American, or African"],"type":"scatter","name":"Black, African American, or African","marker":{"color":"rgba(49,104,142,0.8)","line":{"color":"rgba(49,104,142,1)"}},"textfont":{"color":"rgba(49,104,142,0.8)"},"error_y":{"color":"rgba(49,104,142,0.8)"},"error_x":{"color":"rgba(49,104,142,0.8)"},"line":{"color":"rgba(49,104,142,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[18374,19879,21694,21853,22856,27095,22099],"mode":"line","text":["Year: 2017<br />Race: Multiple Races","Year: 2018<br />Race: Multiple Races","Year: 2019<br />Race: Multiple Races","Year: 2020<br />Race: Multiple Races","Year: 2021<br />Race: Multiple Races","Year: 2022<br />Race: Multiple Races","Year: 2023<br />Race: Multiple Races"],"type":"scatter","name":"Multiple Races","marker":{"color":"rgba(33,144,141,0.8)","line":{"color":"rgba(33,144,141,1)"}},"textfont":{"color":"rgba(33,144,141,0.8)"},"error_y":{"color":"rgba(33,144,141,0.8)"},"error_x":{"color":"rgba(33,144,141,0.8)"},"line":{"color":"rgba(33,144,141,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[5108,5444,6038,6389,6746,7909,6417],"mode":"line","text":["Year: 2017<br />Race: Native Hawaiian or Pacific Islander","Year: 2018<br />Race: Native Hawaiian or Pacific Islander","Year: 2019<br />Race: Native Hawaiian or Pacific Islander","Year: 2020<br />Race: Native Hawaiian or Pacific Islander","Year: 2021<br />Race: Native Hawaiian or Pacific Islander","Year: 2022<br />Race: Native Hawaiian or Pacific Islander","Year: 2023<br />Race: Native Hawaiian or Pacific Islander"],"type":"scatter","name":"Native Hawaiian or Pacific Islander","marker":{"color":"rgba(53,183,121,0.8)","line":{"color":"rgba(53,183,121,1)"}},"textfont":{"color":"rgba(53,183,121,0.8)"},"error_y":{"color":"rgba(53,183,121,0.8)"},"error_x":{"color":"rgba(53,183,121,0.8)"},"line":{"color":"rgba(53,183,121,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[12766,16380,18229,26811,32591,40308,33811],"mode":"line","text":["Year: 2017<br />Race: Unknown","Year: 2018<br />Race: Unknown","Year: 2019<br />Race: Unknown","Year: 2020<br />Race: Unknown","Year: 2021<br />Race: Unknown","Year: 2022<br />Race: Unknown","Year: 2023<br />Race: Unknown"],"type":"scatter","name":"Unknown","marker":{"color":"rgba(143,214,68,0.8)","line":{"color":"rgba(143,214,68,1)"}},"textfont":{"color":"rgba(143,214,68,0.8)"},"error_y":{"color":"rgba(143,214,68,0.8)"},"error_x":{"color":"rgba(143,214,68,0.8)"},"line":{"color":"rgba(143,214,68,0.8)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2017,2018,2019,2020,2021,2022,2023],"y":[202056,236130,267142,284813,304616,354888,283000],"mode":"line","text":["Year: 2017<br />Race: White","Year: 2018<br />Race: White","Year: 2019<br />Race: White","Year: 2020<br />Race: White","Year: 2021<br />Race: White","Year: 2022<br />Race: White","Year: 2023<br />Race: White"],"type":"scatter","name":"White","marker":{"color":"rgba(253,231,37,0.8)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,0.8)"},"error_y":{"color":"rgba(253,231,37,0.8)"},"error_x":{"color":"rgba(253,231,37,0.8)"},"line":{"color":"rgba(253,231,37,0.8)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code># pie chart for &quot;Percentage of Total Homeless by Race&quot;
+race_clean |&gt;
+  group_by(race) |&gt;
+  summarise(total_homelessness = sum(experiencing_homelessness)) |&gt;
+  mutate(percentage = total_homelessness / sum(total_homelessness)) |&gt;
+  plot_ly(labels = ~race, values = ~percentage, type = &quot;pie&quot;, hole = 0.4) |&gt;
+   layout(title = &quot;Percentage of Total Homeless by Race&quot;)</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5522863680c550307552" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-5522863680c550307552">{"x":{"visdat":{"1846857bcfc98":["function () ","plotlyVisDat"]},"cur_data":"1846857bcfc98","attrs":{"1846857bcfc98":{"labels":{},"values":{},"hole":0.40000000000000002,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Percentage of Total Homeless by Race","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["American Indian, Alaska Native, or Indigenous","Asian or Asian American","Black, African American, or African","Multiple Races","Native Hawaiian or Pacific Islander","Unknown","White"],"values":[0.03098976058650622,0.017887277274450983,0.29256789925777854,0.043833544784719888,0.01255061086325444,0.051539245481811428,0.55063166175147849],"hole":0.40000000000000002,"type":"pie","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Based on the percantage of total homeless by race, we can see that
+white people accounted for the largest percentage of homeless people
+receiving help at 55.1%, followed by Black, Afircan American or African,
+the next largest group at 29.3%. This suggests that there is a
+relationship between race and Number of people receiving homelessness
+services, and that there is a need to focus on these two groups of
+people.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
