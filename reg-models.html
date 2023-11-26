@@ -608,15 +608,15 @@ non-linearities.</li>
 <p>Since <code>ordered_LicensedBedSize</code> is ordinal data, we use
 Spearman correlation coefficients when constructing correlation
 matrix.</p>
-<pre class="r"><code>dat1 &lt;- dat|&gt;
-  mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|&gt;
-  select(ed_visit,government,investor,rural,ordered_LicensedBedSize,Encounters)
+<pre class="r"><code>dat1 &lt;- dat %&gt;%
+  mutate(ordered_LicensedBedSize = as.numeric(ordered_LicensedBedSize)) %&gt;%
+  dplyr::select(ed_visit, government, investor, rural, ordered_LicensedBedSize, Encounters)
 
 correlation_matrix &lt;- cor(dat1, method = &quot;spearman&quot;, use = &quot;complete.obs&quot;)
 
 # Visualize
 corrplot(correlation_matrix, method = &quot;color&quot;, addCoef.col = &quot;black&quot;, tl.col = &quot;black&quot;, tl.srt = 45, insig = &quot;blank&quot; , number.cex = 0.7, diag = FALSE)</code></pre>
-<p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><strong>Description</strong></p>
 <ul>
 <li>the variable ordered_LicensedBedSize seems to have a moderately
@@ -630,11 +630,41 @@ is less likely that collinearity will pose a problem for the regression
 model.</li>
 </ul>
 </div>
+<div id="yeo-johnson-transformation" class="section level2">
+<h2>Yeo-Johnson transformation</h2>
+<pre class="r"><code># Shift the response variable to ensure all values are positive
+shift_constant &lt;- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
+dat$Encounters_shifted &lt;- dat$Encounters + shift_constant
+
+# Fit the model with the shifted response variable
+fit2_shifted &lt;- lm(Encounters_shifted ~ ed_visit + government + investor + rural + ordered_LicensedBedSize, data = dat)
+
+# Apply Box-Cox transformation on the shifted response variable
+bc_shifted &lt;- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))</code></pre>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p>Yeo-Johnson method applies a transformation by raising
+<code>Encounters</code> to different power, as we can see above, <span
+class="math inline">\(\lambda\)</span> is close to 0, so we need to do
+natural logarithm transformation, turn <code>Encounters</code> into
+ln(<code>Encounters</code>).</p>
+</div>
 <div id="multivariable-regression-model" class="section level2">
 <h2>Multivariable Regression Model</h2>
-<pre class="r"><code>tidy_model &lt;- round_df(broom::tidy(lm(Encounters ~ ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)), 4)
-knitr::kable(tidy_model)</code></pre>
-<table>
+<pre class="r"><code>dat = dat %&gt;%
+  mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
+fit = lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat) 
+
+summary(fit) %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="37%" />
+<col width="15%" />
+<col width="14%" />
+<col width="17%" />
+<col width="14%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">term</th>
@@ -647,66 +677,66 @@ knitr::kable(tidy_model)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">3860.4354</td>
-<td align="right">118.6007</td>
-<td align="right">32.5499</td>
-<td align="right">0.0000</td>
+<td align="right">5.4035104</td>
+<td align="right">0.0300183</td>
+<td align="right">180.0074055</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">ed_visit</td>
-<td align="right">5956.2454</td>
-<td align="right">141.1255</td>
-<td align="right">42.2053</td>
-<td align="right">0.0000</td>
+<td align="right">1.5720588</td>
+<td align="right">0.0357194</td>
+<td align="right">44.0113496</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">government</td>
-<td align="right">-596.6063</td>
-<td align="right">198.9406</td>
-<td align="right">-2.9989</td>
-<td align="right">0.0027</td>
+<td align="right">-0.0452897</td>
+<td align="right">0.0503526</td>
+<td align="right">-0.8994520</td>
+<td align="right">0.3684205</td>
 </tr>
 <tr class="even">
 <td align="left">investor</td>
-<td align="right">-1307.8888</td>
-<td align="right">163.0178</td>
-<td align="right">-8.0230</td>
-<td align="right">0.0000</td>
+<td align="right">-0.3516252</td>
+<td align="right">0.0412604</td>
+<td align="right">-8.5220986</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">rural</td>
-<td align="right">-1503.5756</td>
-<td align="right">207.3858</td>
-<td align="right">-7.2501</td>
-<td align="right">0.0000</td>
+<td align="right">-0.6233033</td>
+<td align="right">0.0524901</td>
+<td align="right">-11.8746828</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize.L</td>
-<td align="right">5086.4756</td>
-<td align="right">189.1708</td>
-<td align="right">26.8883</td>
-<td align="right">0.0000</td>
+<td align="right">1.6142143</td>
+<td align="right">0.0478798</td>
+<td align="right">33.7138681</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize.Q</td>
-<td align="right">189.2612</td>
-<td align="right">171.3362</td>
-<td align="right">1.1046</td>
-<td align="right">0.2693</td>
+<td align="right">-0.5490362</td>
+<td align="right">0.0433658</td>
+<td align="right">-12.6605756</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize.C</td>
-<td align="right">-311.7558</td>
-<td align="right">162.2150</td>
-<td align="right">-1.9219</td>
-<td align="right">0.0546</td>
+<td align="right">0.2416523</td>
+<td align="right">0.0410572</td>
+<td align="right">5.8857436</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize^4</td>
-<td align="right">-69.0655</td>
-<td align="right">163.3450</td>
-<td align="right">-0.4228</td>
-<td align="right">0.6724</td>
+<td align="right">0.0180526</td>
+<td align="right">0.0413432</td>
+<td align="right">0.4366524</td>
+<td align="right">0.6623671</td>
 </tr>
 </tbody>
 </table>
@@ -714,31 +744,27 @@ knitr::kable(tidy_model)</code></pre>
 <ul>
 <li><strong>Coefficients</strong>:
 <ul>
-<li><code>ed_visit</code> has a positive and highly significant
-relationship with <code>Encounters</code>. For each unit increase in
-<code>ed_visit</code>, <code>Encounters</code> increases by about
-5956.25, holding other variables constant.</li>
-<li><code>government</code> has a small negative effect, decreasing
-<code>Encounters</code> by 596.61 compared to the non-profit ownership
-category (likely private, non-government, non-investor).</li>
-<li><code>investor</code> ownership is associated with a larger negative
-effect, decreasing <code>Encounters</code> by 1307.89 compared to the
-non-profit</li>
-<li><code>rural</code> locations are associated with a negative effect,
-decreasing <code>Encounters</code> by 1503.58 compared to urban
-locations.</li>
-<li><code>ordered_LicensedBedSize</code> is treated as an ordinal
-variable with polynomial contrasts. The linear term (L) has a large
-positive effect, suggesting a strong increase in <code>Encounters</code>
-as bed size increases. However, the quadratic (Q), cubic (C), and
-quartic (^4) terms are not statistically significant at conventional
-levels, indicating the relationship may not have strong non-linear
-components.</li>
+<li></li>
 </ul></li>
 <li>Model Fit: The Multiple R-squared value of 0.1275 suggests that
 approximately 12.75% of the variability in Encounters is explained by
 the model.</li>
 </ul>
+</div>
+<div id="model-diagnostics" class="section level2">
+<h2>Model diagnostics</h2>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(fit)</code></pre>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>residuals &lt;- residuals(fit)
+# Kolmogorov-Smirnov Test
+ks.test(residuals, &quot;pnorm&quot;, mean = mean(residuals), sd = sd(residuals))</code></pre>
+<pre><code>## 
+##  Asymptotic one-sample Kolmogorov-Smirnov test
+## 
+## data:  residuals
+## D = 0.065232, p-value &lt; 2.2e-16
+## alternative hypothesis: two-sided</code></pre>
 </div>
 
 

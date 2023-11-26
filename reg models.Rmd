@@ -10,9 +10,17 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+echo = TRUE,
+warning = FALSE,
+fig.width = 9, 
+  fig.height = 9,
+  out.width = "80%"
+)
+
 library(tidyverse)
 library(corrplot)
+library(MASS)
 ```
 
 ## Import Data & Recoding
@@ -88,9 +96,9 @@ knitr::kable(combined_table)
 ## Correlation Matrix
 Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coefficients when constructing correlation matrix.
 ```{r,message=FALSE}
-dat1 <- dat|>
-  mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|>
-  select(ed_visit,government,investor,rural,ordered_LicensedBedSize,Encounters)
+dat1 <- dat %>%
+  mutate(ordered_LicensedBedSize = as.numeric(ordered_LicensedBedSize)) %>%
+  dplyr::select(ed_visit, government, investor, rural, ordered_LicensedBedSize, Encounters)
 
 correlation_matrix <- cor(dat1, method = "spearman", use = "complete.obs")
 
@@ -104,18 +112,49 @@ corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "
 * rural has a strong negative correlation with ordered_LicensedBedSize (-0.45), implying that rural facilities are likely to have fewer licensed beds.
 * Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
 
+## Yeo-Johnson transformation
+```{r,fig.width = 9, fig.height = 6,out.width= "60%", fig.align = 'center'}
+# Shift the response variable to ensure all values are positive
+shift_constant <- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
+dat$Encounters_shifted <- dat$Encounters + shift_constant
+
+# Fit the model with the shifted response variable
+fit2_shifted <- lm(Encounters_shifted ~ ed_visit + government + investor + rural + ordered_LicensedBedSize, data = dat)
+
+# Apply Box-Cox transformation on the shifted response variable
+bc_shifted <- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))
+```
+
+Yeo-Johnson method applies a transformation by raising `Encounters` to different power, as we can see above, $\lambda$ is close to 0, so we need to do natural logarithm transformation, turn `Encounters` into ln(`Encounters`).
+
+
 ## Multivariable Regression Model
+
 ```{r}
-tidy_model <- round_df(broom::tidy(lm(Encounters ~ ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)), 4)
-knitr::kable(tidy_model)
+dat = dat %>%
+  mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
+fit = lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat) 
+
+summary(fit) %>% 
+  broom::tidy() %>% 
+  knitr::kable()
 ```
 
 **Description**
 
 * **Coefficients**:
-  * `ed_visit` has a positive and highly significant relationship with `Encounters`. For each unit increase in `ed_visit`, `Encounters` increases by about 5956.25, holding other variables constant.
-  * `government` has a small negative effect, decreasing `Encounters` by 596.61 compared to the non-profit ownership category (likely private, non-government, non-investor).
-  * `investor` ownership is associated with a larger negative effect, decreasing `Encounters` by 1307.89 compared to the non-profit
-  * `rural` locations are associated with a negative effect, decreasing `Encounters` by 1503.58 compared to urban locations.
-  * `ordered_LicensedBedSize` is treated as an ordinal variable with polynomial contrasts. The linear term (L) has a large positive effect, suggesting a strong increase in `Encounters` as bed size increases. However, the quadratic (Q), cubic (C), and quartic (^4) terms are not statistically significant at conventional levels, indicating the relationship may not have strong non-linear components.
+  *
 * Model Fit: The Multiple R-squared value of 0.1275 suggests that approximately 12.75% of the variability in Encounters is explained by the model.
+
+## Model diagnostics
+```{r, fig.align= "center"}
+par(mfrow = c(2,2))
+plot(fit)
+```
+
+```{r}
+residuals <- residuals(fit)
+# Kolmogorov-Smirnov Test
+ks.test(residuals, "pnorm", mean = mean(residuals), sd = sd(residuals))
+```
+
