@@ -4,6 +4,7 @@ author: "Yiying Wu"
 date: "2023-11-26"
 output: 
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
 ---
@@ -11,31 +12,87 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(corrplot)
 ```
 
-## import data
+## Import Data & Recoding
+First import data and create dummy variables for categorical variables.
 ```{r, message=FALSE}
-dat<-read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-```
-## recoding
+dat <- read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+
 ### EncounterType
+dat$ed_visit <- ifelse(dat$EncounterType=="ED Visits",1,0)
 
 ### Ownership
+dat$government <- ifelse(dat$Ownership=="Government",1,0)
+dat$investor <- ifelse(dat$Ownership=="Investor",1,0)
 
 ### Urban_Rural
-
+dat$rural <- ifelse(dat$Urban_Rural=="Rural/Frontier",1,0)
 
 ### LicensedBedSize
+## the first level will be treated as ref
+dat$LicensedBedSize <- as.factor(dat$LicensedBedSize)
+dat$ordered_LicensedBedSize <- ordered(dat$LicensedBedSize, 
+                             levels = c("1-99","100-199","200-299","300-399","400+"))
+```
+The variables and corresponding descriptions are as follows.
 
+| Variable | Description | Value |
+|-------|-----------|-----------|
+| ed_visit | Dummy variable for EncounterType  | 1=ED Visits, 0=Inpatient Hospitalizations   |
+| government | Dummy variable for Ownership | 1=Government, 0=Otherwise |
+| investor | Dummy variable for Ownership | 1=Investor, 0=Otherwise |
+| rural | Dummy variable for Urban_Rural | 1=Rural/Frontier, 0=Otherwise |
+| ordered_LicensedBedSize.L | Dummy variable for LicensedBedSize | 1=100-199, 0=Otherwise |
+| ordered_LicensedBedSize.Q | Dummy variable for LicensedBedSize | 1=200-299, 0=Otherwise |
+| ordered_LicensedBedSize.C | Dummy variable for LicensedBedSize | 1=300-399, 0=Otherwise |
+| ordered_LicensedBedSize^4 | Dummy variable for LicensedBedSize | 1=400+, 0=Otherwise |
 
-### DemographicValue
+## Univariate Analysis
+We conducted univariate analyses to identify individual factors associated with outcomes `Encounters`. 
+
 ```{r}
+# Function to round all numeric columns in a dataframe
+round_df <- function(df, digits) {
+  df %>% mutate(across(where(is.numeric), ~ round(., digits)))
+}
 
+# Create tidied summaries for each model and round them
+### EncounterType
+tidy_ed_visit <- round_df(broom::tidy(lm(Encounters ~ ed_visit, data = dat)), 4) %>%
+  mutate(Model = "EncounterType")
+
+### Ownership
+tidy_Ownership <- round_df(broom::tidy(lm(Encounters ~ government + investor, data = dat)), 4) %>%
+  mutate(Model = "Ownership")
+
+### Urban_Rural
+tidy_Urban_Rural <- round_df(broom::tidy(lm(Encounters ~ rural, data = dat)), 4) %>%
+  mutate(Model = "Urban_Rural")
+
+### LicensedBedSize
+tidy_LicensedBedSize <- round_df(broom::tidy(lm(Encounters ~ ordered_LicensedBedSize, data = dat)), 4) %>%
+  mutate(Model = "LicensedBedSize")
+
+# Combine all tidied summaries into one table
+combined_table <- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, tidy_LicensedBedSize)
+
+# Output the table
+knitr::kable(combined_table)
 ```
 
 
-## univariate analysis
-```{r}
+## Correlation Matrix
+Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coefficients when constructing Correlation Matrix.
+```{r,message=FALSE}
+dat1 <- dat|>
+  mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|>
+  select(ed_visit,government,investor,rural,ordered_LicensedBedSize,Encounters)
 
+correlation_matrix <- cor(dat1, method = "spearman", use = "complete.obs")
+
+# Visualize
+corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "black", tl.srt = 45, insig = "blank" , number.cex = 0.7, diag = FALSE)
 ```
 

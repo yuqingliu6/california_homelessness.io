@@ -35,6 +35,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
@@ -223,6 +224,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -347,6 +351,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">reg models</h1>
@@ -356,30 +368,249 @@ div.tocify {
 </div>
 
 
-<div id="import-data" class="section level2">
-<h2>import data</h2>
-<pre class="r"><code>dat&lt;-read_csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)</code></pre>
-</div>
-<div id="recoding" class="section level2">
-<h2>recoding</h2>
-<div id="encountertype" class="section level3">
-<h3>EncounterType</h3>
-</div>
-<div id="ownership" class="section level3">
-<h3>Ownership</h3>
-</div>
-<div id="urban_rural" class="section level3">
-<h3>Urban_Rural</h3>
-</div>
-<div id="licensedbedsize" class="section level3">
-<h3>LicensedBedSize</h3>
-</div>
-<div id="demographicvalue" class="section level3">
-<h3>DemographicValue</h3>
-</div>
+<div id="import-data-recoding" class="section level2">
+<h2>Import Data &amp; Recoding</h2>
+<p>First import data and create dummy variables for categorical
+variables.</p>
+<pre class="r"><code>dat &lt;- read_csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)
+
+### EncounterType
+dat$ed_visit &lt;- ifelse(dat$EncounterType==&quot;ED Visits&quot;,1,0)
+
+### Ownership
+dat$government &lt;- ifelse(dat$Ownership==&quot;Government&quot;,1,0)
+dat$investor &lt;- ifelse(dat$Ownership==&quot;Investor&quot;,1,0)
+
+### Urban_Rural
+dat$rural &lt;- ifelse(dat$Urban_Rural==&quot;Rural/Frontier&quot;,1,0)
+
+### LicensedBedSize
+## the first level will be treated as ref
+dat$LicensedBedSize &lt;- as.factor(dat$LicensedBedSize)
+dat$ordered_LicensedBedSize &lt;- ordered(dat$LicensedBedSize, 
+                             levels = c(&quot;1-99&quot;,&quot;100-199&quot;,&quot;200-299&quot;,&quot;300-399&quot;,&quot;400+&quot;))</code></pre>
+<p>The variables and corresponding descriptions are as follows.</p>
+<table>
+<colgroup>
+<col width="24%" />
+<col width="37%" />
+<col width="37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ed_visit</td>
+<td>Dummy variable for EncounterType</td>
+<td>1=ED Visits, 0=Inpatient Hospitalizations</td>
+</tr>
+<tr class="even">
+<td>government</td>
+<td>Dummy variable for Ownership</td>
+<td>1=Government, 0=Otherwise</td>
+</tr>
+<tr class="odd">
+<td>investor</td>
+<td>Dummy variable for Ownership</td>
+<td>1=Investor, 0=Otherwise</td>
+</tr>
+<tr class="even">
+<td>rural</td>
+<td>Dummy variable for Urban_Rural</td>
+<td>1=Rural/Frontier, 0=Otherwise</td>
+</tr>
+<tr class="odd">
+<td>ordered_LicensedBedSize.L</td>
+<td>Dummy variable for LicensedBedSize</td>
+<td>1=100-199, 0=Otherwise</td>
+</tr>
+<tr class="even">
+<td>ordered_LicensedBedSize.Q</td>
+<td>Dummy variable for LicensedBedSize</td>
+<td>1=200-299, 0=Otherwise</td>
+</tr>
+<tr class="odd">
+<td>ordered_LicensedBedSize.C</td>
+<td>Dummy variable for LicensedBedSize</td>
+<td>1=300-399, 0=Otherwise</td>
+</tr>
+<tr class="even">
+<td>ordered_LicensedBedSize^4</td>
+<td>Dummy variable for LicensedBedSize</td>
+<td>1=400+, 0=Otherwise</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="univariate-analysis" class="section level2">
-<h2>univariate analysis</h2>
+<h2>Univariate Analysis</h2>
+<p>We conducted univariate analyses to identify individual factors
+associated with outcomes <code>Encounters</code>.</p>
+<pre class="r"><code># Function to round all numeric columns in a dataframe
+round_df &lt;- function(df, digits) {
+  df %&gt;% mutate(across(where(is.numeric), ~ round(., digits)))
+}
+
+# Create tidied summaries for each model and round them
+### EncounterType
+tidy_ed_visit &lt;- round_df(broom::tidy(lm(Encounters ~ ed_visit, data = dat)), 4) %&gt;%
+  mutate(Model = &quot;EncounterType&quot;)
+
+### Ownership
+tidy_Ownership &lt;- round_df(broom::tidy(lm(Encounters ~ government + investor, data = dat)), 4) %&gt;%
+  mutate(Model = &quot;Ownership&quot;)
+
+### Urban_Rural
+tidy_Urban_Rural &lt;- round_df(broom::tidy(lm(Encounters ~ rural, data = dat)), 4) %&gt;%
+  mutate(Model = &quot;Urban_Rural&quot;)
+
+### LicensedBedSize
+tidy_LicensedBedSize &lt;- round_df(broom::tidy(lm(Encounters ~ ordered_LicensedBedSize, data = dat)), 4) %&gt;%
+  mutate(Model = &quot;LicensedBedSize&quot;)
+
+# Combine all tidied summaries into one table
+combined_table &lt;- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, tidy_LicensedBedSize)
+
+# Output the table
+knitr::kable(combined_table)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="32%" />
+<col width="13%" />
+<col width="12%" />
+<col width="12%" />
+<col width="9%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">Model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">1977.9689</td>
+<td align="right">92.1465</td>
+<td align="right">21.4655</td>
+<td align="right">0.0000</td>
+<td align="left">EncounterType</td>
+</tr>
+<tr class="even">
+<td align="left">ed_visit</td>
+<td align="right">6536.6541</td>
+<td align="right">141.8179</td>
+<td align="right">46.0919</td>
+<td align="right">0.0000</td>
+<td align="left">EncounterType</td>
+</tr>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">5976.7202</td>
+<td align="right">100.8761</td>
+<td align="right">59.2481</td>
+<td align="right">0.0000</td>
+<td align="left">Ownership</td>
+</tr>
+<tr class="even">
+<td align="left">government</td>
+<td align="right">-1487.7157</td>
+<td align="right">205.4245</td>
+<td align="right">-7.2422</td>
+<td align="right">0.0000</td>
+<td align="left">Ownership</td>
+</tr>
+<tr class="odd">
+<td align="left">investor</td>
+<td align="right">-3098.7008</td>
+<td align="right">162.7489</td>
+<td align="right">-19.0398</td>
+<td align="right">0.0000</td>
+<td align="left">Ownership</td>
+</tr>
+<tr class="even">
+<td align="left">(Intercept)</td>
+<td align="right">5355.7890</td>
+<td align="right">80.6482</td>
+<td align="right">66.4093</td>
+<td align="right">0.0000</td>
+<td align="left">Urban_Rural</td>
+</tr>
+<tr class="odd">
+<td align="left">rural</td>
+<td align="right">-3213.3035</td>
+<td align="right">183.8693</td>
+<td align="right">-17.4760</td>
+<td align="right">0.0000</td>
+<td align="left">Urban_Rural</td>
+</tr>
+<tr class="even">
+<td align="left">(Intercept)</td>
+<td align="right">5837.5888</td>
+<td align="right">75.8621</td>
+<td align="right">76.9500</td>
+<td align="right">0.0000</td>
+<td align="left">LicensedBedSize</td>
+</tr>
+<tr class="odd">
+<td align="left">ordered_LicensedBedSize.L</td>
+<td align="right">6655.9286</td>
+<td align="right">171.1719</td>
+<td align="right">38.8845</td>
+<td align="right">0.0000</td>
+<td align="left">LicensedBedSize</td>
+</tr>
+<tr class="even">
+<td align="left">ordered_LicensedBedSize.Q</td>
+<td align="right">-592.1927</td>
+<td align="right">171.3326</td>
+<td align="right">-3.4564</td>
+<td align="right">0.0005</td>
+<td align="left">LicensedBedSize</td>
+</tr>
+<tr class="odd">
+<td align="left">ordered_LicensedBedSize.C</td>
+<td align="right">-204.4763</td>
+<td align="right">167.0095</td>
+<td align="right">-1.2243</td>
+<td align="right">0.2208</td>
+<td align="left">LicensedBedSize</td>
+</tr>
+<tr class="even">
+<td align="left">ordered_LicensedBedSize^4</td>
+<td align="right">26.7908</td>
+<td align="right">168.9802</td>
+<td align="right">0.1585</td>
+<td align="right">0.8740</td>
+<td align="left">LicensedBedSize</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="correlation-matrix" class="section level2">
+<h2>Correlation Matrix</h2>
+<p>Since <code>ordered_LicensedBedSize</code> is ordinal data, we use
+Spearman correlation coefficients when constructing Correlation
+Matrix.</p>
+<pre class="r"><code>dat1 &lt;- dat|&gt;
+  mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|&gt;
+  select(ed_visit,government,investor,rural,ordered_LicensedBedSize,Encounters)
+
+correlation_matrix &lt;- cor(dat1, method = &quot;spearman&quot;, use = &quot;complete.obs&quot;)
+
+# Visualize
+corrplot(correlation_matrix, method = &quot;color&quot;, addCoef.col = &quot;black&quot;, tl.col = &quot;black&quot;, tl.srt = 45, insig = &quot;blank&quot; , number.cex = 0.7, diag = FALSE)</code></pre>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 
 
@@ -417,6 +648,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
