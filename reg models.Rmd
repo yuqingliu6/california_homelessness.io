@@ -1,0 +1,41 @@
+---
+title: "reg models"
+author: "Yiying Wu"
+date: "2023-11-26"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## import data
+```{r, message=FALSE}
+dat<-read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+```
+## recoding
+### EncounterType
+
+### Ownership
+
+### Urban_Rural
+
+
+### LicensedBedSize
+
+
+### DemographicValue
+```{r}
+
+```
+
+
+## univariate analysis
+```{r}
+
+```
+
