@@ -422,27 +422,7 @@ dat$ordered_LicensedBedSize &lt;- ordered(dat$LicensedBedSize,
 <tr class="even">
 <td>rural</td>
 <td>Dummy variable for Urban_Rural</td>
-<td>1=Rural/Frontier, 0=Otherwise</td>
-</tr>
-<tr class="odd">
-<td>ordered_LicensedBedSize.L</td>
-<td>Dummy variable for LicensedBedSize</td>
-<td>1=100-199, 0=Otherwise</td>
-</tr>
-<tr class="even">
-<td>ordered_LicensedBedSize.Q</td>
-<td>Dummy variable for LicensedBedSize</td>
-<td>1=200-299, 0=Otherwise</td>
-</tr>
-<tr class="odd">
-<td>ordered_LicensedBedSize.C</td>
-<td>Dummy variable for LicensedBedSize</td>
-<td>1=300-399, 0=Otherwise</td>
-</tr>
-<tr class="even">
-<td>ordered_LicensedBedSize^4</td>
-<td>Dummy variable for LicensedBedSize</td>
-<td>1=400+, 0=Otherwise</td>
+<td>1=Rural/Frontier, 0=Urban</td>
 </tr>
 </tbody>
 </table>
@@ -596,6 +576,32 @@ knitr::kable(combined_table)</code></pre>
 </tr>
 </tbody>
 </table>
+<p><strong>Description</strong></p>
+<ul>
+<li><strong>EncounterType Model</strong>: The increase in the number of
+encounters for each additional emergency department visit. It is highly
+significant (p &lt; 0.0001), suggesting a strong relationship between
+emergency department visits and the number of encounters.</li>
+<li><strong>Ownership Model</strong>: The differences in the number of
+encounters for government-owned and investor-owned facilities compared
+to the Non-Profit facilities. Both coefficients are significant (p &lt;
+0.0001), indicating that ownership type is an important predictor of
+encounters.</li>
+<li><strong>Urban_Rural Model</strong>: The difference in the number of
+encounters between Rural/Frontier and Urban facilities. The negative
+coefficient suggests that Rural/Frontier facilities have fewer
+encounters than urban ones, and this is highly significant (p &lt;
+0.0001).</li>
+<li><strong>LicensedBedSize Model</strong>: Coefficients (L, Q, C, ^4)
+represent the linear, quadratic, cubic, and quartic terms in a
+polynomial regression model for ordered bed sizes. The ‘L’ term has a
+highly significant positive coefficient, indicating an initial increase
+in encounters with bed size. However, the lack of significance in the
+quadratic (‘Q’) and cubic (‘C’) terms, and the non-significant quartic
+term (‘^4’), suggests that the relationship might not be strongly
+non-linear or that there is insufficient data to detect higher-order
+non-linearities.</li>
+</ul>
 </div>
 <div id="correlation-matrix" class="section level2">
 <h2>Correlation Matrix</h2>
