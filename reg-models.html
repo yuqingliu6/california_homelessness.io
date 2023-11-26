@@ -630,6 +630,116 @@ is less likely that collinearity will pose a problem for the regression
 model.</li>
 </ul>
 </div>
+<div id="multivariable-regression-model" class="section level2">
+<h2>Multivariable Regression Model</h2>
+<pre class="r"><code>tidy_model &lt;- round_df(broom::tidy(lm(Encounters ~ ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)), 4)
+knitr::kable(tidy_model)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">3860.4354</td>
+<td align="right">118.6007</td>
+<td align="right">32.5499</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">ed_visit</td>
+<td align="right">5956.2454</td>
+<td align="right">141.1255</td>
+<td align="right">42.2053</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="odd">
+<td align="left">government</td>
+<td align="right">-596.6063</td>
+<td align="right">198.9406</td>
+<td align="right">-2.9989</td>
+<td align="right">0.0027</td>
+</tr>
+<tr class="even">
+<td align="left">investor</td>
+<td align="right">-1307.8888</td>
+<td align="right">163.0178</td>
+<td align="right">-8.0230</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="odd">
+<td align="left">rural</td>
+<td align="right">-1503.5756</td>
+<td align="right">207.3858</td>
+<td align="right">-7.2501</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">ordered_LicensedBedSize.L</td>
+<td align="right">5086.4756</td>
+<td align="right">189.1708</td>
+<td align="right">26.8883</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="odd">
+<td align="left">ordered_LicensedBedSize.Q</td>
+<td align="right">189.2612</td>
+<td align="right">171.3362</td>
+<td align="right">1.1046</td>
+<td align="right">0.2693</td>
+</tr>
+<tr class="even">
+<td align="left">ordered_LicensedBedSize.C</td>
+<td align="right">-311.7558</td>
+<td align="right">162.2150</td>
+<td align="right">-1.9219</td>
+<td align="right">0.0546</td>
+</tr>
+<tr class="odd">
+<td align="left">ordered_LicensedBedSize^4</td>
+<td align="right">-69.0655</td>
+<td align="right">163.3450</td>
+<td align="right">-0.4228</td>
+<td align="right">0.6724</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Description</strong></p>
+<ul>
+<li><strong>Coefficients</strong>:
+<ul>
+<li><code>ed_visit</code> has a positive and highly significant
+relationship with <code>Encounters</code>. For each unit increase in
+<code>ed_visit</code>, <code>Encounters</code> increases by about
+5956.25, holding other variables constant.</li>
+<li><code>government</code> has a small negative effect, decreasing
+<code>Encounters</code> by 596.61 compared to the non-profit ownership
+category (likely private, non-government, non-investor).</li>
+<li><code>investor</code> ownership is associated with a larger negative
+effect, decreasing <code>Encounters</code> by 1307.89 compared to the
+non-profit</li>
+<li><code>rural</code> locations are associated with a negative effect,
+decreasing <code>Encounters</code> by 1503.58 compared to urban
+locations.</li>
+<li><code>ordered_LicensedBedSize</code> is treated as an ordinal
+variable with polynomial contrasts. The linear term (L) has a large
+positive effect, suggesting a strong increase in <code>Encounters</code>
+as bed size increases. However, the quadratic (Q), cubic (C), and
+quartic (^4) terms are not statistically significant at conventional
+levels, indicating the relationship may not have strong non-linear
+components.</li>
+</ul></li>
+<li>Model Fit: The Multiple R-squared value of 0.1275 suggests that
+approximately 12.75% of the variability in Encounters is explained by
+the model.</li>
+</ul>
+</div>
 
 
 
