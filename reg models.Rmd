@@ -86,7 +86,7 @@ knitr::kable(combined_table)
 
 
 ## Correlation Matrix
-Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coefficients when constructing Correlation Matrix.
+Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coefficients when constructing correlation matrix.
 ```{r,message=FALSE}
 dat1 <- dat|>
   mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|>
@@ -98,3 +98,8 @@ correlation_matrix <- cor(dat1, method = "spearman", use = "complete.obs")
 corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "black", tl.srt = 45, insig = "blank" , number.cex = 0.7, diag = FALSE)
 ```
 
+**Description**
+
+* the variable ordered_LicensedBedSize seems to have a moderately positive correlation with Encounters (0.34), suggesting that facilities with more licensed beds tend to have more encounters.
+* rural has a strong negative correlation with ordered_LicensedBedSize (-0.45), implying that rural facilities are likely to have fewer licensed beds.
+* Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.

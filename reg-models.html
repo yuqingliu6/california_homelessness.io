@@ -606,8 +606,8 @@ non-linearities.</li>
 <div id="correlation-matrix" class="section level2">
 <h2>Correlation Matrix</h2>
 <p>Since <code>ordered_LicensedBedSize</code> is ordinal data, we use
-Spearman correlation coefficients when constructing Correlation
-Matrix.</p>
+Spearman correlation coefficients when constructing correlation
+matrix.</p>
 <pre class="r"><code>dat1 &lt;- dat|&gt;
   mutate(ordered_LicensedBedSize=as.numeric(ordered_LicensedBedSize))|&gt;
   select(ed_visit,government,investor,rural,ordered_LicensedBedSize,Encounters)
@@ -617,6 +617,18 @@ correlation_matrix &lt;- cor(dat1, method = &quot;spearman&quot;, use = &quot;co
 # Visualize
 corrplot(correlation_matrix, method = &quot;color&quot;, addCoef.col = &quot;black&quot;, tl.col = &quot;black&quot;, tl.srt = 45, insig = &quot;blank&quot; , number.cex = 0.7, diag = FALSE)</code></pre>
 <p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><strong>Description</strong></p>
+<ul>
+<li>the variable ordered_LicensedBedSize seems to have a moderately
+positive correlation with Encounters (0.34), suggesting that facilities
+with more licensed beds tend to have more encounters.</li>
+<li>rural has a strong negative correlation with ordered_LicensedBedSize
+(-0.45), implying that rural facilities are likely to have fewer
+licensed beds.</li>
+<li>Correlation between all variables are below 70%, indicating that it
+is less likely that collinearity will pose a problem for the regression
+model.</li>
+</ul>
 </div>
 
 
