@@ -1,5 +1,5 @@
 ---
-title: "reg models"
+title: "Regression Analysis"
 author: "Yiying Wu"
 date: "2023-11-26"
 output: 
