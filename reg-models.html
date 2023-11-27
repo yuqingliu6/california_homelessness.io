@@ -372,7 +372,8 @@ div.tocify {
 <h2>Import Data &amp; Recoding</h2>
 <p>First import data and create dummy variables for categorical
 variables.</p>
-<pre class="r"><code>dat &lt;- read_csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)
+<pre class="r"><code>dat &lt;- read_csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)|&gt;
+  filter(HomelessIndicator == &quot;Homeless&quot;) 
 
 ### EncounterType
 dat$ed_visit &lt;- ifelse(dat$EncounterType==&quot;ED Visits&quot;,1,0)
@@ -458,14 +459,14 @@ combined_table &lt;- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, 
 
 # Output the table
 knitr::kable(combined_table)</code></pre>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="32%" />
-<col width="13%" />
 <col width="12%" />
 <col width="12%" />
-<col width="9%" />
-<col width="19%" />
+<col width="12%" />
+<col width="10%" />
+<col width="20%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -480,98 +481,98 @@ knitr::kable(combined_table)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">1977.9689</td>
-<td align="right">92.1465</td>
-<td align="right">21.4655</td>
+<td align="right">133.3748</td>
+<td align="right">9.3259</td>
+<td align="right">14.3016</td>
 <td align="right">0.0000</td>
 <td align="left">EncounterType</td>
 </tr>
 <tr class="even">
 <td align="left">ed_visit</td>
-<td align="right">6536.6541</td>
-<td align="right">141.8179</td>
-<td align="right">46.0919</td>
+<td align="right">358.4442</td>
+<td align="right">14.2358</td>
+<td align="right">25.1791</td>
 <td align="right">0.0000</td>
 <td align="left">EncounterType</td>
 </tr>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">5976.7202</td>
-<td align="right">100.8761</td>
-<td align="right">59.2481</td>
+<td align="right">310.0998</td>
+<td align="right">9.9657</td>
+<td align="right">31.1166</td>
 <td align="right">0.0000</td>
 <td align="left">Ownership</td>
 </tr>
 <tr class="even">
 <td align="left">government</td>
-<td align="right">-1487.7157</td>
-<td align="right">205.4245</td>
-<td align="right">-7.2422</td>
+<td align="right">101.1826</td>
+<td align="right">20.3831</td>
+<td align="right">4.9640</td>
 <td align="right">0.0000</td>
 <td align="left">Ownership</td>
 </tr>
 <tr class="odd">
 <td align="left">investor</td>
-<td align="right">-3098.7008</td>
-<td align="right">162.7489</td>
-<td align="right">-19.0398</td>
+<td align="right">-124.7763</td>
+<td align="right">16.2125</td>
+<td align="right">-7.6963</td>
 <td align="right">0.0000</td>
 <td align="left">Ownership</td>
 </tr>
 <tr class="even">
 <td align="left">(Intercept)</td>
-<td align="right">5355.7890</td>
-<td align="right">80.6482</td>
-<td align="right">66.4093</td>
+<td align="right">337.4669</td>
+<td align="right">7.9554</td>
+<td align="right">42.4199</td>
 <td align="right">0.0000</td>
 <td align="left">Urban_Rural</td>
 </tr>
 <tr class="odd">
 <td align="left">rural</td>
-<td align="right">-3213.3035</td>
-<td align="right">183.8693</td>
-<td align="right">-17.4760</td>
+<td align="right">-265.4221</td>
+<td align="right">18.2811</td>
+<td align="right">-14.5189</td>
 <td align="right">0.0000</td>
 <td align="left">Urban_Rural</td>
 </tr>
 <tr class="even">
 <td align="left">(Intercept)</td>
-<td align="right">5837.5888</td>
-<td align="right">75.8621</td>
-<td align="right">76.9500</td>
+<td align="right">362.1985</td>
+<td align="right">7.4630</td>
+<td align="right">48.5329</td>
 <td align="right">0.0000</td>
 <td align="left">LicensedBedSize</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize.L</td>
-<td align="right">6655.9286</td>
-<td align="right">171.1719</td>
-<td align="right">38.8845</td>
+<td align="right">491.0416</td>
+<td align="right">16.8757</td>
+<td align="right">29.0975</td>
 <td align="right">0.0000</td>
 <td align="left">LicensedBedSize</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize.Q</td>
-<td align="right">-592.1927</td>
-<td align="right">171.3326</td>
-<td align="right">-3.4564</td>
-<td align="right">0.0005</td>
+<td align="right">25.4965</td>
+<td align="right">16.8677</td>
+<td align="right">1.5116</td>
+<td align="right">0.1307</td>
 <td align="left">LicensedBedSize</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize.C</td>
-<td align="right">-204.4763</td>
-<td align="right">167.0095</td>
-<td align="right">-1.2243</td>
-<td align="right">0.2208</td>
+<td align="right">32.5054</td>
+<td align="right">16.4160</td>
+<td align="right">1.9801</td>
+<td align="right">0.0477</td>
 <td align="left">LicensedBedSize</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize^4</td>
-<td align="right">26.7908</td>
-<td align="right">168.9802</td>
-<td align="right">0.1585</td>
-<td align="right">0.8740</td>
+<td align="right">23.5211</td>
+<td align="right">16.5867</td>
+<td align="right">1.4181</td>
+<td align="right">0.1562</td>
 <td align="left">LicensedBedSize</td>
 </tr>
 </tbody>
@@ -597,7 +598,7 @@ represent the linear, quadratic, cubic, and quartic terms in a
 polynomial regression model for ordered bed sizes. The ‘L’ term has a
 highly significant positive coefficient, indicating an initial increase
 in encounters with bed size. However, the lack of significance in the
-quadratic (‘Q’) and cubic (‘C’) terms, and the non-significant quartic
+cubic (‘C’) terms, and the non-significant quadratic (‘Q’) and quartic
 term (‘^4’), suggests that the relationship might not be strongly
 non-linear or that there is insufficient data to detect higher-order
 non-linearities.</li>
@@ -619,12 +620,13 @@ corrplot(correlation_matrix, method = &quot;color&quot;, addCoef.col = &quot;bla
 <p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><strong>Description</strong></p>
 <ul>
-<li>the variable ordered_LicensedBedSize seems to have a moderately
-positive correlation with Encounters (0.34), suggesting that facilities
-with more licensed beds tend to have more encounters.</li>
-<li>rural has a strong negative correlation with ordered_LicensedBedSize
-(-0.45), implying that rural facilities are likely to have fewer
-licensed beds.</li>
+<li>the variable <code>ordered_LicensedBedSize</code> seems to have a
+moderately positive correlation with <code>Encounters</code> (0.41),
+suggesting that facilities with more licensed beds tend to have more
+encounters.</li>
+<li>rural has a strong negative correlation with
+<code>ordered_LicensedBedSize</code> (-0.45), implying that rural
+facilities are likely to have fewer licensed beds.</li>
 <li>Correlation between all variables are below 70%, indicating that it
 is less likely that collinearity will pose a problem for the regression
 model.</li>
@@ -632,6 +634,8 @@ model.</li>
 </div>
 <div id="yeo-johnson-transformation" class="section level2">
 <h2>Yeo-Johnson transformation</h2>
+<p>Since <code>Encounters</code> can be 0, use Yeo-Johnson
+transformation instead of Box-Cox transformation.</p>
 <pre class="r"><code># Shift the response variable to ensure all values are positive
 shift_constant &lt;- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
 dat$Encounters_shifted &lt;- dat$Encounters + shift_constant
@@ -643,28 +647,21 @@ fit2_shifted &lt;- lm(Encounters_shifted ~ ed_visit + government + investor + ru
 bc_shifted &lt;- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))</code></pre>
 <p><img src="reg-models_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>Yeo-Johnson method applies a transformation by raising
-<code>Encounters</code> to different power, as we can see above, <span
-class="math inline">\(\lambda\)</span> is close to 0, so we need to do
-natural logarithm transformation, turn <code>Encounters</code> into
-ln(<code>Encounters</code>).</p>
+<code>Encounters_shifted</code> to different power, as we can see above,
+<span class="math inline">\(\lambda\)</span> is close to 0, so we need
+to do natural logarithm transformation, turn
+<code>Encounters_shifted</code> into
+ln(<code>Encounters_shifted</code>).</p>
 </div>
 <div id="multivariable-regression-model" class="section level2">
 <h2>Multivariable Regression Model</h2>
 <pre class="r"><code>dat = dat %&gt;%
   mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
-fit = lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat) 
+model = round_df(broom::tidy(lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)) ,4)
+fit= lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)
 
-summary(fit) %&gt;% 
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table style="width:100%;">
-<colgroup>
-<col width="37%" />
-<col width="15%" />
-<col width="14%" />
-<col width="17%" />
-<col width="14%" />
-</colgroup>
+knitr::kable(model)</code></pre>
+<table>
 <thead>
 <tr class="header">
 <th align="left">term</th>
@@ -677,66 +674,66 @@ summary(fit) %&gt;%
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">5.4035104</td>
-<td align="right">0.0300183</td>
-<td align="right">180.0074055</td>
-<td align="right">0.0000000</td>
+<td align="right">3.5044</td>
+<td align="right">0.0303</td>
+<td align="right">115.5334</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="even">
 <td align="left">ed_visit</td>
-<td align="right">1.5720588</td>
-<td align="right">0.0357194</td>
-<td align="right">44.0113496</td>
-<td align="right">0.0000000</td>
+<td align="right">1.2819</td>
+<td align="right">0.0360</td>
+<td align="right">35.6114</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">government</td>
-<td align="right">-0.0452897</td>
-<td align="right">0.0503526</td>
-<td align="right">-0.8994520</td>
-<td align="right">0.3684205</td>
+<td align="right">0.2311</td>
+<td align="right">0.0508</td>
+<td align="right">4.5483</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="even">
 <td align="left">investor</td>
-<td align="right">-0.3516252</td>
-<td align="right">0.0412604</td>
-<td align="right">-8.5220986</td>
-<td align="right">0.0000000</td>
+<td align="right">-0.1235</td>
+<td align="right">0.0418</td>
+<td align="right">-2.9514</td>
+<td align="right">0.0032</td>
 </tr>
 <tr class="odd">
 <td align="left">rural</td>
-<td align="right">-0.6233033</td>
-<td align="right">0.0524901</td>
-<td align="right">-11.8746828</td>
-<td align="right">0.0000000</td>
+<td align="right">-0.9272</td>
+<td align="right">0.0536</td>
+<td align="right">-17.3114</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize.L</td>
-<td align="right">1.6142143</td>
-<td align="right">0.0478798</td>
-<td align="right">33.7138681</td>
-<td align="right">0.0000000</td>
+<td align="right">1.4611</td>
+<td align="right">0.0483</td>
+<td align="right">30.2219</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize.Q</td>
-<td align="right">-0.5490362</td>
-<td align="right">0.0433658</td>
-<td align="right">-12.6605756</td>
-<td align="right">0.0000000</td>
+<td align="right">-0.4487</td>
+<td align="right">0.0438</td>
+<td align="right">-10.2513</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="even">
 <td align="left">ordered_LicensedBedSize.C</td>
-<td align="right">0.2416523</td>
-<td align="right">0.0410572</td>
-<td align="right">5.8857436</td>
-<td align="right">0.0000000</td>
+<td align="right">0.2347</td>
+<td align="right">0.0413</td>
+<td align="right">5.6782</td>
+<td align="right">0.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">ordered_LicensedBedSize^4</td>
-<td align="right">0.0180526</td>
-<td align="right">0.0413432</td>
-<td align="right">0.4366524</td>
-<td align="right">0.6623671</td>
+<td align="right">0.0518</td>
+<td align="right">0.0415</td>
+<td align="right">1.2479</td>
+<td align="right">0.2121</td>
 </tr>
 </tbody>
 </table>
@@ -744,10 +741,39 @@ summary(fit) %&gt;%
 <ul>
 <li><strong>Coefficients</strong>:
 <ul>
-<li></li>
+<li><code>ed_visit</code>: This predictor has a positive estimated
+coefficient of 1.2819, suggesting that there is a positive association
+between ed_visit and the response variable. Given the p-value is
+practically zero, this relationship is statistically significant.</li>
+<li><code>government</code>: The positive coefficient of 0.2311 for
+government implies a positive effect on the response variable, which is
+statistically significant based on the p-value.</li>
+<li><code>investor</code>: This predictor has a negative coefficient of
+-0.1235, suggesting a negative association with the response variable.
+The p-value indicates this effect is statistically significant, although
+it is less significant than some other predictors given the higher (but
+still &lt;0.05) p-value.</li>
+<li><code>rural</code>: The coefficient of -0.9272 indicates a strong
+negative relationship with the response variable, and the p-value
+confirms that this relationship is statistically significant.</li>
+<li><code>ordered_LicensedBedSize.L</code> (Linear term): The positive
+coefficient of 1.4611 for this term suggests a significant positive
+linear trend related to ordered_LicensedBedSize and the response
+variable.</li>
+<li><code>ordered_LicensedBedSize.Q</code> (Quadratic term): The
+negative coefficient of -0.4487 suggests that the relationship between
+ordered_LicensedBedSize and the response variable has a significant
+quadratic component, indicating a curved relationship.</li>
+<li><code>ordered_LicensedBedSize.C</code> (Cubic term): The cubic term
+has a positive coefficient of 0.2347 and a statistically significant
+p-value, indicating a cubic relationship is present.</li>
+<li><code>ordered_LicensedBedSize^4</code>: The fourth-degree polynomial
+term is not statistically significant (p-value 0.2121) and has a small
+estimated effect (0.0518), suggesting that it may not be a useful
+predictor in the model.</li>
 </ul></li>
-<li>Model Fit: The Multiple R-squared value of 0.1275 suggests that
-approximately 12.75% of the variability in Encounters is explained by
+<li>Model Fit: The Multiple R-squared value of 0.2684 suggests that
+approximately 26.84% of the variability in Encounters is explained by
 the model.</li>
 </ul>
 </div>
@@ -756,15 +782,18 @@ the model.</li>
 <pre class="r"><code>par(mfrow = c(2,2))
 plot(fit)</code></pre>
 <p><img src="reg-models_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>residuals &lt;- residuals(fit)
-# Kolmogorov-Smirnov Test
-ks.test(residuals, &quot;pnorm&quot;, mean = mean(residuals), sd = sd(residuals))</code></pre>
-<pre><code>## 
-##  Asymptotic one-sample Kolmogorov-Smirnov test
-## 
-## data:  residuals
-## D = 0.065232, p-value &lt; 2.2e-16
-## alternative hypothesis: two-sided</code></pre>
+<p><strong>Description</strong></p>
+<ul>
+<li>The “Residuals vs Fitted” plot shows a funnel-like shape, suggesting
+potential heteroscedasticity.</li>
+<li>The “Normal Q-Q” plot has deviations from normality, especially in
+the tails.</li>
+<li>The “Scale-Location” plot shows some signs of heteroscedasticity as
+the spread of residuals increases with the fitted values.</li>
+<li>The “Residuals vs Leverage” plot indicates a few points with high
+leverage, but without knowing the Cook’s distance threshold, it’s
+unclear if these are problematic.</li>
+</ul>
 </div>
 
 

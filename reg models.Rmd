@@ -26,7 +26,8 @@ library(MASS)
 ## Import Data & Recoding
 First import data and create dummy variables for categorical variables.
 ```{r, message=FALSE}
-dat <- read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+dat <- read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")|>
+  filter(HomelessIndicator == "Homeless") 
 
 ### EncounterType
 dat$ed_visit <- ifelse(dat$EncounterType=="ED Visits",1,0)
@@ -90,7 +91,7 @@ knitr::kable(combined_table)
 * **EncounterType Model**: The increase in the number of encounters for each additional emergency department visit. It is highly significant (p < 0.0001), suggesting a strong relationship between emergency department visits and the number of encounters.
 * **Ownership Model**: The differences in the number of encounters for government-owned and investor-owned facilities compared to the Non-Profit facilities. Both coefficients are significant (p < 0.0001), indicating that ownership type is an important predictor of encounters. 
 * **Urban_Rural Model**: The difference in the number of encounters between Rural/Frontier and Urban facilities. The negative coefficient suggests that Rural/Frontier facilities have fewer encounters than urban ones, and this is highly significant (p < 0.0001).
-* **LicensedBedSize Model**: Coefficients (L, Q, C, ^4) represent the linear, quadratic, cubic, and quartic terms in a polynomial regression model for ordered bed sizes. The 'L' term has a highly significant positive coefficient, indicating an initial increase in encounters with bed size. However, the lack of significance in the quadratic ('Q') and cubic ('C') terms, and the non-significant quartic term ('^4'), suggests that the relationship might not be strongly non-linear or that there is insufficient data to detect higher-order non-linearities.
+* **LicensedBedSize Model**: Coefficients (L, Q, C, ^4) represent the linear, quadratic, cubic, and quartic terms in a polynomial regression model for ordered bed sizes. The 'L' term has a highly significant positive coefficient, indicating an initial increase in encounters with bed size. However, the lack of significance in the cubic ('C') terms, and the non-significant quadratic ('Q') and quartic term ('^4'), suggests that the relationship might not be strongly non-linear or that there is insufficient data to detect higher-order non-linearities.
 
 
 ## Correlation Matrix
@@ -108,11 +109,12 @@ corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "
 
 **Description**
 
-* the variable ordered_LicensedBedSize seems to have a moderately positive correlation with Encounters (0.34), suggesting that facilities with more licensed beds tend to have more encounters.
-* rural has a strong negative correlation with ordered_LicensedBedSize (-0.45), implying that rural facilities are likely to have fewer licensed beds.
+* the variable `ordered_LicensedBedSize` seems to have a moderately positive correlation with `Encounters` (0.41), suggesting that facilities with more licensed beds tend to have more encounters.
+* rural has a strong negative correlation with `ordered_LicensedBedSize` (-0.45), implying that rural facilities are likely to have fewer licensed beds.
 * Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
 
 ## Yeo-Johnson transformation
+Since `Encounters` can be 0, use Yeo-Johnson transformation instead of Box-Cox transformation.
 ```{r,fig.width = 9, fig.height = 6,out.width= "60%", fig.align = 'center'}
 # Shift the response variable to ensure all values are positive
 shift_constant <- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
@@ -125,7 +127,7 @@ fit2_shifted <- lm(Encounters_shifted ~ ed_visit + government + investor + rural
 bc_shifted <- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))
 ```
 
-Yeo-Johnson method applies a transformation by raising `Encounters` to different power, as we can see above, $\lambda$ is close to 0, so we need to do natural logarithm transformation, turn `Encounters` into ln(`Encounters`).
+Yeo-Johnson method applies a transformation by raising `Encounters_shifted` to different power, as we can see above, $\lambda$ is close to 0, so we need to do natural logarithm transformation, turn `Encounters_shifted` into ln(`Encounters_shifted`).
 
 
 ## Multivariable Regression Model
@@ -133,18 +135,24 @@ Yeo-Johnson method applies a transformation by raising `Encounters` to different
 ```{r}
 dat = dat %>%
   mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
-fit = lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat) 
+model = round_df(broom::tidy(lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)) ,4)
+fit= lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)
 
-summary(fit) %>% 
-  broom::tidy() %>% 
-  knitr::kable()
+knitr::kable(model)
 ```
 
 **Description**
 
 * **Coefficients**:
-  *
-* Model Fit: The Multiple R-squared value of 0.1275 suggests that approximately 12.75% of the variability in Encounters is explained by the model.
+  * `ed_visit`: This predictor has a positive estimated coefficient of 1.2819, suggesting that there is a positive association between ed_visit and the response variable. Given the p-value is practically zero, this relationship is statistically significant.
+  * `government`: The positive coefficient of 0.2311 for government implies a positive effect on the response variable, which is statistically significant based on the p-value.
+  * `investor`: This predictor has a negative coefficient of -0.1235, suggesting a negative association with the response variable. The p-value indicates this effect is statistically significant, although it is less significant than some other predictors given the higher (but still <0.05) p-value.
+  * `rural`: The coefficient of -0.9272 indicates a strong negative relationship with the response variable, and the p-value confirms that this relationship is statistically significant.
+  * `ordered_LicensedBedSize.L` (Linear term): The positive coefficient of 1.4611 for this term suggests a significant positive linear trend related to ordered_LicensedBedSize and the response variable.
+  * `ordered_LicensedBedSize.Q` (Quadratic term): The negative coefficient of -0.4487 suggests that the relationship between ordered_LicensedBedSize and the response variable has a significant quadratic component, indicating a curved relationship.
+  * `ordered_LicensedBedSize.C` (Cubic term): The cubic term has a positive coefficient of 0.2347 and a statistically significant p-value, indicating a cubic relationship is present.
+  * `ordered_LicensedBedSize^4`: The fourth-degree polynomial term is not statistically significant (p-value 0.2121) and has a small estimated effect (0.0518), suggesting that it may not be a useful predictor in the model.
+* Model Fit: The Multiple R-squared value of 0.2684 suggests that approximately 26.84% of the variability in Encounters is explained by the model.
 
 ## Model diagnostics
 ```{r, fig.align= "center"}
@@ -152,9 +160,9 @@ par(mfrow = c(2,2))
 plot(fit)
 ```
 
-```{r}
-residuals <- residuals(fit)
-# Kolmogorov-Smirnov Test
-ks.test(residuals, "pnorm", mean = mean(residuals), sd = sd(residuals))
-```
+**Description**
 
+* The "Residuals vs Fitted" plot shows a funnel-like shape, suggesting potential heteroscedasticity.
+* The "Normal Q-Q" plot has deviations from normality, especially in the tails.
+* The "Scale-Location" plot shows some signs of heteroscedasticity as the spread of residuals increases with the fitted values.
+* The "Residuals vs Leverage" plot indicates a few points with high leverage, but without knowing the Cook's distance threshold, it's unclear if these are problematic.
