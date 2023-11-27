@@ -2,6 +2,9 @@ name: "P8105 Final Project"
 output_dir: "."
 navbar:
   title: "Home"
+  left:
+    - text: "Regression Analysis"
+      href: reg-models.html
   right:
     - text: "Proposal for P8105 Final Project"
       href: final-project-proposal.html
