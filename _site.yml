@@ -15,6 +15,8 @@ navbar:
       href: EDA_demo_data.html
     - text: "Regression Analysis"
       href: reg-models.html
+    - text: "Conclusions"
+      href: Conclusions.html
   right:
     - text: "Proposal"
       href: final-project-proposal.html

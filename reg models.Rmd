@@ -154,7 +154,7 @@ knitr::kable(model)
   * `ordered_LicensedBedSize^4`: The fourth-degree polynomial term is not statistically significant (p-value 0.2121) and has a small estimated effect (0.0518), suggesting that it may not be a useful predictor in the model.
 * Model Fit: The Multiple R-squared value of 0.2684 suggests that approximately 26.84% of the variability in Encounters is explained by the model.
 
-## Model diagnostics
+## Model Diagnostics
 ```{r, fig.align= "center"}
 par(mfrow = c(2,2))
 plot(fit)

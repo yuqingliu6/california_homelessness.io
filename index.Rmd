@@ -1,9 +1,7 @@
 ---
 title: "P8105 Final Project"
 output: 
-  html_document:
-    toc: true
-    toc_float: true
+  html_document
 ---
 
 amazing discription and graphs!
