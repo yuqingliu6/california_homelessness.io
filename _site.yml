@@ -3,10 +3,20 @@ output_dir: "."
 navbar:
   title: "Home"
   left:
+    - text: "Overview"
+      menu:
+      - text: "california homelessness"
+        href: california_homelessness.html
+      - text: "Description1"
+        href: Description-and-Summary-of-Two-Datasets.html
+      - text: "Description2"
+        href: 20192020-homeless.html
+    - text: "Exploratory Data Analysis"
+      href: EDA_demo_data.html
     - text: "Regression Analysis"
       href: reg-models.html
   right:
-    - text: "Proposal for P8105 Final Project"
+    - text: "Proposal"
       href: final-project-proposal.html
     - icon: fa-envelope fa-lg
       href: mailto:<yl5219@cumc.columbia.edu>
