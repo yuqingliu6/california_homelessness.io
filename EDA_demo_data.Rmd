@@ -11,9 +11,9 @@ output:
 knitr::opts_chunk$set(
 echo = TRUE,
 warning = FALSE,
-fig.width = 9, 
-  fig.height = 9,
-  out.width = "80%"
+fig.width = 10, 
+  fig.height = 5,
+  out.width = "100%"
 )
 ```
 # First datasets "People Receiving Homeless Response Services"

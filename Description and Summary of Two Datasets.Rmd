@@ -18,7 +18,7 @@ gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
 race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
 ```
 
-For the purpose of analyzing the population trend of California's homelessness, we used the following datasets for our project: `2019-2020-homeless-ip-and-ed-by-facility.csv`, `cleaned_race_demo.csv`, `cleaned_gender_demo.csv`, `cleaned_ethnicity_demo.csv`, `cleaned_age_demo.csv`. Extracted from `HealthData.gov`, the official government-authorized website containing various public-health-related data sources, these datasets contain critical information of the summary of Californian homeless people stratified by race, gender, ethnicity, age, as well as those receiving hospitalizations or emergency department visits from 2019 to 2020. 
+For the purpose of analyzing the population trend of California's homelessness, we used the following datasets for our project: `2019-2020-homeless-ip-and-ed-by-facility.csv`, `cleaned_race_demo.csv`, `cleaned_gender_demo.csv`, `cleaned_ethnicity_demo.csv`, `cleaned_age_demo.csv`. Extracted from `HealthData.gov`, the official government-authorized website containing various public-health-related data sources, these datasets contain critical information of the summary of Californian homeless people stratified by race, gender, ethnicity, age, as well as those receiving hospitalizations or emergency department visits from 2019 to 2020.
 
 ## Summary
 
@@ -81,7 +81,3 @@ race_clean_for_summary =
   select(-experiencing_homelessness, -location)
 summary_of_table(race_clean_for_summary)
 ```
-
-
-
-
