@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis"
+title: "demo_homeless"
 author: "yh wang"
 date: "2023-11-04"
 output: 
@@ -8,17 +8,19 @@ output:
     toc_float: true
 ---
 
-# First datasets "People Receiving Homeless Response Services"
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-## Description of datasets
+## Description of datasets `demo`
 
 The `demo` datasets are defined as "People Receiving Homeless Response Services by Age, Race, Ethnicity, and Gender".
 
-This data set gives annual statistics by age group, race, ethnicity, and gender on the number of people who have benefited from homelessness assistance services.
+This data set gives annual statistics by age group, race, ethnicity, and gender on the number of people who have benefited from homelessness assistance services. 
 
 The Homelessness Data Integration System (HDIS), an extensive data repository that compiles and examines information from each of California's 44 Continuums of Care (CoC), is the source of this information. Every Community of Communities (CoC) collects and disseminates information on the people it serves via a range of programs, such as those aimed at ending homelessness, offering outreach services to the homeless, assisting with permanent housing solutions, and other projects in line with California's Housing First objectives.
 
--   Important Variables:
+Important Variables:
 
 `CALENDAR_YEAR`: Calendar Year\
 `LOCATION`: Location\
@@ -30,7 +32,7 @@ The Homelessness Data Integration System (HDIS), an extensive data repository th
 
 ## Data Process
 
-First, we converted all the variable names to lowercase.
+First, we converted all the variable names to lowercase. 
 
 Then we removed the unneeded variable "location_id", and removed the null value of "experiencing_homelessness".
 
@@ -48,6 +50,7 @@ head(ethnicity_demo)
 head(gender_demo)
 head(race_demo)
 ```
+
 
 ```{r}
 # Clean data
@@ -86,7 +89,6 @@ race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 
 The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
 
-### Total Homelessness by Year and Age Group
 ```{r}
 # line plot for "Total Homelessness by Year and Age Group"
 library(plotly)
@@ -103,7 +105,6 @@ age_plot |>
 
 The above graph shows that the majority of homeless individuals who have received assistance are under the age of 18. The proportion of homeless people who have received assistance overall is higher among lower age groups. So we should pay attention to younger group to give them broader help. The overall trend of the homeless population receiving assistance is rising between 2021 and 2022, which is probably because of the potential effects of the COVID-19 pandemic.
 
-### Total Homelessness by Year and Ethnicity
 ```{r}
 # bar chart for "Total Homelessness by Year and ethnicity"
 ethnicity_plot <- ethnicity_clean |>
@@ -117,10 +118,9 @@ ethnicity_plot |>
   layout(
     title = "Total Homelessness by Year and ethnicity")
 ```
-
 From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large percentage of people receiving homeless response services. So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
 
-### Total Homelessness by Year and Gender
+
 ```{r}
 # bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
@@ -137,9 +137,9 @@ gender_plot  |>
 
 According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are women, indicating that homelessness is a problem that affects more women than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
-### Total Homelessness by Year and Race
+
 ```{r}
-# line plot for "Total Homelessness by Year and race"
+# line plot for "Total Homelessness by Year and gender"
 race_plot <- race_clean |>
   select(-location) |>
   group_by(calendar_year,race) |>
