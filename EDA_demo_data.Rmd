@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis"
+title: "Exploratory Data Analysis"
 author: "yh wang"
 date: "2023-11-04"
 output: 
@@ -7,7 +7,15 @@ output:
     toc: true
     toc_float: true
 ---
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+echo = TRUE,
+warning = FALSE,
+fig.width = 9, 
+  fig.height = 9,
+  out.width = "80%"
+)
+```
 # First datasets "People Receiving Homeless Response Services"
 
 ## Description of datasets
