@@ -185,15 +185,7 @@ Based on the percantage of total homeless by race, we can see that white people 
 
 While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
 
-```{r}
-library(tidyverse)
-library(knitr)
-homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-homeless_data<-homeless_ip %>% 
-  filter(HomelessIndicator == "Homeless")
-```
-
-### Description of important variables
+-   Important Variables:
 
 `2019-2020-homeless-ip-and-ed-by-facility` contains 17 variables, some of which are listed below:
 
@@ -202,6 +194,14 @@ homeless_data<-homeless_ip %>%
 `Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
 `Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
 `Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.     
+```{r}
+library(tidyverse)
+library(knitr)
+homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+homeless_data<-homeless_ip %>% 
+  filter(HomelessIndicator == "Homeless")
+```
+
 
 ### Data Visualization
 
@@ -238,7 +238,7 @@ Among the variable Bed Size, the category of 400+ Licensed Bed Size shows a high
 ```{r}
 plot3 <- plot_ly(homeless_data, x = ~Urban_Rural, y = ~Encounters, 
                  type = 'bar', color = ~Urban_Rural, 
-                 colors = 'Set3') %>%
+                 colors = 'viridis') %>%
   layout(title = "Homeless Encounters in Urban vs. Rural Areas",
          xaxis = list(title = "Urban/Rural"),
          yaxis = list(title = "Number of Homeless Encounters"))
@@ -252,7 +252,7 @@ This plot help us gain the understanding of the relationship between the number 
 ```{r}
 plot4 <- plot_ly(homeless_data, x = ~Ownership, y = ~Percent, 
                  type = 'bar', color = ~Ownership, 
-                 colors = 'Set3') %>%
+                 colors = 'viridis') %>%
   layout(title = "Percentage of Homeless Encounters by Ownership Type",
          xaxis = list(title = "Ownership"),
          yaxis = list(title = "Percentage of Homeless Encounters"))
