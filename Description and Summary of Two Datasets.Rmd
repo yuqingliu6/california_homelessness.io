@@ -11,17 +11,11 @@ library(dplyr)
 library(tidyverse)
 library(usmap)
 
-# homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-# age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
-# ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
-# gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
-# race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
-
-homeless_data <- read.csv("data/2019-2020-homeless-ip-and-ed-by-facility.csv")
-age_clean <- read.csv("data/cleaned_age_demo.csv")
-ethnicity_clean <- read.csv("data/cleaned_ethnicity_demo.csv")
-gender_clean <- read.csv("data/cleaned_gender_demo.csv")
-race_clean <- read.csv("data/cleaned_race_demo.csv")
+homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
+ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
+gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
+race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
 ```
 
 For the purpose of analyzing the population trend of California's homelessness, we used the following datasets for our project: `2019-2020-homeless-ip-and-ed-by-facility.csv`, `cleaned_race_demo.csv`, `cleaned_gender_demo.csv`, `cleaned_ethnicity_demo.csv`, `cleaned_age_demo.csv`. Extracted from `HealthData.gov`, the official government-authorized website containing various public-health-related data sources, these datasets contain critical information of the summary of Californian homeless people stratified by race, gender, ethnicity, age, as well as those receiving hospitalizations or emergency department visits from 2019 to 2020.
@@ -39,8 +33,8 @@ summary_of_table <- function(df) {
   for (col in names(df)) {
       summary_by_col <- df |>
         group_by(!!sym(col)) |>
-        summarise(Count = n()) |>
-        mutate(Percentage = (Count / sum(Count)) * 100)
+        summarise(Homelessness = n()) |>
+        mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
       
       summary_table[[col]] <- summary_by_col
   }
