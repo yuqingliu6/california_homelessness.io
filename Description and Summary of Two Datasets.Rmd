@@ -11,22 +11,28 @@ library(dplyr)
 library(tidyverse)
 library(usmap)
 
-homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
-ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
-gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
-race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
+# homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+# age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
+# ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
+# gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
+# race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
+
+homeless_data <- read.csv("data/2019-2020-homeless-ip-and-ed-by-facility.csv")
+age_clean <- read.csv("data/cleaned_age_demo.csv")
+ethnicity_clean <- read.csv("data/cleaned_ethnicity_demo.csv")
+gender_clean <- read.csv("data/cleaned_gender_demo.csv")
+race_clean <- read.csv("data/cleaned_race_demo.csv")
 ```
 
 For the purpose of analyzing the population trend of California's homelessness, we used the following datasets for our project: `2019-2020-homeless-ip-and-ed-by-facility.csv`, `cleaned_race_demo.csv`, `cleaned_gender_demo.csv`, `cleaned_ethnicity_demo.csv`, `cleaned_age_demo.csv`. Extracted from `HealthData.gov`, the official government-authorized website containing various public-health-related data sources, these datasets contain critical information of the summary of Californian homeless people stratified by race, gender, ethnicity, age, as well as those receiving hospitalizations or emergency department visits from 2019 to 2020.
 
 ## Summary
 
-To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset:
+To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset;
+
+First of all, for convenience, we define a function that automates the process of creating summary table, with the dataset's name as the input:
 
 ```{r}
-# define a function that automates the process of creating summary table,
-# with the dataset's name as the input
 summary_of_table <- function(df) {
   summary_table <- list()
   
@@ -43,21 +49,38 @@ summary_of_table <- function(df) {
 }
 ```
 
+Then, we consider summarizing the population grouped by the following parameters: 
+
+EncounterType (whether receiving ED Visits or Inpatient Hospitalizations);
+
+FacilityName (name of hospitals), System (name of systems that hospitals belong to);
+
+Ownership (type of ownership that hospitals belong to);
+
+Urban_Rural (whether hospitals locate in urban or rural areas);
+
+LicensedBedSize (size of licensed beds per hospital);
+
+PrimaryCareShortageArea (whether hospitals locate in area with limited primary care);
+
+MentalHealthShortageArea (whether hospitals locate in area with limited mental health care).
+
 ```{r}
 homeless_data_for_summary =
   homeless_data |>
   filter(HomelessIndicator == "Homeless") |>
-  select(EncounterType, System, Ownership, Urban_Rural, LicensedBedSize, DemographicValue)
+  select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea)
 
 summary_of_table(homeless_data_for_summary)
 ```
 
-The following commands summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately.
+Furthermore, we also summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately.
 
 ```{r}
 age_clean_for_summary = 
   age_clean |>
   select(-experiencing_homelessness, -location)
+
 summary_of_table(age_clean_for_summary)
 ```
 
@@ -65,6 +88,7 @@ summary_of_table(age_clean_for_summary)
 ethnicity_clean_for_summary = 
   ethnicity_clean |>
   select(-experiencing_homelessness, -location)
+
 summary_of_table(ethnicity_clean_for_summary)
 ```
 
@@ -72,6 +96,7 @@ summary_of_table(ethnicity_clean_for_summary)
 gender_clean_for_summary = 
   gender_clean |>
   select(-experiencing_homelessness, -location)
+
 summary_of_table(gender_clean_for_summary)
 ```
 
@@ -79,5 +104,6 @@ summary_of_table(gender_clean_for_summary)
 race_clean_for_summary = 
   race_clean |>
   select(-experiencing_homelessness, -location)
+
 summary_of_table(race_clean_for_summary)
 ```
