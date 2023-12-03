@@ -4,10 +4,6 @@ output:
   html_document
 ---
 
-amazing discription and graphs!
-
-Check out [proposal](final-project-proposal.html) on the upper right icon. :)
-
 ## Analysis of California's Homelessness Crisis 
 
 ![](image/homeless1.PNG)
@@ -16,6 +12,10 @@ Check out [proposal](final-project-proposal.html) on the upper right icon. :)
 
 * Homelessness has become a long term problem in the United States, which negatively affects cityscape and poses threats to residents’ life and property. Additionally, California has the largest homeless population in the nation.  <br>
 * To deal with this nationwide social issue, the California state government initiated the Homelessness’ Statewide Action Plan in the past few years in order to quantify and end the prevalence of homelessness under the coordinated effort of multiple state departments. Aligning with this goal, the Homeless Data Integration System (HDIS) is created as an integrated database system that records the status of the homeless accessing social and medical services in different sub-regions, differentiated by their race, gender, etc. 
+
+### The motivation for this project
+
+Our motivation stems from the urgent need to comprehensively examine and address homelessness in California. By harnessing the power of data science and leveraging the rich information within HDIS, our project aspires to contribute valuable insights that can inform evidence-based policies and interventions, ultimately paving the way towards a more inclusive and compassionate society.
 
 ### Screencast
 
