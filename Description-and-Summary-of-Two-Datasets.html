@@ -397,12 +397,28 @@ limited mental health care).</p>
 homeless_data_for_summary |&gt;
   group_by(EncounterType) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 2 × 3
-##   EncounterType              Homelessness Percent
-##   &lt;chr&gt;                             &lt;int&gt;   &lt;dbl&gt;
-## 1 ED Visits                       2633691    73.5
-## 2 Inpatient Hospitalizations       950029    26.5</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">EncounterType</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ED Visits</td>
+<td align="right">2633691</td>
+<td align="right">73.49042</td>
+</tr>
+<tr class="even">
+<td align="left">Inpatient Hospitalizations</td>
+<td align="right">950029</td>
+<td align="right">26.50958</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(FacilityName) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
@@ -424,52 +440,148 @@ homeless_data_for_summary |&gt;
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(Ownership) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 3 × 3
-##   Ownership  Homelessness Percent
-##   &lt;chr&gt;             &lt;int&gt;   &lt;dbl&gt;
-## 1 Government       839016    23.4
-## 2 Investor         730916    20.4
-## 3 Non-Profit      2013788    56.2</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Ownership</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Government</td>
+<td align="right">839016</td>
+<td align="right">23.41187</td>
+</tr>
+<tr class="even">
+<td align="left">Investor</td>
+<td align="right">730916</td>
+<td align="right">20.39545</td>
+</tr>
+<tr class="odd">
+<td align="left">Non-Profit</td>
+<td align="right">2013788</td>
+<td align="right">56.19267</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(Urban_Rural) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 2 × 3
-##   Urban_Rural    Homelessness Percent
-##   &lt;chr&gt;                 &lt;int&gt;   &lt;dbl&gt;
-## 1 Rural/Frontier       170242    4.75
-## 2 Urban               3413478   95.2</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Urban_Rural</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Rural/Frontier</td>
+<td align="right">170242</td>
+<td align="right">4.750427</td>
+</tr>
+<tr class="even">
+<td align="left">Urban</td>
+<td align="right">3413478</td>
+<td align="right">95.249573</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(LicensedBedSize) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 5 × 3
-##   LicensedBedSize Homelessness Percent
-##   &lt;chr&gt;                  &lt;int&gt;   &lt;dbl&gt;
-## 1 1-99                  208301    5.81
-## 2 100-199               744056   20.8 
-## 3 200-299               782768   21.8 
-## 4 300-399               814065   22.7 
-## 5 400+                 1034530   28.9</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">LicensedBedSize</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1-99</td>
+<td align="right">208301</td>
+<td align="right">5.812424</td>
+</tr>
+<tr class="even">
+<td align="left">100-199</td>
+<td align="right">744056</td>
+<td align="right">20.762113</td>
+</tr>
+<tr class="odd">
+<td align="left">200-299</td>
+<td align="right">782768</td>
+<td align="right">21.842331</td>
+</tr>
+<tr class="even">
+<td align="left">300-399</td>
+<td align="right">814065</td>
+<td align="right">22.715642</td>
+</tr>
+<tr class="odd">
+<td align="left">400+</td>
+<td align="right">1034530</td>
+<td align="right">28.867490</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(PrimaryCareShortageArea) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 2 × 3
-##   PrimaryCareShortageArea Homelessness Percent
-##   &lt;chr&gt;                          &lt;int&gt;   &lt;dbl&gt;
-## 1 No                           2846216    79.4
-## 2 Yes                           737504    20.6</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">PrimaryCareShortageArea</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">2846216</td>
+<td align="right">79.42071</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">737504</td>
+<td align="right">20.57929</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>homeless_data_for_summary |&gt;
   group_by(MentalHealthShortageArea) |&gt;
   summarize(Homelessness = sum(Encounters)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 2 × 3
-##   MentalHealthShortageArea Homelessness Percent
-##   &lt;chr&gt;                           &lt;int&gt;   &lt;dbl&gt;
-## 1 No                            2619228    73.1
-## 2 Yes                            964492    26.9</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">MentalHealthShortageArea</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">2619228</td>
+<td align="right">73.08685</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">964492</td>
+<td align="right">26.91315</td>
+</tr>
+</tbody>
+</table>
 <p>Furthermore, we also summarize the counts and percentages of
 Californian homeless people from 2017 to 2023, stratified by age,
 ethnicity, gender, race, separately.</p>
@@ -480,32 +592,108 @@ ethnicity, gender, race, separately.</p>
 age_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 7 × 3
-##   calendar_year Homelessness Percent
-##           &lt;int&gt;        &lt;int&gt;   &lt;dbl&gt;
-## 1          2017       377894    10.6
-## 2          2018       440495    12.3
-## 3          2019       493607    13.8
-## 4          2020       523979    14.7
-## 5          2021       558746    15.6
-## 6          2022       654811    18.3
-## 7          2023       522824    14.6</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">calendar_year</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">377894</td>
+<td align="right">10.57828</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">440495</td>
+<td align="right">12.33066</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">493607</td>
+<td align="right">13.81741</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">523979</td>
+<td align="right">14.66760</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">558746</td>
+<td align="right">15.64083</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">654811</td>
+<td align="right">18.32995</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">522824</td>
+<td align="right">14.63527</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>age_clean_for_summary |&gt;
   group_by(age_group_public) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 8 × 3
-##   age_group_public Homelessness Percent
-##   &lt;chr&gt;                   &lt;int&gt;   &lt;dbl&gt;
-## 1 18-24                  281727    7.89
-## 2 25-34                  576530   16.1 
-## 3 35-44                  566387   15.9 
-## 4 45-54                  524878   14.7 
-## 5 55-64                  493348   13.8 
-## 6 65+                    189685    5.31
-## 7 Under 18               813273   22.8 
-## 8 Unknown                126528    3.54</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">age_group_public</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">18-24</td>
+<td align="right">281727</td>
+<td align="right">7.886308</td>
+</tr>
+<tr class="even">
+<td align="left">25-34</td>
+<td align="right">576530</td>
+<td align="right">16.138649</td>
+</tr>
+<tr class="odd">
+<td align="left">35-44</td>
+<td align="right">566387</td>
+<td align="right">15.854719</td>
+</tr>
+<tr class="even">
+<td align="left">45-54</td>
+<td align="right">524878</td>
+<td align="right">14.692769</td>
+</tr>
+<tr class="odd">
+<td align="left">55-64</td>
+<td align="right">493348</td>
+<td align="right">13.810158</td>
+</tr>
+<tr class="even">
+<td align="left">65+</td>
+<td align="right">189685</td>
+<td align="right">5.309801</td>
+</tr>
+<tr class="odd">
+<td align="left">Under 18</td>
+<td align="right">813273</td>
+<td align="right">22.765732</td>
+</tr>
+<tr class="even">
+<td align="left">Unknown</td>
+<td align="right">126528</td>
+<td align="right">3.541864</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>ethnicity_clean_for_summary = 
   ethnicity_clean |&gt;
   select(-location)
@@ -513,27 +701,83 @@ age_clean_for_summary |&gt;
 ethnicity_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 7 × 3
-##   calendar_year Homelessness Percent
-##           &lt;int&gt;        &lt;int&gt;   &lt;dbl&gt;
-## 1          2017       373281    10.6
-## 2          2018       434563    12.4
-## 3          2019       486049    13.8
-## 4          2020       514756    14.7
-## 5          2021       547527    15.6
-## 6          2022       640070    18.2
-## 7          2023       514832    14.7</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">calendar_year</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">373281</td>
+<td align="right">10.63152</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">434563</td>
+<td align="right">12.37691</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">486049</td>
+<td align="right">13.84330</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">514756</td>
+<td align="right">14.66091</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">547527</td>
+<td align="right">15.59427</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">640070</td>
+<td align="right">18.23001</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">514832</td>
+<td align="right">14.66307</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>ethnicity_clean_for_summary |&gt;
   group_by(ethnicity) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 3 × 3
-##   ethnicity           Homelessness Percent
-##   &lt;chr&gt;                      &lt;int&gt;   &lt;dbl&gt;
-## 1 Hispanic/Latinx          1224078   34.9 
-## 2 Not Hispanic/Latinx      2187297   62.3 
-## 3 Unknown                    99703    2.84</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ethnicity</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Hispanic/Latinx</td>
+<td align="right">1224078</td>
+<td align="right">34.863310</td>
+</tr>
+<tr class="even">
+<td align="left">Not Hispanic/Latinx</td>
+<td align="right">2187297</td>
+<td align="right">62.297021</td>
+</tr>
+<tr class="odd">
+<td align="left">Unknown</td>
+<td align="right">99703</td>
+<td align="right">2.839669</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>gender_clean_for_summary = 
   gender_clean |&gt;
   select(-location)
@@ -541,30 +785,98 @@ ethnicity_clean_for_summary |&gt;
 gender_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 7 × 3
-##   calendar_year Homelessness Percent
-##           &lt;int&gt;        &lt;int&gt;   &lt;dbl&gt;
-## 1          2017       373071    10.6
-## 2          2018       434374    12.4
-## 3          2019       485807    13.8
-## 4          2020       514506    14.7
-## 5          2021       547260    15.6
-## 6          2022       639749    18.2
-## 7          2023       514523    14.7</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">calendar_year</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">373071</td>
+<td align="right">10.63095</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">434374</td>
+<td align="right">12.37783</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">485807</td>
+<td align="right">13.84346</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">514506</td>
+<td align="right">14.66126</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">547260</td>
+<td align="right">15.59461</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">639749</td>
+<td align="right">18.23015</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">514523</td>
+<td align="right">14.66174</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>gender_clean_for_summary |&gt;
   group_by(gender) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 6 × 3
-##   gender              Homelessness  Percent
-##   &lt;chr&gt;                      &lt;int&gt;    &lt;dbl&gt;
-## 1 Female                   1479598 42.2    
-## 2 Male                     1969207 56.1    
-## 3 Non-Singular Gender         6170  0.176  
-## 4 Questioning Gender           161  0.00459
-## 5 Transgender                15788  0.450  
-## 6 Unknown                    38366  1.09</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">gender</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">1479598</td>
+<td align="right">42.1623177</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">1969207</td>
+<td align="right">56.1141143</td>
+</tr>
+<tr class="odd">
+<td align="left">Non-Singular Gender</td>
+<td align="right">6170</td>
+<td align="right">0.1758190</td>
+</tr>
+<tr class="even">
+<td align="left">Questioning Gender</td>
+<td align="right">161</td>
+<td align="right">0.0045878</td>
+</tr>
+<tr class="odd">
+<td align="left">Transgender</td>
+<td align="right">15788</td>
+<td align="right">0.4498916</td>
+</tr>
+<tr class="even">
+<td align="left">Unknown</td>
+<td align="right">38366</td>
+<td align="right">1.0932696</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>race_clean_for_summary = 
   race_clean |&gt;
   select(-location)
@@ -572,31 +884,108 @@ gender_clean_for_summary |&gt;
 race_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 7 × 3
-##   calendar_year Homelessness Percent
-##           &lt;int&gt;        &lt;int&gt;   &lt;dbl&gt;
-## 1          2017       373049    10.6
-## 2          2018       434372    12.4
-## 3          2019       485876    13.8
-## 4          2020       514587    14.7
-## 5          2021       547394    15.6
-## 6          2022       639935    18.2
-## 7          2023       514656    14.7</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">calendar_year</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">373049</td>
+<td align="right">10.62857</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">434372</td>
+<td align="right">12.37573</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">485876</td>
+<td align="right">13.84314</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">514587</td>
+<td align="right">14.66115</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">547394</td>
+<td align="right">15.59585</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">639935</td>
+<td align="right">18.23245</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">514656</td>
+<td align="right">14.66311</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>race_clean_for_summary |&gt;
   group_by(race) |&gt;
   summarize(Homelessness = sum(experiencing_homelessness)) |&gt;
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)</code></pre>
-<pre><code>## # A tibble: 7 × 3
-##   race                                          Homelessness Percent
-##   &lt;chr&gt;                                                &lt;int&gt;   &lt;dbl&gt;
-## 1 American Indian, Alaska Native, or Indigenous       108770    3.10
-## 2 Asian or Asian American                              62782    1.79
-## 3 Black, African American, or African                1026875   29.3 
-## 4 Multiple Races                                      153850    4.38
-## 5 Native Hawaiian or Pacific Islander                  44051    1.26
-## 6 Unknown                                             180896    5.15
-## 7 White                                              1932645   55.1</code></pre>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |&gt; knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="66%" />
+<col width="18%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">race</th>
+<th align="right">Homelessness</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">American Indian, Alaska Native, or Indigenous</td>
+<td align="right">108770</td>
+<td align="right">3.098976</td>
+</tr>
+<tr class="even">
+<td align="left">Asian or Asian American</td>
+<td align="right">62782</td>
+<td align="right">1.788728</td>
+</tr>
+<tr class="odd">
+<td align="left">Black, African American, or African</td>
+<td align="right">1026875</td>
+<td align="right">29.256790</td>
+</tr>
+<tr class="even">
+<td align="left">Multiple Races</td>
+<td align="right">153850</td>
+<td align="right">4.383355</td>
+</tr>
+<tr class="odd">
+<td align="left">Native Hawaiian or Pacific Islander</td>
+<td align="right">44051</td>
+<td align="right">1.255061</td>
+</tr>
+<tr class="even">
+<td align="left">Unknown</td>
+<td align="right">180896</td>
+<td align="right">5.153924</td>
+</tr>
+<tr class="odd">
+<td align="left">White</td>
+<td align="right">1932645</td>
+<td align="right">55.063166</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

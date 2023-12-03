@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(tidyverse)
 library(usmap)
- 
+
 homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
 age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
 ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
@@ -49,7 +49,7 @@ homeless_data_for_summary =
 homeless_data_for_summary |>
   group_by(EncounterType) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 homeless_data_for_summary |>
   group_by(FacilityName) |>
@@ -59,27 +59,27 @@ homeless_data_for_summary |>
 homeless_data_for_summary |>
   group_by(Ownership) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 homeless_data_for_summary |>
   group_by(Urban_Rural) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 homeless_data_for_summary |>
   group_by(LicensedBedSize) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 homeless_data_for_summary |>
   group_by(PrimaryCareShortageArea) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 homeless_data_for_summary |>
   group_by(MentalHealthShortageArea) |>
   summarize(Homelessness = sum(Encounters)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 
@@ -93,12 +93,12 @@ age_clean_for_summary =
 age_clean_for_summary |>
   group_by(calendar_year) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 age_clean_for_summary |>
   group_by(age_group_public) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
@@ -109,12 +109,12 @@ ethnicity_clean_for_summary =
 ethnicity_clean_for_summary |>
   group_by(calendar_year) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 ethnicity_clean_for_summary |>
   group_by(ethnicity) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
@@ -125,12 +125,12 @@ gender_clean_for_summary =
 gender_clean_for_summary |>
   group_by(calendar_year) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 gender_clean_for_summary |>
   group_by(gender) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
@@ -141,10 +141,10 @@ race_clean_for_summary =
 race_clean_for_summary |>
   group_by(calendar_year) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 
 race_clean_for_summary |>
   group_by(race) |>
   summarize(Homelessness = sum(experiencing_homelessness)) |>
-  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
