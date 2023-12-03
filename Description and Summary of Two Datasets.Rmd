@@ -2,10 +2,22 @@
 title: "california_homelessness"
 author: "Zilin Huang"
 date: "2023-11-04"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+echo = TRUE,
+warning = FALSE,
+fig.width = 9, 
+  fig.height = 9,
+  out.width = "80%"
+)
+
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(tidyverse)
@@ -22,62 +34,129 @@ For the purpose of analyzing the population trend of California's homelessness, 
 
 ## Summary
 
-To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset:
+To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset;
 
-```{r}
-# define a function that automates the process of creating summary table,
-# with the dataset's name as the input
-summary_of_table <- function(df) {
-  summary_table <- list()
-  
-  for (col in names(df)) {
-      summary_by_col <- df |>
-        group_by(!!sym(col)) |>
-        summarise(Count = n()) |>
-        mutate(Percentage = (Count / sum(Count)) * 100)
-      
-      summary_table[[col]] <- summary_by_col
-  }
+First of all, we consider summarizing the population grouped by the following parameters: 
 
-  return(summary_table)
-}
-```
+EncounterType (whether receiving ED Visits or Inpatient Hospitalizations);
+
+FacilityName (name of hospitals), System (name of systems that hospitals belong to);
+
+Ownership (type of ownership that hospitals belong to);
+
+Urban_Rural (whether hospitals locate in urban or rural areas);
+
+LicensedBedSize (size of licensed beds per hospital);
+
+PrimaryCareShortageArea (whether hospitals locate in area with limited primary care);
+
+MentalHealthShortageArea (whether hospitals locate in area with limited mental health care).
 
 ```{r}
 homeless_data_for_summary =
   homeless_data |>
   filter(HomelessIndicator == "Homeless") |>
-  select(EncounterType, System, Ownership, Urban_Rural, LicensedBedSize, DemographicValue)
+  select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
 
-summary_of_table(homeless_data_for_summary)
+homeless_data_for_summary |>
+  group_by(EncounterType) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(FacilityName) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+
+homeless_data_for_summary |>
+  group_by(Ownership) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(Urban_Rural) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(LicensedBedSize) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(PrimaryCareShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(MentalHealthShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
-The following commands summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately.
+
+Furthermore, we also summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately.
 
 ```{r}
 age_clean_for_summary = 
   age_clean |>
-  select(-experiencing_homelessness, -location)
-summary_of_table(age_clean_for_summary)
+  select(-location)
+
+age_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+age_clean_for_summary |>
+  group_by(age_group_public) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
 ethnicity_clean_for_summary = 
   ethnicity_clean |>
-  select(-experiencing_homelessness, -location)
-summary_of_table(ethnicity_clean_for_summary)
+  select(-location)
+
+ethnicity_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+ethnicity_clean_for_summary |>
+  group_by(ethnicity) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
 gender_clean_for_summary = 
   gender_clean |>
-  select(-experiencing_homelessness, -location)
-summary_of_table(gender_clean_for_summary)
+  select(-location)
+
+gender_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+gender_clean_for_summary |>
+  group_by(gender) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```
 
 ```{r}
 race_clean_for_summary = 
   race_clean |>
-  select(-experiencing_homelessness, -location)
-summary_of_table(race_clean_for_summary)
+  select(-location)
+
+race_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+race_clean_for_summary |>
+  group_by(race) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
 ```

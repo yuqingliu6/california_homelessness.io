@@ -181,15 +181,11 @@ Based on the percantage of total homeless by race, we can see that white people 
 
 ## Part2: datasets "Hospital Encounters for Homeless Patients"
 
-```{r}
-library(tidyverse)
-library(knitr)
-homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-homeless_data<-homeless_ip %>% 
-  filter(HomelessIndicator == "Homeless")
-```
+### Description of datasets
 
-### Description of important variables
+While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
+
+-   Important Variables:
 
 `2019-2020-homeless-ip-and-ed-by-facility` contains 17 variables, some of which are listed below:
 
@@ -198,37 +194,28 @@ homeless_data<-homeless_ip %>%
 `Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
 `Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
 `Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.     
-
-### Correlation Matrix of Homeless Data
-
 ```{r}
-# Correlation matrix
-numeric_data <- homeless_data %>% select(Encounters, TotalEncounters, Percent)
-correlation_matrix <- cor(numeric_data, method = "pearson")
-correlation_table <- kable(correlation_matrix, caption = "Correlation Matrix of Homeless Data")
-correlation_table
+library(tidyverse)
+library(knitr)
+homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+homeless_data<-homeless_ip %>% 
+  filter(HomelessIndicator == "Homeless")
 ```
-**Encounters and TotalEncounters**: There is a moderate positive correlation of approximately 0.67. This suggests that as the total number of encounters at a facility increases, the number of homeless encounters also tends to increase. This could be expected as larger facilities might see more patients overall, including homeless individuals.
+
 
 ### Data Visualization
 
 #### Homeless Encounters by Demographic Group (Age, Payer, Race, Sex)
 
 ```{r}
-homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-
-homeless_data<-homeless_ip %>% 
-  filter(HomelessIndicator == "Homeless")
-combined_plot <- homeless_data %>%
-  ggplot(aes(x = DemographicValue, y = Encounters, fill = DemographicValue)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~ Demographic, scales = "free_x") + 
-  labs(title = "Homeless Encounters by Demographic Group",
-       x = "Demographic Value",
-       y = "Number of Homeless Encounters") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        strip.text.x = element_text(face = "bold")) 
+combined_plot <- plot_ly(homeless_data, x = ~DemographicValue, y = ~Encounters, 
+                         type = 'bar', color = ~DemographicValue, 
+                         colors = 'viridis') %>%
+  add_bars(width = 1) %>%
+  layout(title = "Homeless Encounters by Demographic Group",
+         xaxis = list(title = "Demographic Value", tickangle = 45),
+         yaxis = list(title = "Number of Homeless Encounters"),
+         barmode = 'group')
 combined_plot
 ```
 
@@ -236,16 +223,12 @@ This analysis provides a breakdown of homeless encounters by different demograph
 
 #### Homeless Encounters by Bed Size
 ```{r}
-plot2<-homeless_ip %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = LicensedBedSize, y = Encounters, fill = LicensedBedSize)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Homeless Encounters by Bed Size",
-       x = "Licensed Bed Size",
-       y = "Number of Homeless Encounters") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+plot2 <- plot_ly(homeless_data, x = ~LicensedBedSize, y = ~Encounters, 
+                 type = 'bar', color = ~LicensedBedSize, 
+                 colors = 'viridis') %>%
+  layout(title = "Homeless Encounters by Bed Size",
+         xaxis = list(title = "Licensed Bed Size", tickangle = 45),
+         yaxis = list(title = "Number of Homeless Encounters"))
 plot2
 ```
 
@@ -253,15 +236,13 @@ Among the variable Bed Size, the category of 400+ Licensed Bed Size shows a high
 
 #### Homeless Encounters by Area
 ```{r}
-plot3<-homeless_data %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = Urban_Rural, y = Encounters, fill = Urban_Rural)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Homeless Encounters in Urban vs. Rural Areas",
-       x = "Urban/Rural",
-       y = "Number of Homeless Encounters") +
-  theme_minimal()
+plot3 <- plot_ly(homeless_data, x = ~Urban_Rural, y = ~Encounters, 
+                 type = 'bar', color = ~Urban_Rural, 
+                 colors = 'viridis') %>%
+  layout(title = "Homeless Encounters in Urban vs. Rural Areas",
+         xaxis = list(title = "Urban/Rural"),
+         yaxis = list(title = "Number of Homeless Encounters"))
+
 plot3
 ```
 
@@ -269,15 +250,12 @@ This plot help us gain the understanding of the relationship between the number 
 
 #### Homeless Encounters by Ownership Type
 ```{r}
-plot4<-homeless_ip %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = Ownership, y = Percent, fill = Ownership)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Percentage of Homeless Encounters by Ownership Type",
-       x = "Ownership",
-       y = "Percentage of Homeless Encounters") +
-  theme_minimal()
+plot4 <- plot_ly(homeless_data, x = ~Ownership, y = ~Percent, 
+                 type = 'bar', color = ~Ownership, 
+                 colors = 'viridis') %>%
+  layout(title = "Percentage of Homeless Encounters by Ownership Type",
+         xaxis = list(title = "Ownership"),
+         yaxis = list(title = "Percentage of Homeless Encounters"))
 plot4
 ```
 
