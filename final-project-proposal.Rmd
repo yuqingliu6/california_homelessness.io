@@ -25,6 +25,11 @@ Examining the homelessness in California, 2017-2023
 * We will use data from Homelessness Data Integration System (HDIS) which is a publicly available data source from the State of California, Business, Consumer Services, and Housing Agency. The Homelessness Data Integration System (HDIS) is a comprehensive data repository that aggregates and analyzes data from all 44 Continuums of Care (CoC) in California. 
 * Each Continuum of Care (CoC) gathers and shares information about the individuals it serves through various programs, including those designed to combat homelessness, provide outreach services to homeless populations, support permanent housing solutions, and align with California's Housing First goals. 
 * Demographic data from people receiving homeless response services by age, race, ethnicity, and gender included in Homelessness Data Integration System will also be used in our analysis. 
+* The original link of datasets:\
+People Receiving Homeless Response Services by Age, Race, Ethnicity, and Gender：
+https://data.ca.gov/dataset/homelessness-demographics \
+Hospital Encounters for Homeless Patients：
+https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m
 
 
 ### The planned analyses / visualizations / coding challenges 
