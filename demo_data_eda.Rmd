@@ -20,6 +20,8 @@ This data set gives annual statistics by age group, race, ethnicity, and gender 
 
 The Homelessness Data Integration System (HDIS), an extensive data repository that compiles and examines information from each of California's 44 Continuums of Care (CoC), is the source of this information. Every Community of Communities (CoC) collects and disseminates information on the people it serves via a range of programs, such as those aimed at ending homelessness, offering outreach services to the homeless, assisting with permanent housing solutions, and other projects in line with California's Housing First objectives.
 
+![](image/datasource.png)
+
 Important Variables:
 
 `CALENDAR_YEAR`: Calendar Year\

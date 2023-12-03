@@ -21,6 +21,8 @@ fig.width = 10,
 
 ### Description of datasets
 
+![](image/datasource.png)
+
 The `demo` datasets are defined as "People Receiving Homeless Response Services by Age, Race, Ethnicity, and Gender".
 
 This data set gives annual statistics by age group, race, ethnicity, and gender on the number of people who have benefited from homelessness assistance services.

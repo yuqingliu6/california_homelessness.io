@@ -31,7 +31,6 @@ https://data.ca.gov/dataset/homelessness-demographics \
 Hospital Encounters for Homeless Patients：
 https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m
 
-
 ### The planned analyses / visualizations / coding challenges 
 * The main challenges in coding and analysis we anticipate are model construction and the selection of predictive variables for this study.
 * Our plan involves conducting an analysis of homelessness figures within each Continuum of Care (CoC) and examining the sociodemographic profiles of individuals who have received assistance from these CoCs. We intend to utilize generalized linear models to investigate the associations between the number of homeless people in each CoC and various sociodemographic attributes of the recipients. So, careful consideration is needed when constructing the model and selecting the predictors of interest.
