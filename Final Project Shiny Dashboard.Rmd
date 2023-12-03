@@ -12,12 +12,14 @@ library(flexdashboard)
 library(tidyverse)
 library(shiny)
 library(plotly)
+library(rsconnect)
 
-homeless_data<-read.csv("data/2019-2020-homeless-ip-and-ed-by-facility.csv")
-age_clean = read.csv("data/cleaned_age_demo.csv")
-ethnicity_clean = read.csv("data/cleaned_ethnicity_demo.csv")
-gender_clean = read.csv("data/cleaned_gender_demo.csv")
-race_clean = read.csv("data/cleaned_race_demo.csv")
+homeless_data <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
+age_clean <- read.csv("./processed data/demo/cleaned_age_demo.csv")
+ethnicity_clean <- read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
+gender_clean <- read.csv("./processed data/demo/cleaned_gender_demo.csv")
+race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
+
 ```
 
 Homeless People Receiving Hospital Healthcare Services in Hospitals
