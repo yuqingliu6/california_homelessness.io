@@ -7,8 +7,6 @@ navbar:
       menu:
       - text: "california homelessness"
         href: california_homelessness.html
-      - text: "Summary"
-        href: Description-and-Summary-of-Two-Datasets.html
       - text: "Description2"
         href: 20192020-homeless.html
     - text: "Exploratory Data Analysis"
@@ -17,7 +15,7 @@ navbar:
       href: reg-models.html
     - text: "Conclusions"
       href: Conclusions.html
-    - text: "RShniy"
+    - text: "RShiny"
       href: https://zh2596.shinyapps.io/RShinyDashboard/
   right:
     - text: "Proposal"
