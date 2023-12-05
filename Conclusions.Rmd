@@ -2,19 +2,19 @@
 title: "Final Report"
 date: "2023-11-27"
 output: 
-  html_document
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
-
-
 ### Movitation
 
-Our motivation stems from the urgent need to comprehensively examine and address homelessness in California. By harnessing the power of data science and leveraging the rich information within HDIS, our project aspires to contribute valuable insights that can inform evidence-based policies and interventions, ultimately paving the way towards a more inclusive and compassionate society.
+Our motivation stems from the urgent need to comprehensively examine and address homelessness in California. By harnessing the power of data science and leveraging the rich information within HDIS, our project aspires to contribute valuable insights that can inform evidence-based policies and interventions by analyzing the demographic composition of all register homeless people in California and what types of hospital would homeless people more likely to visit.  
 
 
 
@@ -26,19 +26,30 @@ We are inspired to do this because homelessness has been a long term problem in 
 
 ### Initial Questions
 
-* How is the number of homeless people vary by demographic variables?
-* Has the number of homeless people by demographics changed over the year?
-* What are some predictors for the number of homeless people?
-* How well is our model at predicting the number of homeless people?
+The initial questions centered around understanding the sociodemographic attributes of homeless individuals in California and identifying predictors for the frequency of encounters with homeless patients.
 
+As our research progressed, we refined our questions to achieve greater specificity. This refinement was driven by a deeper familiarity with our datasets and a desire to focus on more explicit aspects of the research.
+
+The current research questions are:
+
+* How is the number of homeless people vary by demographic variables including age, gender, race and type of payer?
+* Has the number of homeless people by demographics changed over the year?
+* Are encounter type, ownership of the hospital, number of hospital beds significant predictors for the number of homeless patient encounters?
+* How well is our model at predicting the number of homeless people?
 
 
 ## Data Source & Cleaning
 
-We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m) from Homelessness Data Integration System (HDIS) which is a publicly available data source from the State of California, Business, Consumer Services, and Housing Agency. The Homelessness Data Integration System (HDIS) is a comprehensive data repository that aggregates and analyzes data from all 44 Continuums of Care (CoC) in California.
-We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) which included demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System.
+In this project, we used two datasets to address our research question. One dataset features demographic characteristics of homeless people who are receiving homelessness response services and number of them over the year. Another dataset features characteristics of hospital encounters of homeless people and information about which type of hospital they visits.
 
-Firstly, we converted all the variable names to lowercase. Then, we removed the unneeded variable `location_id`, and removed the null value of `experiencing_homelessness`.Finally, we batch export the four cleaned csv files into datasets.The final datasets included the following variables. 
+We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m) from Homelessness Data Integration System (HDIS) that include homeless patients information in all 44 Continuums of Care (CoC) in California. This dataset includes characteristics of hospital encounters of homeless people and information about which type of hospital they visits among all CoC registries in California from 2019 to 2020. 
+
+We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset to have a more recent estimate. 
+
+In the data cleaning process, we first converted all the variable names to lowercase. Then, we removed the unneeded variable `location_id`, and removed the null value of `experiencing_homelessness`.Finally, we batch export the four cleaned csv files into datasets. 
+
+
+The final dataset of demographic data of homeless people from 2017 to 2023 included the following variables. 
 
 * `CALENDAR_YEAR`: Calendar Year\
 * `LOCATION`: Location\
@@ -48,23 +59,25 @@ Firstly, we converted all the variable names to lowercase. Then, we removed the 
 * `RACE`: Race\
 * `EXPERIENCING_HOMELESSNESS`: Number of people receiving homelessness services
 
-## Exploratory Analysis
-```{r}
+
+The final dataset of hospital encounters of homeless people in 44 CoC from 2019 to 2020 included major variables as following: 
+
+`Licensed Bed Size`: the hospital's number of licensed beds.                        
+`Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
+`Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
+`Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
+`Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.  
+
+
+## Exploratory Analysis\
+
+```{r message=FALSE}
 library(tidyverse)
 library(knitr)
 homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
 homeless_data<-homeless_ip %>% 
   filter(HomelessIndicator == "Homeless")
 ```
-#### Description of important variables
-
-`2019-2020-homeless-ip-and-ed-by-facility` contains 17 variables, some of which are listed below:
-
-`Licensed Bed Size`: the hospital's number of licensed beds.                        
-`Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
-`Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
-`Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
-`Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.     
 
 #### Correlation Matrix of Homeless Data
 
@@ -77,27 +90,6 @@ correlation_table
 ```
 **Encounters and TotalEncounters**: There is a moderate positive correlation of approximately 0.67. This suggests that as the total number of encounters at a facility increases, the number of homeless encounters also tends to increase. This could be expected as larger facilities might see more patients overall, including homeless individuals.
 
-#### Homeless Encounters by Demographic Group (Age, Payer, Race, Sex)
-
-```{r}
-homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-
-homeless_data<-homeless_ip %>% 
-  filter(HomelessIndicator == "Homeless")
-combined_plot <- homeless_data %>%
-  ggplot(aes(x = DemographicValue, y = Encounters, fill = DemographicValue)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~ Demographic, scales = "free_x") + 
-  labs(title = "Homeless Encounters by Demographic Group",
-       x = "Demographic Value",
-       y = "Number of Homeless Encounters") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        strip.text.x = element_text(face = "bold")) 
-combined_plot
-```
-
-This analysis provides a breakdown of homeless encounters by different demographic facets and indicates which groups have higher or lower counts of encounters. It suggests that middle-aged individuals, those covered by Medi-Cal, white individuals, and males have higher numbers of homeless encounters. These findings could point towards specific demographic groups that may require more focused services and interventions. 
 
 #### Homeless Encounters by Bed Size
 ```{r}
@@ -157,10 +149,6 @@ age_demo = read.csv("./original data/demo/age_demo.csv")
 ethnicity_demo = read.csv("./original data/demo/ethnicity_demo.csv")
 gender_demo = read.csv("./original data/demo/gender_demo.csv")
 race_demo = read.csv("./original data/demo/race_demo.csv")
-head(age_demo) 
-head(ethnicity_demo)
-head(gender_demo)
-head(race_demo)
 ```
 
 ```{r}
@@ -201,7 +189,7 @@ race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
 
 #### Total Homelessness by Year and Age Group
-```{r}
+```{r message= FALSE, warning=FALSE}
 # line plot for "Total Homelessness by Year and Age Group"
 library(plotly)
 age_plot <- age_clean |>
@@ -351,11 +339,6 @@ plot3 <- plot_ly(homeless_data, x = ~Urban_Rural, y = ~Encounters,
 plot3
 ```
 
-###Results
-
-###Discussion
-
-
 This plot help us gain the understanding of the relationship between the number of homelessness encounters and rural/ urban settlement. It is evident that in urban areas there are many people who tend to be homeless due to various reasons such as poverty. Urban hospitals are often larger and have more comprehensive services, which might also contribute to the higher number of encounters. On the other hand, in rural areas less people tend to be homeless since life there is cheap and easily affordable. The more the population in a certain place the higher the chances of homelessness encounters.
 
 #### Homeless Encounters by Ownership Type
@@ -371,3 +354,21 @@ plot4
 
 When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
 
+
+### Additional Analysis
+
+regression part
+
+### Discussion
+
+Some of our major findings are:
+
+* Males and individuals under 18 years old constitute a higher percentage within the population receiving assistance from Continuums of Care (CoC).
+
+* The proportion of Hispanic individuals among those who received assistance from Continuums of Care (CoC) is higher than the percentage of Hispanics in the general population. This suggests a greater likelihood for the Hispanic population to experience homelessness and be registered as homeless in CoC. Additionally, among races other than Hispanic, Whites represent a higher percentage of registered homelessness encounters at CoC.
+
+* From the regression results, we know that homeless patients are more likely to visit urban hospitals compared to rural hospitals. Being a governmental hospital would increase the number of homeless patients visits and being an investor hospital would decrease the number of homeless patients visits compared to the non-profit hospital.
+
+* Hospitals with more beds are more likely to have larger capicity to help with homeless people's encounters. 
+
+These result could assist policy-making which could target more on the more volunerable population who are experience homeless. For example, 
