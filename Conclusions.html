@@ -355,9 +355,208 @@ href="https://data.ca.gov/dataset/homelessness-demographics">dataset</a>
 which included demographic variables including age, race, ethnicity, and
 gender among from people who are receiving homeless response services in
 Homelessness Data Integration System.</p>
+<p>Firstly, we converted all the variable names to lowercase. Then, we
+removed the unneeded variable <code>location_id</code>, and removed the
+null value of <code>experiencing_homelessness</code>.Finally, we batch
+export the four cleaned csv files into datasets.The final datasets
+included the following variables.</p>
+<ul>
+<li><code>CALENDAR_YEAR</code>: Calendar Year<br />
+</li>
+<li><code>LOCATION</code>: Location<br />
+</li>
+<li><code>ETHNICITY</code>: Ethnicity<br />
+</li>
+<li><code>AGE_GROUP_PUBLIC</code>: Age Group<br />
+</li>
+<li><code>GENDER</code>: Gender<br />
+</li>
+<li><code>RACE</code>: Race<br />
+</li>
+<li><code>EXPERIENCING_HOMELESSNESS</code>: Number of people receiving
+homelessness services</li>
+</ul>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory Analysis</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.3     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(knitr)
+homeless_ip&lt;-read.csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)
+homeless_data&lt;-homeless_ip %&gt;% 
+  filter(HomelessIndicator == &quot;Homeless&quot;)</code></pre>
+<div id="description-of-important-variables" class="section level4">
+<h4>Description of important variables</h4>
+<p><code>2019-2020-homeless-ip-and-ed-by-facility</code> contains 17
+variables, some of which are listed below:</p>
+<p><code>Licensed Bed Size</code>: the hospital’s number of licensed
+beds.<br />
+<code>Homeless Indicator</code>: indicates if the data is for Homeless
+or Non-Homeless encounters.<br />
+<code>Demographic Category</code>: Age, Race, Sex, or (Expected)
+Payer.<br />
+<code>Encounters</code>: Count of inpatient hospitalizations (i.e.,
+discharges) or emergency department visits.<br />
+<code>Total Hospital Encounters</code>: Total inpatient hospitalizations
+or emergency department visits per hospital.</p>
+</div>
+<div id="correlation-matrix-of-homeless-data" class="section level4">
+<h4>Correlation Matrix of Homeless Data</h4>
+<pre class="r"><code># Correlation matrix
+numeric_data &lt;- homeless_data %&gt;% select(Encounters, TotalEncounters, Percent)
+correlation_matrix &lt;- cor(numeric_data, method = &quot;pearson&quot;)
+correlation_table &lt;- kable(correlation_matrix, caption = &quot;Correlation Matrix of Homeless Data&quot;)
+correlation_table</code></pre>
+<table>
+<caption>Correlation Matrix of Homeless Data</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Encounters</th>
+<th align="right">TotalEncounters</th>
+<th align="right">Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Encounters</td>
+<td align="right">1.0000000</td>
+<td align="right">0.6696037</td>
+<td align="right">0.3308220</td>
+</tr>
+<tr class="even">
+<td align="left">TotalEncounters</td>
+<td align="right">0.6696037</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.0000295</td>
+</tr>
+<tr class="odd">
+<td align="left">Percent</td>
+<td align="right">0.3308220</td>
+<td align="right">-0.0000295</td>
+<td align="right">1.0000000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Encounters and TotalEncounters</strong>: There is a moderate
+positive correlation of approximately 0.67. This suggests that as the
+total number of encounters at a facility increases, the number of
+homeless encounters also tends to increase. This could be expected as
+larger facilities might see more patients overall, including homeless
+individuals.</p>
+</div>
+<div id="homeless-encounters-by-demographic-group-age-payer-race-sex"
+class="section level4">
+<h4>Homeless Encounters by Demographic Group (Age, Payer, Race,
+Sex)</h4>
+<pre class="r"><code>homeless_ip&lt;-read.csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;)
+
+homeless_data&lt;-homeless_ip %&gt;% 
+  filter(HomelessIndicator == &quot;Homeless&quot;)
+combined_plot &lt;- homeless_data %&gt;%
+  ggplot(aes(x = DemographicValue, y = Encounters, fill = DemographicValue)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;) +
+  facet_wrap(~ Demographic, scales = &quot;free_x&quot;) + 
+  labs(title = &quot;Homeless Encounters by Demographic Group&quot;,
+       x = &quot;Demographic Value&quot;,
+       y = &quot;Number of Homeless Encounters&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        strip.text.x = element_text(face = &quot;bold&quot;)) 
+combined_plot</code></pre>
+<p><img src="Conclusions_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>This analysis provides a breakdown of homeless encounters by
+different demographic facets and indicates which groups have higher or
+lower counts of encounters. It suggests that middle-aged individuals,
+those covered by Medi-Cal, white individuals, and males have higher
+numbers of homeless encounters. These findings could point towards
+specific demographic groups that may require more focused services and
+interventions.</p>
+</div>
+<div id="homeless-encounters-by-bed-size" class="section level4">
+<h4>Homeless Encounters by Bed Size</h4>
+<pre class="r"><code>plot2&lt;-homeless_ip %&gt;%
+  filter(HomelessIndicator == &quot;Homeless&quot; &amp; EncounterType == &quot;Inpatient Hospitalizations&quot;) %&gt;%
+  ggplot(aes(x = LicensedBedSize, y = Encounters, fill = LicensedBedSize)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_fill_brewer(palette = &quot;Set3&quot;) +
+  labs(title = &quot;Homeless Encounters by Bed Size&quot;,
+       x = &quot;Licensed Bed Size&quot;,
+       y = &quot;Number of Homeless Encounters&quot;) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+plot2</code></pre>
+<p><img src="Conclusions_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Among the variable Bed Size, the category of 400+ Licensed Bed Size
+shows a high number of encounters of homelessness as compared to other
+groups, indicating that larger hospitals may have a higher number of
+such encounters. This could be due to a larger capacity to serve more
+patients or a higher likelihood of being located in urban areas where
+homelessness rates may be higher. The second leading category is the
+100-199 Licensed Bed Size which was relatively high, because hospitals
+with 100-199 beds might be specialized in services that are more
+frequently utilized by the homeless population, such as mental health or
+substance abuse treatment and these medium-sized hospitals could be
+strategically located in areas where the homeless population is
+higher.</p>
+</div>
+<div id="homeless-encounters-by-area" class="section level4">
+<h4>Homeless Encounters by Area</h4>
+<pre class="r"><code>plot3&lt;-homeless_data %&gt;%
+  filter(HomelessIndicator == &quot;Homeless&quot; &amp; EncounterType == &quot;Inpatient Hospitalizations&quot;) %&gt;%
+  ggplot(aes(x = Urban_Rural, y = Encounters, fill = Urban_Rural)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_fill_brewer(palette = &quot;Set3&quot;) +
+  labs(title = &quot;Homeless Encounters in Urban vs. Rural Areas&quot;,
+       x = &quot;Urban/Rural&quot;,
+       y = &quot;Number of Homeless Encounters&quot;) +
+  theme_minimal()
+plot3</code></pre>
+<p><img src="Conclusions_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>This plot help us gain the understanding of the relationship between
+the number of homelessness encounters and rural/ urban settlement. It is
+evident that in urban areas there are many people who tend to be
+homeless due to various reasons such as poverty. Urban hospitals are
+often larger and have more comprehensive services, which might also
+contribute to the higher number of encounters. On the other hand, in
+rural areas less people tend to be homeless since life there is cheap
+and easily affordable. The more the population in a certain place the
+higher the chances of homelessness encounters.</p>
+</div>
+<div id="homeless-encounters-by-ownership-type" class="section level4">
+<h4>Homeless Encounters by Ownership Type</h4>
+<pre class="r"><code>plot4&lt;-homeless_ip %&gt;%
+  filter(HomelessIndicator == &quot;Homeless&quot; &amp; EncounterType == &quot;Inpatient Hospitalizations&quot;) %&gt;%
+  ggplot(aes(x = Ownership, y = Percent, fill = Ownership)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_fill_brewer(palette = &quot;Set3&quot;) +
+  labs(title = &quot;Percentage of Homeless Encounters by Ownership Type&quot;,
+       x = &quot;Ownership&quot;,
+       y = &quot;Percentage of Homeless Encounters&quot;) +
+  theme_minimal()
+plot4</code></pre>
+<p><img src="Conclusions_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>When comparing the percentage of homeless encounters by ownership the
+non-profit category showed the highest percentage in homeless
+encounters. Non-Profit hospitals may have more encounters with homeless
+individuals possibly due to their mission-driven approach, which may
+include providing care to underserved populations. Investor-owned
+hospitals, while having a higher percentage of encounters than
+government hospitals, may still be less than Non-Profit hospitals,
+potentially due to different operational goals and priorities.
+Government-owned hospitals having the lowest percentage could be a
+result of factors such as location, size, the scope of services offered,
+or specific governmental policies and funding for homeless services.</p>
+</div>
 </div>
 
 
