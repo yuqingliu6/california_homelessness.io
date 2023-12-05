@@ -1,5 +1,5 @@
 ---
-title: "Conclusions"
+title: "Final Report"
 date: "2023-11-27"
 output: 
   html_document
@@ -9,4 +9,33 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-write conclusions here
+#Introduction
+
+
+##Movitation
+Our motivation stems from the urgent need to comprehensively examine and address homelessness in California. By harnessing the power of data science and leveraging the rich information within HDIS, our project aspires to contribute valuable insights that can inform evidence-based policies and interventions, ultimately paving the way towards a more inclusive and compassionate society.
+
+
+
+##Related Work
+We are inspired to do this because homelessness has been a long term problem in the United States, which negatively affects cityscape and poses threats to residents’ life and property. Additionally, California has the largest homeless population in the nation. Learning statistical analysis tools from this class, we are motivated to investigate the homelessness situation in California and what are some factors that influence homelessness. 
+
+
+
+##Initial Questions
+* How is the number of homeless people vary by demographic variables?
+* Has the number of homeless people by demographics changed over the year?
+* What are some predictors for the number of homeless people?
+* How well is our model at predicting the number of homeless people?
+
+
+
+#Data Source & Cleaning
+We will use data [https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m] from Homelessness Data Integration System (HDIS) which is a publicly available data source from the State of California, Business, Consumer Services, and Housing Agency. The Homelessness Data Integration System (HDIS) is a comprehensive data repository that aggregates and analyzes data from all 44 Continuums of Care (CoC) in California.
+Each Continuum of Care (CoC) gathers and shares information about the individuals it serves through various programs, including those designed to combat homelessness, provide outreach services to homeless populations, support permanent housing solutions, and align with California’s Housing First goals.
+We also used another dataset which included demographic data[https://data.ca.gov/dataset/homelessness-demographics] including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System.
+
+
+
+#Exploratory Analysis
+
