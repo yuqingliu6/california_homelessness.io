@@ -133,6 +133,10 @@ From the bar chart above we can see that people whose race are Hispanic/Latinx m
 
 #### Total Homelessness by Year and Gender
 ```{r}
+# exclude the minor part of gender,such as unknown, transgender
+gender_clean <- gender_clean |>
+  filter(gender == "Male" | gender == "Female")
+  
 # bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
   select(-location) |>
@@ -146,7 +150,7 @@ gender_plot  |>
     title = "Total Homelessness by Year and gender")
 ```
 
-According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are women, indicating that homelessness is a problem that affects more women than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
+According to the bar chart by sex, we can know that the majority of people received help who are homeless are male, indicating that homelessness is a problem that affects more men than women and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
 #### Total Homelessness by Year and Race
 ```{r}
@@ -262,3 +266,8 @@ plot4
 ```
 
 When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
+
+## Reference
+1. https://share.america.gov/zh-hans/hispanic-enrollment-reaches-new-high-at-four-year-colleges-in-the-u-s/
+2. https://www.gov.ca.gov/2023/10/10/california-takes-action-to-tackle-homelessness/
+3. https://www.auditor.ca.gov/issues/briefs/housing-and-homelessness

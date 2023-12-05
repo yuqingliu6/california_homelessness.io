@@ -59,6 +59,7 @@ dat_clean <- dat |>
 summary(dat_clean)
 dat_clean
 ```
+
 ```{r}
 library(ggplot2)
 

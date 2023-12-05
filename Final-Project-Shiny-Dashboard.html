@@ -50,11 +50,14 @@ window.FlexDashboardComponents = [];
 <script src="site_libs/prism-1.4.1/prism.js"></script>
 <link href="site_libs/flexdashboard-css-0.6.2/flexdashboard.min.css" rel="stylesheet" />
 <link href="site_libs/flexdashboard-css-0.6.2/theme-cosmo.css" rel="stylesheet" />
-<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
-<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
 <link href="site_libs/selectize-0.12.4/css/selectize.bootstrap3.css" rel="stylesheet" />
 <script src="site_libs/selectize-0.12.4/js/selectize.min.js"></script>
 <script src="site_libs/selectize-0.12.4/accessibility/js/selectize-plugin-a11y.min.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/ionrangeslider-javascript-2.3.1/js/ion.rangeSlider.min.js"></script>
+<script src="site_libs/strftime-0.9.2/strftime-min.js"></script>
+<link href="site_libs/ionrangeslider-css-2.3.1/css/ion.rangeSlider.css" rel="stylesheet" />
 <style type="text/css">
 /*
   CSS for flexdashboard.js' use of Sly(). The sizing/position of this CSS needs to be
@@ -1875,60 +1878,127 @@ id="section-homeless-people-receiving-hospital-healthcare-services-in-hospitals"
 class="section level1">
 <h1>Homeless People Receiving Hospital Healthcare Services in
 Hospitals</h1>
-<div id="section-column" class="section level2 sidebar">
-<h2 class="sidebar">Column</h2>
+<div id="section-column" class="section level2" data-height="350">
+<h2>Column</h2>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
 <div id="DemoValue" class="form-group shiny-input-radiogroup shiny-input-container" role="radiogroup" aria-labelledby="DemoValue-label">
 <label class="control-label" id="DemoValue-label" for="DemoValue">
-<h3>Select a Demographic Category</h3>
+<h3>Select the Hospital's Type of Encounters (for Bar Plot)</h3>
 </label>
 <div class="shiny-options-group">
 <div class="radio">
 <label>
-<input type="radio" name="DemoValue" value="Age" checked="checked"/>
-<span>Age</span>
+<input type="radio" name="DemoValue" value="Inpatient Hospitalizations" checked="checked"/>
+<span>Inpatient Hospitalizations</span>
 </label>
 </div>
 <div class="radio">
 <label>
-<input type="radio" name="DemoValue" value="Race"/>
-<span>Race</span>
+<input type="radio" name="DemoValue" value="ED Visits"/>
+<span>ED Visits</span>
+</label>
+</div>
+</div>
+</div>
+<div id="DemoValue2" class="form-group shiny-input-radiogroup shiny-input-container" role="radiogroup" aria-labelledby="DemoValue2-label">
+<label class="control-label" id="DemoValue2-label" for="DemoValue2">
+<h3>Select the Hospital's Type of Ownership (for Bar Plot)</h3>
+</label>
+<div class="shiny-options-group">
+<div class="radio">
+<label>
+<input type="radio" name="DemoValue2" value="Government" checked="checked"/>
+<span>Government</span>
 </label>
 </div>
 <div class="radio">
 <label>
-<input type="radio" name="DemoValue" value="Sex"/>
-<span>Sex</span>
+<input type="radio" name="DemoValue2" value="Non-Profit"/>
+<span>Non-Profit</span>
 </label>
 </div>
 <div class="radio">
 <label>
-<input type="radio" name="DemoValue" value="Payer"/>
-<span>Payer</span>
+<input type="radio" name="DemoValue2" value="Investor"/>
+<span>Investor</span>
 </label>
 </div>
 </div>
 </div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="Demovalue3-label" for="Demovalue3">
+<h3>Select the type of Demographic Value for Homelessnes (for Pie Chart)</h3>
+</label>
+<div>
+<select id="Demovalue3" class="shiny-input-select"><option value="Alameda" selected>Alameda</option>
+<option value="Amador">Amador</option>
+<option value="Butte">Butte</option>
+<option value="Calaveras">Calaveras</option>
+<option value="Colusa">Colusa</option>
+<option value="Contra Costa">Contra Costa</option>
+<option value="Del Norte">Del Norte</option>
+<option value="El Dorado">El Dorado</option>
+<option value="Fresno">Fresno</option>
+<option value="Glenn">Glenn</option>
+<option value="Humboldt">Humboldt</option>
+<option value="Imperial">Imperial</option>
+<option value="Inyo">Inyo</option>
+<option value="Kern">Kern</option>
+<option value="Kings">Kings</option>
+<option value="Lake">Lake</option>
+<option value="Lassen">Lassen</option>
+<option value="Los Angeles">Los Angeles</option>
+<option value="Madera">Madera</option>
+<option value="Marin">Marin</option>
+<option value="Mariposa">Mariposa</option>
+<option value="Mendocino">Mendocino</option>
+<option value="Merced">Merced</option>
+<option value="Modoc">Modoc</option>
+<option value="Mono">Mono</option>
+<option value="Monterey">Monterey</option>
+<option value="Napa">Napa</option>
+<option value="Nevada">Nevada</option>
+<option value="Orange">Orange</option>
+<option value="Placer">Placer</option>
+<option value="Plumas">Plumas</option>
+<option value="Riverside">Riverside</option>
+<option value="Sacramento">Sacramento</option>
+<option value="San Benito">San Benito</option>
+<option value="San Bernardino">San Bernardino</option>
+<option value="San Diego">San Diego</option>
+<option value="San Francisco">San Francisco</option>
+<option value="San Joaquin">San Joaquin</option>
+<option value="San Luis Obispo">San Luis Obispo</option>
+<option value="San Mateo">San Mateo</option>
+<option value="Santa Barbara">Santa Barbara</option>
+<option value="Santa Clara">Santa Clara</option>
+<option value="Santa Cruz">Santa Cruz</option>
+<option value="Shasta">Shasta</option>
+<option value="Siskiyou">Siskiyou</option>
+<option value="Solano">Solano</option>
+<option value="Sonoma">Sonoma</option>
+<option value="Stanislaus">Stanislaus</option>
+<option value="Sutter">Sutter</option>
+<option value="Tehama">Tehama</option>
+<option value="Trinity">Trinity</option>
+<option value="Tulare">Tulare</option>
+<option value="Tuolumne">Tuolumne</option>
+<option value="Ventura">Ventura</option>
+<option value="Yolo">Yolo</option>
+<option value="Yuba">Yuba</option></select>
+<script type="application/json" data-for="Demovalue3" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
-<div id="section-column-1" class="section level2" data-height="650">
+</div>
+</div>
+<div id="section-column-1" class="section level2" data-height="350">
 <h2>Column</h2>
-<div id="section-description" class="section level3">
-<h3>Description</h3>
-<p>While this dataset is rich in hospital encounter information, it
-seems to differ from the ‘demo’ datasets described earlier.</p>
- 
-<p>The ‘demo’ datasets focus on broader statistics of people receiving
-homeless response services across various dimensions such as age, race,
-ethnicity, and gender,</p>
- 
-<p>and are sourced from the Homelessness Data Integration System (HDIS)
-which compiles data from California’s Continuums of Care.</p>
- 
-<p>In contrast, the provided dataset is more focused on hospital
-encounters of homeless individuals, offering a detailed view of
-healthcare utilization among this population.</p>
+<div id="section-pie-chart" class="section level3">
+<h3>Pie Chart</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
 </div>
 </div>
 <div id="section-column-2" class="section level2" data-height="350">
@@ -1938,7 +2008,7 @@ healthcare utilization among this population.</p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outa521179529041c03" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outdb57da6a1ce5dfa9" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -1951,28 +2021,72 @@ healthcare utilization among this population.</p>
 </div>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="year-label" for="year">
-<h3>Select Year</h3>
+<h4>Select Year</h4>
+</label>
+<input class="js-range-slider" id="year" data-skin="shiny" data-type="double" data-min="2017" data-max="2023" data-from="2018" data-to="2019" data-step="1" data-grid="true" data-grid-num="6" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number"/>
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="loc-label" for="loc">
+<h3>Choose Location</h3>
 </label>
 <div>
-<select id="year" class="shiny-input-select"><option value="2017" selected>2017</option>
-<option value="2018">2018</option>
-<option value="2019">2019</option>
-<option value="2020">2020</option>
-<option value="2021">2021</option>
-<option value="2022">2022</option>
-<option value="2023">2023</option></select>
-<script type="application/json" data-for="year" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+<select id="loc" class="shiny-input-select"><option value="California" selected>California</option>
+<option value="Santa Clara County CoC">Santa Clara County CoC</option>
+<option value="San Francisco CoC">San Francisco CoC</option>
+<option value="Alameda County CoC">Alameda County CoC</option>
+<option value="Sacramento County CoC">Sacramento County CoC</option>
+<option value="Sonoma County CoC">Sonoma County CoC</option>
+<option value="Contra Costa County CoC">Contra Costa County CoC</option>
+<option value="Monterey, San Benito Counties CoC">Monterey, San Benito Counties CoC</option>
+<option value="Marin County CoC">Marin County CoC</option>
+<option value="Santa Cruz County CoC">Santa Cruz County CoC</option>
+<option value="Mendocino County CoC">Mendocino County CoC</option>
+<option value="Stanislaus County CoC">Stanislaus County CoC</option>
+<option value="San Joaquin County CoC">San Joaquin County CoC</option>
+<option value="San Mateo County CoC">San Mateo County CoC</option>
+<option value="Kings, Tulare Counties CoC">Kings, Tulare Counties CoC</option>
+<option value="Fresno, Madera Counties CoC">Fresno, Madera Counties CoC</option>
+<option value="Placer County CoC">Placer County CoC</option>
+<option value="Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC">Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC</option>
+<option value="Napa County CoC">Napa County CoC</option>
+<option value="Solano County CoC">Solano County CoC</option>
+<option value="Butte County CoC">Butte County CoC</option>
+<option value="Merced County CoC">Merced County CoC</option>
+<option value="Yolo County CoC">Yolo County CoC</option>
+<option value="Humboldt County CoC">Humboldt County CoC</option>
+<option value="Colusa, Glenn, Trinity Counties CoC">Colusa, Glenn, Trinity Counties CoC</option>
+<option value="El Dorado County CoC">El Dorado County CoC</option>
+<option value="Amador, Calaveras, Mariposa, Tuolumne Counties CoC">Amador, Calaveras, Mariposa, Tuolumne Counties CoC</option>
+<option value="Tehama County CoC">Tehama County CoC</option>
+<option value="Lake County CoC">Lake County CoC</option>
+<option value="Alpine, Inyo, Mono Counties CoC">Alpine, Inyo, Mono Counties CoC</option>
+<option value="Nevada County CoC">Nevada County CoC</option>
+<option value="Los Angeles County CoC">Los Angeles County CoC</option>
+<option value="San Diego County CoC">San Diego County CoC</option>
+<option value="Orange County CoC">Orange County CoC</option>
+<option value="Santa Barbara County CoC">Santa Barbara County CoC</option>
+<option value="Kern County CoC">Kern County CoC</option>
+<option value="Long Beach CoC (Los Angeles County)">Long Beach CoC (Los Angeles County)</option>
+<option value="Pasadena CoC (Los Angeles County)">Pasadena CoC (Los Angeles County)</option>
+<option value="Riverside County CoC">Riverside County CoC</option>
+<option value="San Bernardino County CoC">San Bernardino County CoC</option>
+<option value="Ventura County CoC">Ventura County CoC</option>
+<option value="Glendale CoC (Los Angeles County)">Glendale CoC (Los Angeles County)</option>
+<option value="Imperial County CoC">Imperial County CoC</option>
+<option value="San Luis Obispo County CoC">San Luis Obispo County CoC</option>
+<option value="Yuba, Sutter Counties CoC">Yuba, Sutter Counties CoC</option></select>
+<script type="application/json" data-for="loc" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
 </div>
 </div>
 <div id="section-column-4" class="section level2" data-height="650">
 <h2>Column</h2>
-<div id="section-line-plot" class="section level3">
-<h3>Line Plot</h3>
+<div id="section-pie-chart-1" class="section level3">
+<h3>Pie Chart</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out5a4d3366cc296133" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out2c533048742cfec9" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-column-5" class="section level2" data-height="350">
@@ -1982,7 +2096,7 @@ healthcare utilization among this population.</p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out48828b27617c3aed" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out04816bec1736dd34" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -1995,28 +2109,72 @@ healthcare utilization among this population.</p>
 </div>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="year2-label" for="year2">
-<h3>Select Race</h3>
+<h4>Select Year</h4>
+</label>
+<input class="js-range-slider" id="year2" data-skin="shiny" data-type="double" data-min="2017" data-max="2023" data-from="2018" data-to="2019" data-step="1" data-grid="true" data-grid-num="6" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number"/>
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="loc2-label" for="loc2">
+<h3>Choose Location</h3>
 </label>
 <div>
-<select id="year2" class="shiny-input-select"><option value="2017" selected>2017</option>
-<option value="2018">2018</option>
-<option value="2019">2019</option>
-<option value="2020">2020</option>
-<option value="2021">2021</option>
-<option value="2022">2022</option>
-<option value="2023">2023</option></select>
-<script type="application/json" data-for="year2" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+<select id="loc2" class="shiny-input-select"><option value="California" selected>California</option>
+<option value="Santa Clara County CoC">Santa Clara County CoC</option>
+<option value="San Francisco CoC">San Francisco CoC</option>
+<option value="Alameda County CoC">Alameda County CoC</option>
+<option value="Sacramento County CoC">Sacramento County CoC</option>
+<option value="Sonoma County CoC">Sonoma County CoC</option>
+<option value="Contra Costa County CoC">Contra Costa County CoC</option>
+<option value="Monterey, San Benito Counties CoC">Monterey, San Benito Counties CoC</option>
+<option value="Marin County CoC">Marin County CoC</option>
+<option value="Santa Cruz County CoC">Santa Cruz County CoC</option>
+<option value="Mendocino County CoC">Mendocino County CoC</option>
+<option value="Stanislaus County CoC">Stanislaus County CoC</option>
+<option value="San Joaquin County CoC">San Joaquin County CoC</option>
+<option value="San Mateo County CoC">San Mateo County CoC</option>
+<option value="Kings, Tulare Counties CoC">Kings, Tulare Counties CoC</option>
+<option value="Fresno, Madera Counties CoC">Fresno, Madera Counties CoC</option>
+<option value="Placer County CoC">Placer County CoC</option>
+<option value="Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC">Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC</option>
+<option value="Napa County CoC">Napa County CoC</option>
+<option value="Solano County CoC">Solano County CoC</option>
+<option value="Butte County CoC">Butte County CoC</option>
+<option value="Merced County CoC">Merced County CoC</option>
+<option value="Yolo County CoC">Yolo County CoC</option>
+<option value="Humboldt County CoC">Humboldt County CoC</option>
+<option value="Colusa, Glenn, Trinity Counties CoC">Colusa, Glenn, Trinity Counties CoC</option>
+<option value="El Dorado County CoC">El Dorado County CoC</option>
+<option value="Amador, Calaveras, Mariposa, Tuolumne Counties CoC">Amador, Calaveras, Mariposa, Tuolumne Counties CoC</option>
+<option value="Tehama County CoC">Tehama County CoC</option>
+<option value="Lake County CoC">Lake County CoC</option>
+<option value="Alpine, Inyo, Mono Counties CoC">Alpine, Inyo, Mono Counties CoC</option>
+<option value="Nevada County CoC">Nevada County CoC</option>
+<option value="Los Angeles County CoC">Los Angeles County CoC</option>
+<option value="San Diego County CoC">San Diego County CoC</option>
+<option value="Orange County CoC">Orange County CoC</option>
+<option value="Santa Barbara County CoC">Santa Barbara County CoC</option>
+<option value="Kern County CoC">Kern County CoC</option>
+<option value="Long Beach CoC (Los Angeles County)">Long Beach CoC (Los Angeles County)</option>
+<option value="Pasadena CoC (Los Angeles County)">Pasadena CoC (Los Angeles County)</option>
+<option value="Riverside County CoC">Riverside County CoC</option>
+<option value="San Bernardino County CoC">San Bernardino County CoC</option>
+<option value="Ventura County CoC">Ventura County CoC</option>
+<option value="Glendale CoC (Los Angeles County)">Glendale CoC (Los Angeles County)</option>
+<option value="Imperial County CoC">Imperial County CoC</option>
+<option value="San Luis Obispo County CoC">San Luis Obispo County CoC</option>
+<option value="Yuba, Sutter Counties CoC">Yuba, Sutter Counties CoC</option></select>
+<script type="application/json" data-for="loc2" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
 </div>
 </div>
 <div id="section-row" class="section level2" data-height="650">
 <h2>Row</h2>
-<div id="section-line-plot-1" class="section level3">
-<h3>Line Plot</h3>
+<div id="section-pie-chart-2" class="section level3">
+<h3>Pie Chart</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out66aa22ef670f4810" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out09585da73e0d6e42" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-row-1" class="section level2" data-height="350">
@@ -2026,7 +2184,7 @@ healthcare utilization among this population.</p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out61bc1ea22efa03bb" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out0c282bcba658c1bf" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -2039,28 +2197,72 @@ healthcare utilization among this population.</p>
 </div>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="year3-label" for="year3">
-<h3>Select Ethnicity</h3>
+<h4>Select Year</h4>
+</label>
+<input class="js-range-slider" id="year3" data-skin="shiny" data-type="double" data-min="2017" data-max="2023" data-from="2018" data-to="2019" data-step="1" data-grid="true" data-grid-num="6" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number"/>
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="loc3-label" for="loc3">
+<h3>Choose Location</h3>
 </label>
 <div>
-<select id="year3" class="shiny-input-select"><option value="2017" selected>2017</option>
-<option value="2018">2018</option>
-<option value="2019">2019</option>
-<option value="2020">2020</option>
-<option value="2021">2021</option>
-<option value="2022">2022</option>
-<option value="2023">2023</option></select>
-<script type="application/json" data-for="year3" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+<select id="loc3" class="shiny-input-select"><option value="California" selected>California</option>
+<option value="Santa Clara County CoC">Santa Clara County CoC</option>
+<option value="San Francisco CoC">San Francisco CoC</option>
+<option value="Alameda County CoC">Alameda County CoC</option>
+<option value="Sacramento County CoC">Sacramento County CoC</option>
+<option value="Sonoma County CoC">Sonoma County CoC</option>
+<option value="Contra Costa County CoC">Contra Costa County CoC</option>
+<option value="Monterey, San Benito Counties CoC">Monterey, San Benito Counties CoC</option>
+<option value="Marin County CoC">Marin County CoC</option>
+<option value="Santa Cruz County CoC">Santa Cruz County CoC</option>
+<option value="Mendocino County CoC">Mendocino County CoC</option>
+<option value="Stanislaus County CoC">Stanislaus County CoC</option>
+<option value="San Joaquin County CoC">San Joaquin County CoC</option>
+<option value="San Mateo County CoC">San Mateo County CoC</option>
+<option value="Kings, Tulare Counties CoC">Kings, Tulare Counties CoC</option>
+<option value="Fresno, Madera Counties CoC">Fresno, Madera Counties CoC</option>
+<option value="Placer County CoC">Placer County CoC</option>
+<option value="Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC">Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC</option>
+<option value="Napa County CoC">Napa County CoC</option>
+<option value="Solano County CoC">Solano County CoC</option>
+<option value="Butte County CoC">Butte County CoC</option>
+<option value="Merced County CoC">Merced County CoC</option>
+<option value="Yolo County CoC">Yolo County CoC</option>
+<option value="Humboldt County CoC">Humboldt County CoC</option>
+<option value="Colusa, Glenn, Trinity Counties CoC">Colusa, Glenn, Trinity Counties CoC</option>
+<option value="El Dorado County CoC">El Dorado County CoC</option>
+<option value="Amador, Calaveras, Mariposa, Tuolumne Counties CoC">Amador, Calaveras, Mariposa, Tuolumne Counties CoC</option>
+<option value="Tehama County CoC">Tehama County CoC</option>
+<option value="Lake County CoC">Lake County CoC</option>
+<option value="Alpine, Inyo, Mono Counties CoC">Alpine, Inyo, Mono Counties CoC</option>
+<option value="Nevada County CoC">Nevada County CoC</option>
+<option value="Los Angeles County CoC">Los Angeles County CoC</option>
+<option value="San Diego County CoC">San Diego County CoC</option>
+<option value="Orange County CoC">Orange County CoC</option>
+<option value="Santa Barbara County CoC">Santa Barbara County CoC</option>
+<option value="Kern County CoC">Kern County CoC</option>
+<option value="Long Beach CoC (Los Angeles County)">Long Beach CoC (Los Angeles County)</option>
+<option value="Pasadena CoC (Los Angeles County)">Pasadena CoC (Los Angeles County)</option>
+<option value="Riverside County CoC">Riverside County CoC</option>
+<option value="San Bernardino County CoC">San Bernardino County CoC</option>
+<option value="Ventura County CoC">Ventura County CoC</option>
+<option value="Glendale CoC (Los Angeles County)">Glendale CoC (Los Angeles County)</option>
+<option value="Imperial County CoC">Imperial County CoC</option>
+<option value="San Luis Obispo County CoC">San Luis Obispo County CoC</option>
+<option value="Yuba, Sutter Counties CoC">Yuba, Sutter Counties CoC</option></select>
+<script type="application/json" data-for="loc3" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
 </div>
 </div>
 <div id="section-row-2" class="section level2" data-height="650">
 <h2>Row</h2>
-<div id="section-line-plot-2" class="section level3">
-<h3>Line Plot</h3>
+<div id="section-pie-chart-3" class="section level3">
+<h3>Pie Chart</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outd537732137982041" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out6b9b9d3d3eb7d1fc" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-row-3" class="section level2" data-height="350">
@@ -2070,7 +2272,7 @@ healthcare utilization among this population.</p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outfbfad59f2d0903c1" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out4b2d9df77ad8ea1f" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -2083,28 +2285,72 @@ healthcare utilization among this population.</p>
 </div>
 <div class="form-group shiny-input-container">
 <label class="control-label" id="year4-label" for="year4">
-<h3>Select Gender</h3>
+<h4>Select Year</h4>
+</label>
+<input class="js-range-slider" id="year4" data-skin="shiny" data-type="double" data-min="2017" data-max="2023" data-from="2018" data-to="2019" data-step="1" data-grid="true" data-grid-num="6" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number"/>
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" id="loc4-label" for="loc4">
+<h3>Choose Location</h3>
 </label>
 <div>
-<select id="year4" class="shiny-input-select"><option value="2017" selected>2017</option>
-<option value="2018">2018</option>
-<option value="2019">2019</option>
-<option value="2020">2020</option>
-<option value="2021">2021</option>
-<option value="2022">2022</option>
-<option value="2023">2023</option></select>
-<script type="application/json" data-for="year4" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+<select id="loc4" class="shiny-input-select"><option value="California" selected>California</option>
+<option value="Santa Clara County CoC">Santa Clara County CoC</option>
+<option value="San Francisco CoC">San Francisco CoC</option>
+<option value="Alameda County CoC">Alameda County CoC</option>
+<option value="Sacramento County CoC">Sacramento County CoC</option>
+<option value="Sonoma County CoC">Sonoma County CoC</option>
+<option value="Contra Costa County CoC">Contra Costa County CoC</option>
+<option value="Monterey, San Benito Counties CoC">Monterey, San Benito Counties CoC</option>
+<option value="Marin County CoC">Marin County CoC</option>
+<option value="Santa Cruz County CoC">Santa Cruz County CoC</option>
+<option value="Mendocino County CoC">Mendocino County CoC</option>
+<option value="Stanislaus County CoC">Stanislaus County CoC</option>
+<option value="San Joaquin County CoC">San Joaquin County CoC</option>
+<option value="San Mateo County CoC">San Mateo County CoC</option>
+<option value="Kings, Tulare Counties CoC">Kings, Tulare Counties CoC</option>
+<option value="Fresno, Madera Counties CoC">Fresno, Madera Counties CoC</option>
+<option value="Placer County CoC">Placer County CoC</option>
+<option value="Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC">Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC</option>
+<option value="Napa County CoC">Napa County CoC</option>
+<option value="Solano County CoC">Solano County CoC</option>
+<option value="Butte County CoC">Butte County CoC</option>
+<option value="Merced County CoC">Merced County CoC</option>
+<option value="Yolo County CoC">Yolo County CoC</option>
+<option value="Humboldt County CoC">Humboldt County CoC</option>
+<option value="Colusa, Glenn, Trinity Counties CoC">Colusa, Glenn, Trinity Counties CoC</option>
+<option value="El Dorado County CoC">El Dorado County CoC</option>
+<option value="Amador, Calaveras, Mariposa, Tuolumne Counties CoC">Amador, Calaveras, Mariposa, Tuolumne Counties CoC</option>
+<option value="Tehama County CoC">Tehama County CoC</option>
+<option value="Lake County CoC">Lake County CoC</option>
+<option value="Alpine, Inyo, Mono Counties CoC">Alpine, Inyo, Mono Counties CoC</option>
+<option value="Nevada County CoC">Nevada County CoC</option>
+<option value="Los Angeles County CoC">Los Angeles County CoC</option>
+<option value="San Diego County CoC">San Diego County CoC</option>
+<option value="Orange County CoC">Orange County CoC</option>
+<option value="Santa Barbara County CoC">Santa Barbara County CoC</option>
+<option value="Kern County CoC">Kern County CoC</option>
+<option value="Long Beach CoC (Los Angeles County)">Long Beach CoC (Los Angeles County)</option>
+<option value="Pasadena CoC (Los Angeles County)">Pasadena CoC (Los Angeles County)</option>
+<option value="Riverside County CoC">Riverside County CoC</option>
+<option value="San Bernardino County CoC">San Bernardino County CoC</option>
+<option value="Ventura County CoC">Ventura County CoC</option>
+<option value="Glendale CoC (Los Angeles County)">Glendale CoC (Los Angeles County)</option>
+<option value="Imperial County CoC">Imperial County CoC</option>
+<option value="San Luis Obispo County CoC">San Luis Obispo County CoC</option>
+<option value="Yuba, Sutter Counties CoC">Yuba, Sutter Counties CoC</option></select>
+<script type="application/json" data-for="loc4" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 </div>
 </div>
 </div>
 <div id="section-row-4" class="section level2" data-height="650">
 <h2>Row</h2>
-<div id="section-line-plot-3" class="section level3">
-<h3>Line Plot</h3>
+<div id="section-pie-chart-4" class="section level3">
+<h3>Pie Chart</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outb948a24c6b4b43a0" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outf8746e30d2fdf652" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-row-5" class="section level2" data-height="350">
@@ -2114,7 +2360,7 @@ healthcare utilization among this population.</p>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outb60620d94582cb38" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outacebdb9c2d06c8f0" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -2163,37 +2409,56 @@ race_clean &lt;- read.csv("./processed data/demo/cleaned_race_demo.csv")
 Homeless People Receiving Hospital Healthcare Services in Hospitals
 ===================================== 
 
-Column {.sidebar}
+Column {data-height=350}
 -----------------------------------------------------------------------
 
 ```{r}
-DemoValue = homeless_data |&gt; distinct(Demographic) |&gt; pull()
+DemoValue = homeless_data |&gt; distinct(EncounterType) |&gt; pull()
 
 radioButtons(
   inputId = "DemoValue", 
-  label = h3("Select a Demographic Category"),
+  label = h3("Select the Hospital's Type of Encounters (for Bar Plot)"),
   choices = DemoValue,
-  selected = "Age")
+  selected = "Inpatient Hospitalizations")
+
+DemoValue2 = homeless_data |&gt; distinct(Ownership) |&gt; pull()
+
+radioButtons(
+  inputId = "DemoValue2", 
+  label = h3("Select the Hospital's Type of Ownership (for Bar Plot)"),
+  choices = DemoValue2,
+  selected = "Government")
+
+DemoValue3 = homeless_data |&gt; distinct(HospitalCounty) |&gt; pull()
+
+selectInput(
+  inputId = "Demovalue3",
+  label = h3("Select the type of Demographic Value for Homelessnes (for Pie Chart)"),
+  choices = DemoValue3,
+  selected = "Alameda")
 ```
 
-Column {data-height=650}
+Column {data-height=350}
 -----------------------------------------------------------------------
 
-### Description
+### Pie Chart
 
-While this dataset is rich in hospital encounter information, it seems to differ from the ‘demo’ datasets described earlier. 
+```{r}
+# homeless_pie =
+#   homeless_data |&gt;
+#   group_by(HospitalCounty, DemographicValue) |&gt;
+#   summarise(total_homelessness = sum(Encounters))
+# 
+# renderPlotly({
+#   homeless_pie |&gt;
+#     filter(HospitalCounty == input$DemoValue3) |&gt;
+#     plot_ly(label = ~DemographicValue, values = ~total_homelessness, type ="pie") |&gt;
+#      layout(title = "Total Homelessness by Different Types of Demographic Parameters",
+#          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+#          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+# })
+```
 
-\ \par
-
-The ‘demo’ datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, 
-
-\ \par
-
-and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California’s Continuums of Care. 
-
-\ \par
-
-In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population.
 
 Column {data-height=350}
 -----------------------------------------------------------------------
@@ -2201,17 +2466,23 @@ Column {data-height=350}
 ### Bar Plot
 
 ```{r}
-homeless_data_bar =
-  homeless_data |&gt;
-  group_by(Demographic, DemographicValue) |&gt;
-  summarise(total_homelessness = sum(Encounters))
-
 renderPlotly({
-  homeless_data_bar |&gt; 
-    filter(Demographic == input$DemoValue) |&gt;
-    plot_ly(x = ~DemographicValue, y = ~total_homelessness, type = 'bar') |&gt;
+  homeless_data |&gt;
+    filter(!is.na(HospitalCounty),
+           EncounterType == input$DemoValue,
+           Ownership == input$DemoValue2) |&gt;
+    group_by(HospitalCounty) |&gt;
+    summarise(count = sum(Encounters)) |&gt;
+    top_n(10, count) |&gt;
+    mutate(
+      HospitalCounty = fct_reorder(HospitalCounty,count)
+      ) |&gt;
+    plot_ly(x = ~HospitalCounty, y = ~count, color = ~HospitalCounty, type = "bar") %&gt;% 
     layout(
-      title = "Total Homelessness Receiving Hospitals' Services")
+      title = "Top 10 Californian Counties By Encounters of Homelessness", 
+      xaxis = list(title = "Counties"),
+      yaxis = list(title = "Number of Homelessness")
+      )
 })
 ```
 
@@ -2222,34 +2493,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year = age_clean %&gt;% distinct(calendar_year) %&gt;% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = age_clean |&gt; distinct(location) |&gt; pull() 
+
 selectInput(
-  inputId = "year", 
-  label = h3("Select Year"),
-  choices = year,
-  selected = "2017")
+  inputId = "loc", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Column {data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-age_line =
+age_pie = 
   age_clean |&gt;
-  select(-location) |&gt;
-  group_by(calendar_year, age_group_public) |&gt;
+  group_by(location, age_group_public) |&gt;
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-age_line |&gt; 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nAge Group: ", age_group_public)) |&gt; 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~age_group_public, colors = "viridis", text = ~text_label, alpha = 0.8) |&gt;
-    layout(title = "Total Homelessness by Age")
-
+  age_pie |&gt;
+    filter(location == input$loc) |&gt;
+    plot_ly(labels = ~age_group_public, values = ~total_homelessness, type ="pie") |&gt;
+     layout(title = "Total Homelessness by Age across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -2266,7 +2543,7 @@ age_bar =
 
 renderPlotly({
   age_bar |&gt; 
-    filter(calendar_year == input$year) |&gt;
+    filter(calendar_year %in% input$year[1]:input$year[2]) |&gt;
     plot_ly(x = ~age_group_public, y = ~total_homelessness, type = "bar") |&gt;
     layout(
       title = "Total Homelessness by Age across Years")
@@ -2280,35 +2557,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year2 = race_clean %&gt;% distinct(calendar_year) %&gt;% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year2",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = race_clean |&gt; distinct(location) |&gt; pull() 
+
 selectInput(
-  inputId = "year2", 
-  label = h3("Select Race"),
-  choices = year2,
-  selected = "2017")
-
+  inputId = "loc2", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-race_line =
+race_pie = 
   race_clean |&gt;
-  select(-location) |&gt;
-  group_by(calendar_year, race) |&gt;
+  group_by(location, race) |&gt;
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-race_line |&gt; 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nRace Group: ", race)) |&gt; 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~race, colors = "viridis", text = ~text_label, alpha = 0.8) |&gt;
-    layout(title = "Total Homelessness by Race")
-
+  race_pie |&gt;
+    filter(location == input$loc2) |&gt;
+    plot_ly(labels = ~race, values = ~total_homelessness, type ="pie") |&gt;
+     layout(title = "Total Homelessness by Race across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -2325,7 +2607,7 @@ race_box =
 
 renderPlotly({
   race_box |&gt; 
-    filter(calendar_year == input$year2) |&gt;
+    filter(calendar_year %in% input$year2[1]:input$year2[2]) |&gt;
     plot_ly(x = ~race, y = ~total_homelessness, type = "bar") |&gt;
     layout(
       title = "Total Homelessness by Race across Years")
@@ -2339,35 +2621,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year3 = ethnicity_clean %&gt;% distinct(calendar_year) %&gt;% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year3",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = ethnicity_clean |&gt; distinct(location) |&gt; pull() 
+
 selectInput(
-  inputId = "year3", 
-  label = h3("Select Ethnicity"),
-  choices = year3,
-  selected = "2017")
-
+  inputId = "loc3", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-ethnicity_line =
+ethnicity_pie = 
   ethnicity_clean |&gt;
-  select(-location) |&gt;
-  group_by(calendar_year, ethnicity) |&gt;
+  group_by(location, ethnicity) |&gt;
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-ethnicity_line |&gt; 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nEthnicity Group: ", ethnicity)) |&gt; 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~ethnicity, colors = "viridis", text = ~text_label, alpha = 0.8) |&gt;
-    layout(title = "Total Homelessness by Ethnicity")
-
+  ethnicity_pie |&gt;
+    filter(location == input$loc3) |&gt;
+    plot_ly(labels = ~ethnicity, values = ~total_homelessness, type ="pie") |&gt;
+     layout(title = "Total Homelessness by Ethnicity across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -2384,7 +2671,7 @@ ethnicity_box =
 
 renderPlotly({
   ethnicity_box |&gt; 
-    filter(calendar_year == input$year3) |&gt;
+    filter(calendar_year %in% input$year3[1]:input$year3[2]) |&gt;
     plot_ly(x = ~ethnicity, y = ~total_homelessness, type = "bar") |&gt;
     layout(
       title = "Total Homelessness by Ethnicity across Years")
@@ -2398,35 +2685,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year4 = gender_clean %&gt;% distinct(calendar_year) %&gt;% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year4",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = gender_clean |&gt; distinct(location) |&gt; pull() 
+
 selectInput(
-  inputId = "year4", 
-  label = h3("Select Gender"),
-  choices = year4,
-  selected = "2017")
-
+  inputId = "loc4", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-gender_line =
+gender_pie = 
   gender_clean |&gt;
-  select(-location) |&gt;
-  group_by(calendar_year, gender) |&gt;
+  group_by(location, gender) |&gt;
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-gender_line |&gt; 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nGender Group: ", gender)) |&gt; 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~gender, colors = "viridis", text = ~text_label, alpha = 0.8) |&gt;
-    layout(title = "Total Homelessness by Gender")
-
+  gender_pie |&gt;
+    filter(location == input$loc4) |&gt;
+    plot_ly(labels = ~gender, values = ~total_homelessness, type ="pie") |&gt;
+     layout(title = "Total Homelessness by Gender across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -2443,7 +2735,7 @@ gender_box =
 
 renderPlotly({
   gender_box |&gt; 
-    filter(calendar_year == input$year4) |&gt;
+    filter(calendar_year %in% input$year4[1]:input$year4[2]) |&gt;
     plot_ly(x = ~gender, y = ~total_homelessness, type = "bar") |&gt;
     layout(
       title = "Total Homelessness by Gender across Years")
