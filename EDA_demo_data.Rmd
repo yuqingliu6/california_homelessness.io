@@ -47,7 +47,7 @@ Then we removed the unneeded variable "location_id", and removed the null value 
 
 Finally, we batch export and import the four cleaned csv files into datasets.
 
-```{r}
+```{r, message=FALSE}
 # import data
 library(tidyverse)
 age_demo = read.csv("./original data/demo/age_demo.csv")
@@ -92,6 +92,78 @@ ethnicity_clean = read.csv("./processed data/demo/cleaned_ethnicity_demo.csv")
 gender_clean = read.csv("./processed data/demo/cleaned_gender_demo.csv")
 race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 ```
+
+### Summary
+
+To begin with the analyzing process, we first summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately for each of the four datasets:
+
+Dataset categorized by age:
+
+```{r}
+age_clean_for_summary = 
+  age_clean |>
+  select(-location)
+
+age_clean_for_summary |>
+  group_by(age_group_public) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by ethnicity:
+
+```{r}
+ethnicity_clean_for_summary = 
+  ethnicity_clean |>
+  select(-location)
+
+ethnicity_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+ethnicity_clean_for_summary |>
+  group_by(ethnicity) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by gender:
+
+```{r}
+gender_clean_for_summary = 
+  gender_clean |>
+  select(-location)
+
+gender_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+gender_clean_for_summary |>
+  group_by(gender) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by race:
+
+```{r}
+race_clean_for_summary = 
+  race_clean |>
+  select(-location)
+
+race_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+race_clean_for_summary |>
+  group_by(race) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
 
 ### Data visualization
 
@@ -228,6 +300,68 @@ homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
 homeless_data<-homeless_ip %>% 
   filter(HomelessIndicator == "Homeless")
 ```
+
+### Summary
+
+Again, To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset.
+
+-   Important Variables:
+
+`EncounterType`: whether receiving ED Visits or Inpatient Hospitalizations.
+`FacilityName` :name of hospitals and systems the hospitals belong to.
+`Ownership`: type of ownership that hospitals belong to.
+
+`Urban_Rural`: whether hospitals locate in urban or rural areas.
+
+`LicensedBedSize`: size of licensed beds per hospital.
+
+`PrimaryCareShortageArea`: whether hospitals locate in area with limited primary care.
+
+`MentalHealthShortageArea`: whether hospitals locate in area with limited mental health care.
+
+```{r}
+homeless_data_for_summary =
+  homeless_data |>
+  filter(HomelessIndicator == "Homeless") |>
+  select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
+
+homeless_data_for_summary |>
+  group_by(EncounterType) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(FacilityName) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+
+homeless_data_for_summary |>
+  group_by(Ownership) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(Urban_Rural) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(LicensedBedSize) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(PrimaryCareShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(MentalHealthShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+
 
 
 ### Data Visualization
