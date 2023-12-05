@@ -24,149 +24,145 @@ library(MASS)
 ```
 
 ## Import Data & Recoding
-
-First, we import data and filter homeless people and only focus on the Demographic "Payer". Then we change several variables into factors and tidy the data.
-
-Explanation for factor variables:
-
-| Variable | Description |
-|-------|-----------|
-|LicensedBedSize| 1 = "1-99", 2 = "100-199", 3 = "200-299", 4 = "300-399", 5 = "400+"|
-|Ownership| 1 = "Investor", 2 = "Non-Profit", 3 = "Government"|
-|EncounterType|1 = "ED Visits", 0 = "Inpatient Hospitalizations"|
-|Urban_Rural| 1 = "Rural/Frontier", 0 = "Urban"|
-|Teaching| 1 = "Teaching", 0 = "Non-Teaching"|
-|PrimaryCareShortageArea|1 = "Yes", 0 = "No"|
-|MentalHealthShortageArea|1 = "Yes", 0 = "No"|
-|Payer| 1 = "Medi-Cal", 2 = "Medicare", 3 = "Other Payer", 4 = "Private Coverage", 5 = "Uninsured"|
-
+First import data and create dummy variables for categorical variables.
 ```{r, message=FALSE}
-dat <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv") |>
-   filter(HomelessIndicator == "Homeless" & Demographic == "Payer")
+dat <- read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")|>
+  filter(HomelessIndicator == "Homeless") 
 
-dat_clean <- dat |> 
-  dplyr::select(HomelessIndicator,Ownership, Urban_Rural, Teaching, EncounterType, LicensedBedSize, PrimaryCareShortageArea,
-                MentalHealthShortageArea, DemographicValue, Encounters) |>
-  mutate(LicensedBedSize = match(LicensedBedSize,c("1-99","100-199","200-299","300-399","400+")),
-         Ownership = match(Ownership, c("Investor", "Non-Profit", "Government")),
-         EncounterType = ifelse(EncounterType == "ED Visits",1,0),
-         Urban_Rural = ifelse(Urban_Rural == "Rural/Frontier",1,0),
-         Teaching = ifelse(Teaching == "Teaching",1,0),
-         PrimaryCareShortageArea = ifelse(PrimaryCareShortageArea == "Yes",1,0),
-         MentalHealthShortageArea = ifelse(MentalHealthShortageArea == "Yes",1,0),
-         Payer = match(DemographicValue, c("Medi-Cal", "Medicare", "Other Payer", "Private Coverage", "Uninsured"))
-         )|>
-           mutate(across(-Encounters, as.factor)) |> 
-  dplyr::select(-DemographicValue,-HomelessIndicator) |>
-           janitor::clean_names() 
-         
-summary(dat_clean)
-dat_clean
+### EncounterType
+dat$ed_visit <- ifelse(dat$EncounterType=="ED Visits",1,0)
+
+### Ownership
+dat$government <- ifelse(dat$Ownership=="Government",1,0)
+dat$investor <- ifelse(dat$Ownership=="Investor",1,0)
+
+### Urban_Rural
+dat$rural <- ifelse(dat$Urban_Rural=="Rural/Frontier",1,0)
+
+### LicensedBedSize
+## the first level will be treated as ref
+dat$LicensedBedSize <- as.factor(dat$LicensedBedSize)
+dat$ordered_LicensedBedSize <- ordered(dat$LicensedBedSize, 
+                             levels = c("1-99","100-199","200-299","300-399","400+"))
 ```
+The variables and corresponding descriptions are as follows.
+
+| Variable | Description | Value |
+|-------|-----------|-----------|
+| ed_visit | Dummy variable for EncounterType  | 1=ED Visits, 0=Inpatient Hospitalizations   |
+| government | Dummy variable for Ownership | 1=Government, 0=Otherwise |
+| investor | Dummy variable for Ownership | 1=Investor, 0=Otherwise |
+| rural | Dummy variable for Urban_Rural | 1=Rural/Frontier, 0=Urban |
+
+## Univariate Analysis
+We conducted univariate analyses to identify individual factors associated with outcomes `Encounters`. 
 
 ```{r}
-library(ggplot2)
+# Function to round all numeric columns in a dataframe
+round_df <- function(df, digits) {
+  df %>% mutate(across(where(is.numeric), ~ round(., digits)))
+}
 
-# Histogram
-ggplot(dat_clean, aes(x = encounters)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Histogram of encounters", x = "encounters", y = "Frequency")
+# Create tidied summaries for each model and round them
+### EncounterType
+tidy_ed_visit <- round_df(broom::tidy(lm(Encounters ~ ed_visit, data = dat)), 4) %>%
+  mutate(Model = "EncounterType")
 
-# Kernel Density Plot
-ggplot(dat_clean, aes(x = log(encounters))) +
-  geom_density(fill = "blue", alpha = 0.7) +
-  labs(title = "Kernel Density Plot of log(encounters)", x = "log(encounters)", y = "Density")
+### Ownership
+tidy_Ownership <- round_df(broom::tidy(lm(Encounters ~ government + investor, data = dat)), 4) %>%
+  mutate(Model = "Ownership")
+
+### Urban_Rural
+tidy_Urban_Rural <- round_df(broom::tidy(lm(Encounters ~ rural, data = dat)), 4) %>%
+  mutate(Model = "Urban_Rural")
+
+### LicensedBedSize
+tidy_LicensedBedSize <- round_df(broom::tidy(lm(Encounters ~ ordered_LicensedBedSize, data = dat)), 4) %>%
+  mutate(Model = "LicensedBedSize")
+
+# Combine all tidied summaries into one table
+combined_table <- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, tidy_LicensedBedSize)
+
+# Output the table
+knitr::kable(combined_table)
 ```
+**Description**
+
+* **EncounterType Model**: The increase in the number of encounters for each additional emergency department visit. It is highly significant (p < 0.0001), suggesting a strong relationship between emergency department visits and the number of encounters.
+* **Ownership Model**: The differences in the number of encounters for government-owned and investor-owned facilities compared to the Non-Profit facilities. Both coefficients are significant (p < 0.0001), indicating that ownership type is an important predictor of encounters. 
+* **Urban_Rural Model**: The difference in the number of encounters between Rural/Frontier and Urban facilities. The negative coefficient suggests that Rural/Frontier facilities have fewer encounters than urban ones, and this is highly significant (p < 0.0001).
+* **LicensedBedSize Model**: Coefficients (L, Q, C, ^4) represent the linear, quadratic, cubic, and quartic terms in a polynomial regression model for ordered bed sizes. The 'L' term has a highly significant positive coefficient, indicating an initial increase in encounters with bed size. However, the lack of significance in the cubic ('C') terms, and the non-significant quadratic ('Q') and quartic term ('^4'), suggests that the relationship might not be strongly non-linear or that there is insufficient data to detect higher-order non-linearities.
+
+
+## Correlation Matrix
+Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coefficients when constructing correlation matrix.
+```{r,message=FALSE}
+dat1 <- dat %>%
+  mutate(ordered_LicensedBedSize = as.numeric(ordered_LicensedBedSize)) %>%
+  dplyr::select(ed_visit, government, investor, rural, ordered_LicensedBedSize, Encounters)
+
+correlation_matrix <- cor(dat1, method = "spearman", use = "complete.obs")
+
+# Visualize
+corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "black", tl.srt = 45, insig = "blank" , number.cex = 0.7, diag = FALSE)
+```
+
+**Description**
+
+* the variable `ordered_LicensedBedSize` seems to have a moderately positive correlation with `Encounters` (0.41), suggesting that facilities with more licensed beds tend to have more encounters.
+* rural has a strong negative correlation with `ordered_LicensedBedSize` (-0.45), implying that rural facilities are likely to have fewer licensed beds.
+* Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
+
 ## Yeo-Johnson transformation
-
-The Yeo-Johnson transformation is a data transformation method used to adjust the distribution of data, similar to the Box-Cox transformation. It can handle a wide range of data, including both positive and negative values, and is particularly useful for reducing skewness. The Yeo-Johnson transformation is parameterized, allowing it to handle both positive and negative values.
-
 Since `Encounters` can be 0, use Yeo-Johnson transformation instead of Box-Cox transformation.
 ```{r,fig.width = 9, fig.height = 6,out.width= "60%", fig.align = 'center'}
 # Shift the response variable to ensure all values are positive
-shift_constant <- abs(min(dat_clean$encounters)) + 1  # Ensure the minimum value is at least 1
-dat_clean$encounters_shifted <- dat_clean$encounters + shift_constant
+shift_constant <- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
+dat$Encounters_shifted <- dat$Encounters + shift_constant
 
 # Fit the model with the shifted response variable
-fit2_shifted <- lm(encounters_shifted ~ ., data = dat_clean)
+fit2_shifted <- lm(Encounters_shifted ~ ed_visit + government + investor + rural + ordered_LicensedBedSize, data = dat)
 
 # Apply Box-Cox transformation on the shifted response variable
 bc_shifted <- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))
 ```
 
-#Yeo-Johnson method applies a transformation by raising `Encounters_shifted` to different power, as we can see above, $\lambda$ is close to 0, so we need to do natural logarithm transformation, turn `Encounters_shifted` into ln(`Encounters_shifted`).
+Yeo-Johnson method applies a transformation by raising `Encounters_shifted` to different power, as we can see above, $\lambda$ is close to 0, so we need to do natural logarithm transformation, turn `Encounters_shifted` into ln(`Encounters_shifted`).
 
-#Then we consider a model with the main effects of all variables and then use stepwise regression to select appropriate variables
 
-## Method:
-### Multiple Linear Regression:
-
-Multiple Linear Regression (MLR) is a statistical technique that extends the concept of simple linear regression to analyze the relationship between multiple independent variables and a dependent variable. In MLR, the model is represented as:
-
-MLR allows us to assess the individual and collective impact of each independent variable on the dependent variable, providing valuable insights into the underlying relationships within the data. Assumptions, such as linearity, independence, homoscedasticity, and normality of residuals, are crucial for the validity of MLR results.
-
-### Stepwise Regression:
-
-Stepwise Regression is a variable selection technique used in the context of multiple regression analysis. It systematically selects a subset of independent variables from a larger set, either by adding or removing variables based on specific criteria. There are two main types of stepwise regression: forward selection and backward elimination.
-
-Backward Elimination:
-Beginning with a model that includes all variables, backward elimination removes variables one at a time, excluding the variable that contributes the least to the model's explanatory power. The process continues until no more variables meet the exclusion criteria.
-
-Stepwise Regression is employed to streamline the model by selecting the most influential variables while minimizing overfitting. 
+## Multivariable Regression Model
 
 ```{r}
-# full model
-model_all <- lm(encounters ~ ., data = dat_clean)
+dat = dat %>%
+  mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
+model = round_df(broom::tidy(lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)) ,4)
+fit= lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)
 
-# stepwise regression
-model_stepwise <- step(model_all, direction = "backward")
-
-model_all |> 
-  broom::tidy() |>
-  knitr::kable(digits = 3)
-
-summary(model_stepwise)
-
-model_stepwise |> 
-  broom::tidy() |> 
-  knitr::kable(digits = 3)
+knitr::kable(model)
 ```
 
-### Variance Inflation Factor (VIF)
-The Variance Inflation Factor (VIF) is a common indicator used to detect multicollinearity in regression models. A higher VIF value indicates that the corresponding independent variable is more likely to be influenced by other independent variables. Typically, VIF values exceeding 10 or 20 are considered indicative of the presence of multicollinearity.
+**Description**
 
-```{r}
-library(car)
-vif_values <- vif(model_stepwise)
-print(vif_values)
-# The result is no multicollinearity.
-```
-We show a plot of model residuals against fitted values.
+* **Coefficients**:
+  * `ed_visit`: This predictor has a positive estimated coefficient of 1.2819, suggesting that there is a positive association between ed_visit and the response variable. Given the p-value is practically zero, this relationship is statistically significant.
+  * `government`: The positive coefficient of 0.2311 for government implies a positive effect on the response variable, which is statistically significant based on the p-value.
+  * `investor`: This predictor has a negative coefficient of -0.1235, suggesting a negative association with the response variable. The p-value indicates this effect is statistically significant, although it is less significant than some other predictors given the higher (but still <0.05) p-value.
+  * `rural`: The coefficient of -0.9272 indicates a strong negative relationship with the response variable, and the p-value confirms that this relationship is statistically significant.
+  * `ordered_LicensedBedSize.L` (Linear term): The positive coefficient of 1.4611 for this term suggests a significant positive linear trend related to ordered_LicensedBedSize and the response variable.
+  * `ordered_LicensedBedSize.Q` (Quadratic term): The negative coefficient of -0.4487 suggests that the relationship between ordered_LicensedBedSize and the response variable has a significant quadratic component, indicating a curved relationship.
+  * `ordered_LicensedBedSize.C` (Cubic term): The cubic term has a positive coefficient of 0.2347 and a statistically significant p-value, indicating a cubic relationship is present.
+  * `ordered_LicensedBedSize^4`: The fourth-degree polynomial term is not statistically significant (p-value 0.2121) and has a small estimated effect (0.0518), suggesting that it may not be a useful predictor in the model.
+* Model Fit: The Multiple R-squared value of 0.2684 suggests that approximately 26.84% of the variability in Encounters is explained by the model.
 
-```{r}
-library(modelr)
-dat_clean %>% 
-    add_predictions(model_stepwise) %>% 
-    add_residuals(model_stepwise) %>% 
-    ggplot(aes(x = pred, y = resid)) +
-    geom_point()  + 
-    geom_smooth(method = "lm") + 
-    labs(title = "Model residuals against fitted values", 
-       x = "Predicted values", 
-       y = "Residuals") +
-  theme_minimal()
+## Model Diagnostics
+```{r, fig.align= "center"}
+par(mfrow = c(2,2))
+plot(fit)
 ```
 
-We observe a plot of model residuals against fitted values in regression analysis and notice that the slope is close to zero, it suggests that there is homoscedasticity in the residuals. Homoscedasticity means that the variability of the residuals (or errors) is approximately constant across all levels of the independent variable(s) or across the range of predicted values, which is a desirable assumption in regression analysis. 
+**Description**
 
-
-
-
-
-
-
-
-
-
-
-
+* The "Residuals vs Fitted" plot shows a funnel-like shape, suggesting potential heteroscedasticity.
+* The "Normal Q-Q" plot has deviations from normality, especially in the tails.
+* The "Scale-Location" plot shows some signs of heteroscedasticity as the spread of residuals increases with the fitted values.
+* The "Residuals vs Leverage" plot indicates a few points with high leverage, but without knowing the Cook's distance threshold, it's unclear if these are problematic.
