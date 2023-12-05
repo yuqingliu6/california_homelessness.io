@@ -25,37 +25,56 @@ race_clean <- read.csv("./processed data/demo/cleaned_race_demo.csv")
 Homeless People Receiving Hospital Healthcare Services in Hospitals
 ===================================== 
 
-Column {.sidebar}
+Column {data-height=350}
 -----------------------------------------------------------------------
 
 ```{r}
-DemoValue = homeless_data |> distinct(Demographic) |> pull()
+DemoValue = homeless_data |> distinct(EncounterType) |> pull()
 
 radioButtons(
   inputId = "DemoValue", 
-  label = h3("Select a Demographic Category"),
+  label = h3("Select the Hospital's Type of Encounters (for Bar Plot)"),
   choices = DemoValue,
-  selected = "Age")
+  selected = "Inpatient Hospitalizations")
+
+DemoValue2 = homeless_data |> distinct(Ownership) |> pull()
+
+radioButtons(
+  inputId = "DemoValue2", 
+  label = h3("Select the Hospital's Type of Ownership (for Bar Plot)"),
+  choices = DemoValue2,
+  selected = "Government")
+
+DemoValue3 = homeless_data |> distinct(HospitalCounty) |> pull()
+
+selectInput(
+  inputId = "Demovalue3",
+  label = h3("Select the type of Demographic Value for Homelessnes (for Pie Chart)"),
+  choices = DemoValue3,
+  selected = "Alameda")
 ```
 
-Column {data-height=650}
+Column {data-height=350}
 -----------------------------------------------------------------------
 
-### Description
+### Pie Chart
 
-While this dataset is rich in hospital encounter information, it seems to differ from the ‘demo’ datasets described earlier. 
+```{r}
+# homeless_pie =
+#   homeless_data |>
+#   group_by(HospitalCounty, DemographicValue) |>
+#   summarise(total_homelessness = sum(Encounters))
+# 
+# renderPlotly({
+#   homeless_pie |>
+#     filter(HospitalCounty == input$DemoValue3) |>
+#     plot_ly(label = ~DemographicValue, values = ~total_homelessness, type ="pie") |>
+#      layout(title = "Total Homelessness by Different Types of Demographic Parameters",
+#          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+#          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+# })
+```
 
-\ \par
-
-The ‘demo’ datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, 
-
-\ \par
-
-and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California’s Continuums of Care. 
-
-\ \par
-
-In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population.
 
 Column {data-height=350}
 -----------------------------------------------------------------------
@@ -63,17 +82,23 @@ Column {data-height=350}
 ### Bar Plot
 
 ```{r}
-homeless_data_bar =
-  homeless_data |>
-  group_by(Demographic, DemographicValue) |>
-  summarise(total_homelessness = sum(Encounters))
-
 renderPlotly({
-  homeless_data_bar |> 
-    filter(Demographic == input$DemoValue) |>
-    plot_ly(x = ~DemographicValue, y = ~total_homelessness, type = 'bar') |>
+  homeless_data |>
+    filter(!is.na(HospitalCounty),
+           EncounterType == input$DemoValue,
+           Ownership == input$DemoValue2) |>
+    group_by(HospitalCounty) |>
+    summarise(count = sum(Encounters)) |>
+    top_n(10, count) |>
+    mutate(
+      HospitalCounty = fct_reorder(HospitalCounty,count)
+      ) |>
+    plot_ly(x = ~HospitalCounty, y = ~count, color = ~HospitalCounty, type = "bar") %>% 
     layout(
-      title = "Total Homelessness Receiving Hospitals' Services")
+      title = "Top 10 Californian Counties By Encounters of Homelessness", 
+      xaxis = list(title = "Counties"),
+      yaxis = list(title = "Number of Homelessness")
+      )
 })
 ```
 
@@ -84,34 +109,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year = age_clean %>% distinct(calendar_year) %>% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = age_clean |> distinct(location) |> pull() 
+
 selectInput(
-  inputId = "year", 
-  label = h3("Select Year"),
-  choices = year,
-  selected = "2017")
+  inputId = "loc", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Column {data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-age_line =
+age_pie = 
   age_clean |>
-  select(-location) |>
-  group_by(calendar_year, age_group_public) |>
+  group_by(location, age_group_public) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-age_line |> 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nAge Group: ", age_group_public)) |> 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~age_group_public, colors = "viridis", text = ~text_label, alpha = 0.8) |>
-    layout(title = "Total Homelessness by Age")
-
+  age_pie |>
+    filter(location == input$loc) |>
+    plot_ly(labels = ~age_group_public, values = ~total_homelessness, type ="pie") |>
+     layout(title = "Total Homelessness by Age across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -128,7 +159,7 @@ age_bar =
 
 renderPlotly({
   age_bar |> 
-    filter(calendar_year == input$year) |>
+    filter(calendar_year %in% input$year[1]:input$year[2]) |>
     plot_ly(x = ~age_group_public, y = ~total_homelessness, type = "bar") |>
     layout(
       title = "Total Homelessness by Age across Years")
@@ -142,35 +173,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year2 = race_clean %>% distinct(calendar_year) %>% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year2",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = race_clean |> distinct(location) |> pull() 
+
 selectInput(
-  inputId = "year2", 
-  label = h3("Select Race"),
-  choices = year2,
-  selected = "2017")
-
+  inputId = "loc2", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-race_line =
+race_pie = 
   race_clean |>
-  select(-location) |>
-  group_by(calendar_year, race) |>
+  group_by(location, race) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-race_line |> 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nRace Group: ", race)) |> 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~race, colors = "viridis", text = ~text_label, alpha = 0.8) |>
-    layout(title = "Total Homelessness by Race")
-
+  race_pie |>
+    filter(location == input$loc2) |>
+    plot_ly(labels = ~race, values = ~total_homelessness, type ="pie") |>
+     layout(title = "Total Homelessness by Race across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -187,7 +223,7 @@ race_box =
 
 renderPlotly({
   race_box |> 
-    filter(calendar_year == input$year2) |>
+    filter(calendar_year %in% input$year2[1]:input$year2[2]) |>
     plot_ly(x = ~race, y = ~total_homelessness, type = "bar") |>
     layout(
       title = "Total Homelessness by Race across Years")
@@ -201,35 +237,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year3 = ethnicity_clean %>% distinct(calendar_year) %>% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year3",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = ethnicity_clean |> distinct(location) |> pull() 
+
 selectInput(
-  inputId = "year3", 
-  label = h3("Select Ethnicity"),
-  choices = year3,
-  selected = "2017")
-
+  inputId = "loc3", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-ethnicity_line =
+ethnicity_pie = 
   ethnicity_clean |>
-  select(-location) |>
-  group_by(calendar_year, ethnicity) |>
+  group_by(location, ethnicity) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-ethnicity_line |> 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nEthnicity Group: ", ethnicity)) |> 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~ethnicity, colors = "viridis", text = ~text_label, alpha = 0.8) |>
-    layout(title = "Total Homelessness by Ethnicity")
-
+  ethnicity_pie |>
+    filter(location == input$loc3) |>
+    plot_ly(labels = ~ethnicity, values = ~total_homelessness, type ="pie") |>
+     layout(title = "Total Homelessness by Ethnicity across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -246,7 +287,7 @@ ethnicity_box =
 
 renderPlotly({
   ethnicity_box |> 
-    filter(calendar_year == input$year3) |>
+    filter(calendar_year %in% input$year3[1]:input$year3[2]) |>
     plot_ly(x = ~ethnicity, y = ~total_homelessness, type = "bar") |>
     layout(
       title = "Total Homelessness by Ethnicity across Years")
@@ -260,35 +301,40 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-year4 = gender_clean %>% distinct(calendar_year) %>% pull()
+min_year = 2017
+max_year = 2023
 
-# selectInput widget
+sliderInput(
+  inputId = "year4",
+  label = h4("Select Year"),
+  min = min_year, max = max_year, value = c(2018, 2019))
+
+loc = gender_clean |> distinct(location) |> pull() 
+
 selectInput(
-  inputId = "year4", 
-  label = h3("Select Gender"),
-  choices = year4,
-  selected = "2017")
-
+  inputId = "loc4", 
+  label = h3("Choose Location"), 
+  choices = loc, selected = "California")
 ```
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Line Plot
+### Pie Chart
 
 ```{r}
-gender_line =
+gender_pie = 
   gender_clean |>
-  select(-location) |>
-  group_by(calendar_year, gender) |>
+  group_by(location, gender) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
 renderPlotly({
-gender_line |> 
-  mutate(text_label = str_c("Year: ", calendar_year, "\nGender Group: ", gender)) |> 
-  plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~gender, colors = "viridis", text = ~text_label, alpha = 0.8) |>
-    layout(title = "Total Homelessness by Gender")
-
+  gender_pie |>
+    filter(location == input$loc4) |>
+    plot_ly(labels = ~gender, values = ~total_homelessness, type ="pie") |>
+     layout(title = "Total Homelessness by Gender across Locations",
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 })
 ```
 
@@ -305,7 +351,7 @@ gender_box =
 
 renderPlotly({
   gender_box |> 
-    filter(calendar_year == input$year4) |>
+    filter(calendar_year %in% input$year4[1]:input$year4[2]) |>
     plot_ly(x = ~gender, y = ~total_homelessness, type = "bar") |>
     layout(
       title = "Total Homelessness by Gender across Years")
