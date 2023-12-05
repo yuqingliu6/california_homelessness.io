@@ -282,7 +282,7 @@ According to the results, the p-value of experiencing_homelessness by gender is 
 
 ### Description of datasets
 
-While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
+While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population.
 
 -   Important Variables:
 
@@ -366,18 +366,20 @@ homeless_data_for_summary |>
 
 ### Data Visualization
 
-#### Homeless Encounters by Demographic Group (Age, Payer, Race, Sex)
+#### Homeless Encounters by Payer
 
 ```{r}
-combined_plot <- plot_ly(homeless_data, x = ~DemographicValue, y = ~Encounters, 
-                         type = 'bar', color = ~DemographicValue, 
-                         colors = 'viridis') %>%
-  add_bars(width = 1) %>%
-  layout(title = "Homeless Encounters by Demographic Group",
-         xaxis = list(title = "Demographic Value", tickangle = 45),
+payer_data <- homeless_data %>% 
+  filter(Demographic == "Payer")
+payer_plot <- plot_ly(payer_data, x = ~DemographicValue, y = ~Encounters, 
+                      type = 'bar', color = ~DemographicValue, 
+                      colors = 'viridis') %>%
+  layout(title = "Homeless Encounters by Payer Group",
+         xaxis = list(title = "Payer Group", tickangle = 45),
          yaxis = list(title = "Number of Homeless Encounters"),
-         barmode = 'group')
-combined_plot
+         barmode = 'group',
+         bargap = 0.01)
+payer_plot
 ```
 
 This analysis provides a breakdown of homeless encounters by different demographic facets and indicates which groups have higher or lower counts of encounters. It suggests that middle-aged individuals, those covered by Medi-Cal, white individuals, and males have higher numbers of homeless encounters. These findings could point towards specific demographic groups that may require more focused services and interventions. 
@@ -414,10 +416,10 @@ This plot help us gain the understanding of the relationship between the number 
 plot4 <- plot_ly(homeless_data, x = ~Ownership, y = ~Percent, 
                  type = 'bar', color = ~Ownership, 
                  colors = 'viridis') %>%
-  layout(title = "Percentage of Homeless Encounters by Ownership Type",
+  layout(title = "Number of Homeless Encounters by Ownership Type",
          xaxis = list(title = "Ownership"),
-         yaxis = list(title = "Percentage of Homeless Encounters"))
+         yaxis = list(title = "Number of Homeless Encounters"))
 plot4
 ```
 
-When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
+When comparing the number of homeless encounters by ownership the non-profit category showed the highest number in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher number of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest number could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
