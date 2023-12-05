@@ -154,6 +154,17 @@ dat_clean %>%
 
 We observe a plot of model residuals against fitted values in regression analysis and notice that the slope is close to zero, it suggests that there is homoscedasticity in the residuals. Homoscedasticity means that the variability of the residuals (or errors) is approximately constant across all levels of the independent variable(s) or across the range of predicted values, which is a desirable assumption in regression analysis. 
 
+
+
+
+
+
+
+
+
+
+
+
 ## Univariate Analysis
 We conducted univariate analyses to identify individual factors associated with outcomes `Encounters`. 
 
