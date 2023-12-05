@@ -398,17 +398,56 @@ div.tocify {
 <h2>Import Data &amp; Recoding</h2>
 <p>First, we import data and filter homeless people and only focus on
 the Demographic “Payer”. Then we change several variables into factors
-and tidy the data. Explanation for factor variables:<br />
-LicensedBedSize: 1 = “1-99”, 2 = “100-199”, 3 = “200-299”, 4 =
-“300-399”, 5 = “400+”<br />
-Ownership: 1 = “Investor”, 2 = “Non-Profit”, 3 = “Government”<br />
-EncounterType:1 = “ED Visits”, 0 = “Inpatient Hospitalizations”<br />
-Urban_Rural: 1 = “Rural/Frontier”, 0 = “Urban”<br />
-Teaching: 1 = “Teaching”, 0 = “Non-Teaching”<br />
-PrimaryCareShortageArea: 1 = “Yes”, 0 = “No”<br />
-MentalHealthShortageArea: 1 = “Yes”, 0 = “No”<br />
-Payer: 1 = “Medi-Cal”, 2 = “Medicare”, 3 = “Other Payer”, 4 = “Private
-Coverage”, 5 = “Uninsured”</p>
+and tidy the data.</p>
+<p>Explanation for factor variables:</p>
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LicensedBedSize</td>
+<td>1 = “1-99”, 2 = “100-199”, 3 = “200-299”, 4 = “300-399”, 5 =
+“400+”</td>
+</tr>
+<tr class="even">
+<td>Ownership</td>
+<td>1 = “Investor”, 2 = “Non-Profit”, 3 = “Government”</td>
+</tr>
+<tr class="odd">
+<td>EncounterType</td>
+<td>1 = “ED Visits”, 0 = “Inpatient Hospitalizations”</td>
+</tr>
+<tr class="even">
+<td>Urban_Rural</td>
+<td>1 = “Rural/Frontier”, 0 = “Urban”</td>
+</tr>
+<tr class="odd">
+<td>Teaching</td>
+<td>1 = “Teaching”, 0 = “Non-Teaching”</td>
+</tr>
+<tr class="even">
+<td>PrimaryCareShortageArea</td>
+<td>1 = “Yes”, 0 = “No”</td>
+</tr>
+<tr class="odd">
+<td>MentalHealthShortageArea</td>
+<td>1 = “Yes”, 0 = “No”</td>
+</tr>
+<tr class="even">
+<td>Payer</td>
+<td>1 = “Medi-Cal”, 2 = “Medicare”, 3 = “Other Payer”, 4 = “Private
+Coverage”, 5 = “Uninsured”</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>dat &lt;- read.csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;) |&gt;
    filter(HomelessIndicator == &quot;Homeless&quot; &amp; Demographic == &quot;Payer&quot;)
 

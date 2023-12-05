@@ -26,15 +26,19 @@ library(MASS)
 ## Import Data & Recoding
 
 First, we import data and filter homeless people and only focus on the Demographic "Payer". Then we change several variables into factors and tidy the data.
-Explanation for factor variables:\
-LicensedBedSize: 1 = "1-99", 2 = "100-199", 3 = "200-299", 4 = "300-399", 5 = "400+"\
-Ownership: 1 = "Investor", 2 = "Non-Profit", 3 = "Government"\
-EncounterType:1 = "ED Visits", 0 = "Inpatient Hospitalizations"\
-Urban_Rural: 1 = "Rural/Frontier", 0 = "Urban"\
-Teaching: 1 = "Teaching", 0 = "Non-Teaching"\
-PrimaryCareShortageArea: 1 = "Yes", 0 = "No"\
-MentalHealthShortageArea: 1 = "Yes", 0 = "No"\
-Payer: 1 = "Medi-Cal", 2 = "Medicare", 3 = "Other Payer", 4 = "Private Coverage", 5 = "Uninsured"
+
+Explanation for factor variables:
+
+| Variable | Description |
+|-------|-----------|
+|LicensedBedSize| 1 = "1-99", 2 = "100-199", 3 = "200-299", 4 = "300-399", 5 = "400+"|
+|Ownership| 1 = "Investor", 2 = "Non-Profit", 3 = "Government"|
+|EncounterType|1 = "ED Visits", 0 = "Inpatient Hospitalizations"|
+|Urban_Rural| 1 = "Rural/Frontier", 0 = "Urban"|
+|Teaching| 1 = "Teaching", 0 = "Non-Teaching"|
+|PrimaryCareShortageArea|1 = "Yes", 0 = "No"|
+|MentalHealthShortageArea|1 = "Yes", 0 = "No"|
+|Payer| 1 = "Medi-Cal", 2 = "Medicare", 3 = "Other Payer", 4 = "Private Coverage", 5 = "Uninsured"|
 
 ```{r, message=FALSE}
 dat <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv") |>
