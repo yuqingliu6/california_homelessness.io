@@ -62,11 +62,11 @@ The final dataset of demographic data of homeless people from 2017 to 2023 inclu
 
 The final dataset of hospital encounters of homeless people in 44 CoC from 2019 to 2020 included major variables as following: 
 
-`Licensed Bed Size`: the hospital's number of licensed beds.                        
-`Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
-`Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
-`Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
-`Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.  
+* `Licensed Bed Size`: the hospital's number of licensed beds.                        
+* `Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
+* `Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
+* `Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
+* `Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.  
 
 
 ## Exploratory Analysis\
