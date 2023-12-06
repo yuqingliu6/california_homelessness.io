@@ -5,8 +5,10 @@ navbar:
   left:
     - text: "Exploratory Data Analysis"
       href: EDA_demo_data.html
-    - text: "Regression Analysis"
+    - text: "Regression Analysis 1"
       href: reg-models.html
+    - text: "Regression Analysis 2"
+      href: regression_model_2.html
     - text: "Final Report"
       href: Conclusions.html
     - text: "RShiny"

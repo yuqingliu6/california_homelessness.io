@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Yuhan Wang" />
+
+
+<title>Regression Analysis2</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="EDA_demo_data.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="reg-models.html">Regression Analysis 1</a>
+</li>
+<li>
+  <a href="regression_model_2.html">Regression Analysis 2</a>
+</li>
+<li>
+  <a href="Conclusions.html">Final Report</a>
+</li>
+<li>
+  <a href="https://zh2596.shinyapps.io/RShinyDashboard/">RShiny</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="final-project-proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="mailto:&lt;yl5219@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/yuqingliu6/california_homelessness.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Regression Analysis2</h1>
+<h4 class="author">Yuhan Wang</h4>
+<h4 class="date">2023-12-6</h4>
+
+</div>
+
+
+<div id="import-datasets" class="section level2">
+<h2>Import Datasets</h2>
+<p>First, we import data and filter homeless people and only focus on
+the Demographic “Payer”. Then we change several variables into factors
+and tidy the data. Explanation for factor variables:<br />
+LicensedBedSize: 1 = “1-99”, 2 = “100-199”, 3 = “200-299”, 4 =
+“300-399”, 5 = “400+”<br />
+Ownership: 1 = “Investor”, 2 = “Non-Profit”, 3 = “Government”<br />
+EncounterType:1 = “ED Visits”, 0 = “Inpatient Hospitalizations”<br />
+Urban_Rural: 1 = “Rural/Frontier”, 0 = “Urban”<br />
+Teaching: 1 = “Teaching”, 0 = “Non-Teaching”<br />
+PrimaryCareShortageArea: 1 = “Yes”, 0 = “No”<br />
+MentalHealthShortageArea: 1 = “Yes”, 0 = “No”<br />
+Payer: 1 = “Medi-Cal”, 2 = “Medicare”, 3 = “Other Payer”, 4 = “Private
+Coverage”, 5 = “Uninsured”</p>
+<pre class="r"><code>dat &lt;- read.csv(&quot;2019-2020-homeless-ip-and-ed-by-facility.csv&quot;) |&gt;
+   filter(HomelessIndicator == &quot;Homeless&quot; &amp; Demographic == &quot;Payer&quot;)
+
+dat_clean &lt;- dat |&gt; 
+  dplyr::select(HomelessIndicator,Ownership, Urban_Rural, Teaching, EncounterType, LicensedBedSize, PrimaryCareShortageArea,
+                MentalHealthShortageArea, DemographicValue, Encounters) |&gt;
+  mutate(LicensedBedSize = match(LicensedBedSize,c(&quot;1-99&quot;,&quot;100-199&quot;,&quot;200-299&quot;,&quot;300-399&quot;,&quot;400+&quot;)),
+         Ownership = match(Ownership, c(&quot;Investor&quot;, &quot;Non-Profit&quot;, &quot;Government&quot;)),
+         EncounterType = ifelse(EncounterType == &quot;ED Visits&quot;,1,0),
+         Urban_Rural = ifelse(Urban_Rural == &quot;Rural/Frontier&quot;,1,0),
+         Teaching = ifelse(Teaching == &quot;Teaching&quot;,1,0),
+         PrimaryCareShortageArea = ifelse(PrimaryCareShortageArea == &quot;Yes&quot;,1,0),
+         MentalHealthShortageArea = ifelse(MentalHealthShortageArea == &quot;Yes&quot;,1,0),
+         Payer = match(DemographicValue, c(&quot;Medi-Cal&quot;, &quot;Medicare&quot;, &quot;Other Payer&quot;, &quot;Private Coverage&quot;, &quot;Uninsured&quot;))
+         )|&gt;
+           mutate(across(-Encounters, as.factor)) |&gt; 
+  dplyr::select(-DemographicValue,-HomelessIndicator) |&gt;
+           janitor::clean_names() 
+         
+summary(dat_clean)</code></pre>
+<pre><code>##  ownership urban_rural teaching encounter_type licensed_bed_size
+##  1:1160    0:2975      0:3360   0:2095         1:1060           
+##  2:1910    1: 695      1: 310   1:1575         2:1045           
+##  3: 600                                        3: 630           
+##                                                4: 500           
+##                                                5: 435           
+##                                                                 
+##  primary_care_shortage_area mental_health_shortage_area   encounters     
+##  0:2640                     0:2275                      Min.   :    0.0  
+##  1:1030                     1:1395                      1st Qu.:    4.0  
+##                                                         Median :   30.0  
+##                                                         Mean   :  244.2  
+##                                                         3rd Qu.:  173.0  
+##                                                         Max.   :17485.0  
+##  payer  
+##  1:734  
+##  2:734  
+##  3:734  
+##  4:734  
+##  5:734  
+## </code></pre>
+<pre class="r"><code>library(ggplot2)
+
+# Histogram
+ggplot(dat_clean, aes(x = encounters)) +
+  geom_histogram(binwidth = 1, fill = &quot;blue&quot;, color = &quot;black&quot;, alpha = 0.7) +
+  labs(title = &quot;Histogram of encounters&quot;, x = &quot;encounters&quot;, y = &quot;Frequency&quot;)</code></pre>
+<p><img src="regression_model_2_files/figure-html/unnamed-chunk-2-1.png" width="80%" /></p>
+<pre class="r"><code># Kernel Density Plot
+ggplot(dat_clean, aes(x = log(encounters))) +
+  geom_density(fill = &quot;blue&quot;, alpha = 0.7) +
+  labs(title = &quot;Kernel Density Plot of log(encounters)&quot;, x = &quot;log(encounters)&quot;, y = &quot;Density&quot;)</code></pre>
+<p><img src="regression_model_2_files/figure-html/unnamed-chunk-2-2.png" width="80%" /></p>
+<p>Then we consider a model with the main effects of all variables and
+then use stepwise regression to select appropriate variables</p>
+</div>
+<div id="method" class="section level2">
+<h2>Method</h2>
+<div id="multiple-linear-regression" class="section level3">
+<h3>Multiple Linear Regression:</h3>
+<p>Multiple Linear Regression (MLR) is a statistical technique that
+extends the concept of simple linear regression to analyze the
+relationship between multiple independent variables and a dependent
+variable. In MLR, the model is represented as:</p>
+<p>MLR allows us to assess the individual and collective impact of each
+independent variable on the dependent variable, providing valuable
+insights into the underlying relationships within the data. Assumptions,
+such as linearity, independence, homoscedasticity, and normality of
+residuals, are crucial for the validity of MLR results.</p>
+</div>
+<div id="stepwise-regression" class="section level3">
+<h3>Stepwise Regression:</h3>
+<p>Stepwise Regression is a variable selection technique used in the
+context of multiple regression analysis. It systematically selects a
+subset of independent variables from a larger set, either by adding or
+removing variables based on specific criteria. There are two main types
+of stepwise regression: forward selection and backward elimination.</p>
+<p>Backward Elimination: Beginning with a model that includes all
+variables, backward elimination removes variables one at a time,
+excluding the variable that contributes the least to the model’s
+explanatory power. The process continues until no more variables meet
+the exclusion criteria.</p>
+<p>Stepwise Regression is employed to streamline the model by selecting
+the most influential variables while minimizing overfitting.</p>
+<pre class="r"><code># full model
+model_all &lt;- lm(log1p(encounters) ~ ., data = dat_clean)
+
+# stepwise regression
+model_stepwise &lt;- step(model_all, direction = &quot;backward&quot;)</code></pre>
+<pre><code>## Start:  AIC=2574.02
+## log1p(encounters) ~ ownership + urban_rural + teaching + encounter_type + 
+##     licensed_bed_size + primary_care_shortage_area + mental_health_shortage_area + 
+##     payer
+## 
+##                               Df Sum of Sq     RSS    AIC
+## &lt;none&gt;                                      7336.3 2574.0
+## - ownership                    2      17.9  7354.3 2579.0
+## - primary_care_shortage_area   1      20.3  7356.6 2582.2
+## - mental_health_shortage_area  1      37.5  7373.8 2590.7
+## - teaching                     1      56.9  7393.3 2600.4
+## - urban_rural                  1     179.1  7515.5 2660.6
+## - licensed_bed_size            4    1192.0  8528.3 3118.5
+## - encounter_type               1    1766.6  9102.9 3363.8
+## - payer                        4    5182.5 12518.8 4527.2</code></pre>
+<pre class="r"><code>model_all |&gt; 
+  broom::tidy() |&gt;
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">3.591</td>
+<td align="right">0.080</td>
+<td align="right">44.829</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">ownership2</td>
+<td align="right">0.101</td>
+<td align="right">0.057</td>
+<td align="right">1.788</td>
+<td align="right">0.074</td>
+</tr>
+<tr class="odd">
+<td align="left">ownership3</td>
+<td align="right">0.233</td>
+<td align="right">0.078</td>
+<td align="right">2.968</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">urban_rural1</td>
+<td align="right">-0.780</td>
+<td align="right">0.083</td>
+<td align="right">-9.446</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">teaching1</td>
+<td align="right">0.502</td>
+<td align="right">0.094</td>
+<td align="right">5.324</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">encounter_type1</td>
+<td align="right">1.432</td>
+<td align="right">0.048</td>
+<td align="right">29.663</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">licensed_bed_size2</td>
+<td align="right">1.057</td>
+<td align="right">0.067</td>
+<td align="right">15.883</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">licensed_bed_size3</td>
+<td align="right">1.534</td>
+<td align="right">0.080</td>
+<td align="right">19.120</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">licensed_bed_size4</td>
+<td align="right">1.645</td>
+<td align="right">0.087</td>
+<td align="right">18.960</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">licensed_bed_size5</td>
+<td align="right">1.971</td>
+<td align="right">0.097</td>
+<td align="right">20.331</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">primary_care_shortage_area1</td>
+<td align="right">-0.203</td>
+<td align="right">0.064</td>
+<td align="right">-3.179</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">mental_health_shortage_area1</td>
+<td align="right">0.250</td>
+<td align="right">0.058</td>
+<td align="right">4.322</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">payer2</td>
+<td align="right">-1.087</td>
+<td align="right">0.074</td>
+<td align="right">-14.702</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">payer3</td>
+<td align="right">-3.410</td>
+<td align="right">0.074</td>
+<td align="right">-46.107</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">payer4</td>
+<td align="right">-2.625</td>
+<td align="right">0.074</td>
+<td align="right">-35.496</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">payer5</td>
+<td align="right">-2.005</td>
+<td align="right">0.074</td>
+<td align="right">-27.102</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>summary(model_stepwise)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log1p(encounters) ~ ownership + urban_rural + teaching + 
+##     encounter_type + licensed_bed_size + primary_care_shortage_area + 
+##     mental_health_shortage_area + payer, data = dat_clean)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.6810 -0.8807  0.0660  0.9048  6.7071 
+## 
+## Coefficients:
+##                              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                   3.59062    0.08010  44.829  &lt; 2e-16 ***
+## ownership2                    0.10131    0.05667   1.788  0.07393 .  
+## ownership3                    0.23262    0.07837   2.968  0.00301 ** 
+## urban_rural1                 -0.77979    0.08255  -9.446  &lt; 2e-16 ***
+## teaching1                     0.50162    0.09422   5.324 1.08e-07 ***
+## encounter_type1               1.43189    0.04827  29.663  &lt; 2e-16 ***
+## licensed_bed_size2            1.05692    0.06655  15.883  &lt; 2e-16 ***
+## licensed_bed_size3            1.53428    0.08024  19.120  &lt; 2e-16 ***
+## licensed_bed_size4            1.64461    0.08674  18.960  &lt; 2e-16 ***
+## licensed_bed_size5            1.97100    0.09695  20.331  &lt; 2e-16 ***
+## primary_care_shortage_area1  -0.20317    0.06391  -3.179  0.00149 ** 
+## mental_health_shortage_area1  0.24962    0.05775   4.322 1.59e-05 ***
+## payer2                       -1.08744    0.07396 -14.702  &lt; 2e-16 ***
+## payer3                       -3.41026    0.07396 -46.107  &lt; 2e-16 ***
+## payer4                       -2.62546    0.07396 -35.496  &lt; 2e-16 ***
+## payer5                       -2.00456    0.07396 -27.102  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.417 on 3654 degrees of freedom
+## Multiple R-squared:  0.5929, Adjusted R-squared:  0.5912 
+## F-statistic: 354.8 on 15 and 3654 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>model_stepwise |&gt; 
+  broom::tidy() |&gt; 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">3.591</td>
+<td align="right">0.080</td>
+<td align="right">44.829</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">ownership2</td>
+<td align="right">0.101</td>
+<td align="right">0.057</td>
+<td align="right">1.788</td>
+<td align="right">0.074</td>
+</tr>
+<tr class="odd">
+<td align="left">ownership3</td>
+<td align="right">0.233</td>
+<td align="right">0.078</td>
+<td align="right">2.968</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">urban_rural1</td>
+<td align="right">-0.780</td>
+<td align="right">0.083</td>
+<td align="right">-9.446</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">teaching1</td>
+<td align="right">0.502</td>
+<td align="right">0.094</td>
+<td align="right">5.324</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">encounter_type1</td>
+<td align="right">1.432</td>
+<td align="right">0.048</td>
+<td align="right">29.663</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">licensed_bed_size2</td>
+<td align="right">1.057</td>
+<td align="right">0.067</td>
+<td align="right">15.883</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">licensed_bed_size3</td>
+<td align="right">1.534</td>
+<td align="right">0.080</td>
+<td align="right">19.120</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">licensed_bed_size4</td>
+<td align="right">1.645</td>
+<td align="right">0.087</td>
+<td align="right">18.960</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">licensed_bed_size5</td>
+<td align="right">1.971</td>
+<td align="right">0.097</td>
+<td align="right">20.331</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">primary_care_shortage_area1</td>
+<td align="right">-0.203</td>
+<td align="right">0.064</td>
+<td align="right">-3.179</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">mental_health_shortage_area1</td>
+<td align="right">0.250</td>
+<td align="right">0.058</td>
+<td align="right">4.322</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">payer2</td>
+<td align="right">-1.087</td>
+<td align="right">0.074</td>
+<td align="right">-14.702</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">payer3</td>
+<td align="right">-3.410</td>
+<td align="right">0.074</td>
+<td align="right">-46.107</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">payer4</td>
+<td align="right">-2.625</td>
+<td align="right">0.074</td>
+<td align="right">-35.496</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">payer5</td>
+<td align="right">-2.005</td>
+<td align="right">0.074</td>
+<td align="right">-27.102</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>The stepwise regression model indicates that all variables that are
+important, the p-value of the model is &lt; 2.2e-16, and Adjusted
+R-squared is 0.5912, which means approximately 59.12% of the variability
+in the log-transformed encounters can be explained by the predictor
+variables in your model.</p>
+<ul>
+<li>Licensed Bed Size:</li>
+</ul>
+<p>The estimated coefficients (1.057, 1.534, 1.645, 1.971) indicate the
+change in log-transformed encounters associated with different licensed
+bed sizes. All coefficients are positive and statistically significant,
+suggesting that larger bed sizes are associated with higher
+log-transformed encounters.</p>
+<ul>
+<li>Ownership:</li>
+</ul>
+<p>The estimated coefficients (0.101, 0.233) represent the change in
+log-transformed encounters associated with different ownership
+types.<br />
+Interpreting each level:<br />
+“Non-Profit” (2): +0.101 (not statistically significant)<br />
+“Government” (3): +0.233 (statistically significant)<br />
+“Investor” is the reference category.<br />
+The “Government” ownership type is associated with a statistically
+significant increase in log-transformed encounters.</p>
+<ul>
+<li>Encounter Type:</li>
+</ul>
+<p>The estimated coefficient (1.432) indicates the change in
+log-transformed encounters associated with “ED Visits” compared to
+“Inpatient Hospitalizations.”<br />
+“ED Visits” (1): +1.432<br />
+“Inpatient Hospitalizations” (0) is the reference category.<br />
+“ED Visits” are associated with a statistically significant increase in
+log-transformed encounters.</p>
+<ul>
+<li>Urban/Rural:</li>
+</ul>
+<p>The estimated coefficient (-0.780) represents being in a
+“Rural/Frontier” area is associated with a statistically significant
+decrease in log-transformed encounters.</p>
+<ul>
+<li>Teaching:</li>
+</ul>
+<p>The estimated coefficient (0.502) represents the change in
+log-transformed encounters associated with being in a “Teaching”
+environment compared to a “Non-Teaching” environment. Being in a
+“Teaching” environment is associated with a statistically significant
+increase in log-transformed encounters.</p>
+<ul>
+<li>Primary Care Shortage Area:</li>
+</ul>
+<p>The estimated coefficient (-0.203) represents the change in
+log-transformed encounters associated with being in a “Primary Care
+Shortage Area” compared to a “Non-Shortage Area.” Being in a “Primary
+Care Shortage Area” is associated with a statistically significant
+decrease in log-transformed encounters.</p>
+<ul>
+<li>Mental Health Shortage Area:</li>
+</ul>
+<p>The estimated coefficient (0.250) represents the change in
+log-transformed encounters associated with being in a “Mental Health
+Shortage Area” compared to a “Non-Shortage Area.” Being in a “Mental
+Health Shortage Area” is associated with a statistically significant
+increase in log-transformed encounters.</p>
+<ul>
+<li>Payer:</li>
+</ul>
+<p>The estimated coefficients (-1.087, -3.410, -2.625, -2.005) represent
+the change in log-transformed encounters associated with different payer
+types compared to “Medi-Cal.” All coefficients are negative and
+statistically significant, suggesting that compared to “Medi-Cal,” other
+payer types are associated with a decrease in log-transformed
+encounters.</p>
+</div>
+<div id="variance-inflation-factor-vif" class="section level3">
+<h3>Variance Inflation Factor (VIF)</h3>
+<p>The Variance Inflation Factor (VIF) is a common indicator used to
+detect multicollinearity in regression models. A higher VIF value
+indicates that the corresponding independent variable is more likely to
+be influenced by other independent variables. Typically, VIF values
+exceeding 10 or 20 are considered indicative of the presence of
+multicollinearity.</p>
+<pre class="r"><code>library(car)
+vif_values &lt;- vif(model_stepwise)
+print(vif_values)</code></pre>
+<pre><code>##                                 GVIF Df GVIF^(1/(2*Df))
+## ownership                   1.325356  2        1.072959
+## urban_rural                 1.912280  1        1.382852
+## teaching                    1.254805  1        1.120181
+## encounter_type              1.043487  1        1.021512
+## licensed_bed_size           1.804525  4        1.076578
+## primary_care_shortage_area  1.507205  1        1.227683
+## mental_health_shortage_area 1.436653  1        1.198605
+## payer                       1.000000  4        1.000000</code></pre>
+<pre class="r"><code># The result is no multicollinearity.</code></pre>
+<p>We show a plot of model residuals against fitted values.</p>
+<pre class="r"><code>library(modelr)
+dat_clean %&gt;% 
+    add_predictions(model_stepwise) %&gt;% 
+    add_residuals(model_stepwise) %&gt;% 
+    ggplot(aes(x = pred, y = resid)) +
+    geom_point()  + 
+    geom_smooth(method = &quot;lm&quot;) + 
+    labs(title = &quot;Model residuals against fitted values&quot;, 
+       x = &quot;Predicted values&quot;, 
+       y = &quot;Residuals&quot;) +
+  theme_minimal()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="regression_model_2_files/figure-html/unnamed-chunk-5-1.png" width="80%" /></p>
+<p>We observe a plot of model residuals against fitted values in
+regression analysis and notice that the slope is close to zero, it
+suggests that there is homoscedasticity in the residuals.
+Homoscedasticity means that the variability of the residuals (or errors)
+is approximately constant across all levels of the independent
+variable(s) or across the range of predicted values, which is a
+desirable assumption in regression analysis.</p>
+</div>
+<div id="cross-validation" class="section level3">
+<h3>Cross validation</h3>
+<p>In cross-validation, the root mean squared error (RMSE) is a measure
+of the average magnitude of prediction errors made by a model. A lower
+RMSE indicates that the model has better predictive accuracy, as it
+means the model’s predictions are closer to the true values.</p>
+<pre class="r"><code>cv_df = 
+  crossv_mc(dat_clean, 100)
+
+cv_df &lt;- cv_df |&gt;
+  mutate(train = map(train, as_tibble),
+         test = map(test, as_tibble)) |&gt;
+ mutate(
+    stepwise_mod  = map(train, ~model_stepwise)) |&gt; 
+  mutate(
+    rmse_stepwise = map2_dbl(stepwise_mod, test, \(mod, df) rmse(model = mod, data = df)))
+
+cv_df |&gt;
+  dplyr::select(starts_with(&quot;rmse&quot;)) |&gt;
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) |&gt; 
+  mutate(model = fct_inorder(model)) |&gt; 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  theme_minimal()</code></pre>
+<p><img src="regression_model_2_files/figure-html/unnamed-chunk-6-1.png" width="80%" />
+From the violin plot, we can know that the stepwise regression model has
+relative low rmse, approximately 1.43, which means the model has better
+predictive accuracy</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
