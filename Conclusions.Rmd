@@ -278,15 +278,7 @@ Based on the percantage of total homeless by race, we can see that white people 
 
 While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
 
--   Important Variables:
 
-`2019-2020-homeless-ip-and-ed-by-facility` contains 17 variables, some of which are listed below:
-
-`Licensed Bed Size`: the hospital's number of licensed beds.                        
-`Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
-`Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
-`Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
-`Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.     
 ```{r}
 library(tidyverse)
 library(knitr)

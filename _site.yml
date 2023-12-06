@@ -13,7 +13,7 @@ navbar:
       href: EDA_demo_data.html
     - text: "Regression Analysis"
       href: reg-models.html
-    - text: "Conclusions"
+    - text: "Final Report"
       href: Conclusions.html
     - text: "RShiny"
       href: https://zh2596.shinyapps.io/RShinyDashboard/
