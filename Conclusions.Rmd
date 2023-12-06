@@ -187,8 +187,8 @@ race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 
 The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
 
-#### Total Homelessness by Year and Age Group
-```{r message= FALSE, warning=FALSE}
+#### Total Homelessness by Year and Age
+```{r, message= FALSE, warning=FALSE}
 # line plot for "Total Homelessness by Year and Age Group"
 library(plotly)
 age_plot <- age_clean |>
@@ -199,13 +199,13 @@ age_plot <- age_clean |>
 age_plot |> 
   mutate(text_label = str_c("Year: ", calendar_year, "\nAge Group: ", age_group_public)) |> 
   plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "scatter", mode = "line", color = ~age_group_public, colors = "viridis", text = ~text_label, alpha = 0.8) |>
-    layout(title = "Total Homelessness by Year and Age Group")
+    layout(title = "Total Homelessness by Year and Age")
 ```
 
 The above graph shows that the majority of homeless individuals who have received assistance are under the age of 18. The proportion of homeless people who have received assistance overall is higher among lower age groups. So we should pay attention to younger group to give them broader help. The overall trend of the homeless population receiving assistance is rising between 2021 and 2022, which is probably because of the potential effects of the COVID-19 pandemic.
 
 #### Total Homelessness by Year and Ethnicity
-```{r}
+```{r, message= FALSE, warning=FALSE}
 # bar chart for "Total Homelessness by Year and ethnicity"
 ethnicity_plot <- ethnicity_clean |>
   select(-location) |>
@@ -216,13 +216,13 @@ ethnicity_plot |>
   mutate(text_label = str_c("Year: ", calendar_year, "\nEthnicity: ", ethnicity)) |>
   plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "bar", color = ~ethnicity, colors = "viridis", text = ~text_label, alpha = 0.8) |>
   layout(
-    title = "Total Homelessness by Year and ethnicity")
+    title = "Total Homelessness by Year and Ethnicity")
 ```
 
 From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large percentage of people receiving homeless response services. So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
 
 #### Total Homelessness by Year and Gender
-```{r}
+```{r, message= FALSE, warning=FALSE}
 # bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
   select(-location) |>
@@ -233,13 +233,13 @@ gender_plot  |>
   mutate(text_label = str_c("Year: ", calendar_year, "\nGender: ", gender)) |>
   plot_ly(x = ~calendar_year, y = ~total_homelessness, type = "bar", color = ~gender, colors = "viridis", text = ~text_label, alpha = 0.8) |>
   layout(
-    title = "Total Homelessness by Year and gender")
+    title = "Total Homelessness by Year and Gender")
 ```
 
 According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are men, indicating that homelessness is a problem that affects more men than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
 #### Total Homelessness by Year and Race
-```{r}
+```{r, message= FALSE, warning=FALSE}
 # line plot for "Total Homelessness by Year and race"
 race_plot <- race_clean |>
   select(-location) |>
@@ -250,7 +250,7 @@ race_plot  |>
   mutate(text_label = str_c("Year: ", calendar_year, "\nRace: ", race)) |>
   plot_ly(x = ~calendar_year, y = ~total_homelessness,  type = "scatter", mode = "line", color = ~race, colors = "viridis", text = ~text_label, alpha = 0.8) |>
   layout(
-    title = "Total Homelessness by Year and gender" ,
+    title = "Total Homelessness by Year and Race" ,
     legend = list(
       x = 1,
       y = 0.5, 
@@ -269,7 +269,7 @@ race_clean |>
    layout(title = "Percentage of Total Homeless by Race")
 ```
 
-Based on the percantage of total homeless by race, we can see that white people accounted for the largest percentage of homeless people receiving help at 55.1%, followed by Black, Afircan American or African, the next largest group at 29.3%. This suggests that there is a relationship between race and Number of people receiving homelessness services, and that there is a need to focus on these two groups of people.
+Based on the percentage of total homeless by race, we can see that white people accounted for the largest percentage of homeless people receiving help at 55.1%, followed by Black, African American or African, the next largest group at 29.3%. This suggests that there is a relationship between race and Number of people receiving homelessness services, and that there is a need to focus on these two groups of people.
 
 ### EDA for datasets "Hospital Encounters for Homeless Patients"
 
@@ -564,4 +564,4 @@ The comparison between investor-owned hospitals, receiving fewer homeless patien
 5. https://share.america.gov/zh-hans/hispanic-enrollment-reaches-new-high-at-four-year-colleges-in-the-u-s/<br>
 6. Franco, A., Meldrum, J. & Ngaruiya, C. Identifying homeless population needs in the Emergency Department using Community-Based Participatory Research. BMC Health Serv Res 21, 428 (2021). https://doi.org/10.1186/s12913-021-06426-z<br>
 7. Mitchell, E., Waring, T., Ahern, E. et al. Predictors and consequences of homelessness in whole-population observational studies that used administrative data: a systematic review. BMC Public Health 23, 1610 (2023). https://doi.org/10.1186/s12889-023-16503-z
-8. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908)
+8. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908). Biometrika, 87(4), 954-959.

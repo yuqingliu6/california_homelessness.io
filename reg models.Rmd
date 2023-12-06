@@ -238,4 +238,4 @@ Our model diagnostics confirmed the homoscedasticity of residuals, showing that 
 In summary, our analysis has highlighted the multifaceted nature of healthcare encounters, revealing how facility type, geographic location, bed size, and insurance coverage collectively shape healthcare service utilization. These insights can serve as a foundation for policymakers and healthcare administrators to optimize resource allocation and improve healthcare delivery across diverse settings.
 
 ## Reference
-1. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908)
+1. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908). Biometrika, 87(4), 954-959.
