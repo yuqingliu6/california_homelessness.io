@@ -807,8 +807,23 @@ model.</li>
 <div id="yeo-johnson-transformation1" class="section level2">
 <h2>Yeo-Johnson transformation<span
 class="math inline">\(^1\)</span></h2>
+<p>First check <code>Encounters</code></p>
+<pre class="r"><code>summary(dat$Encounters)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     0.0     4.0    30.0   244.2   173.0 17485.0</code></pre>
+<p>We observe that <code>Encounters</code> is non-negative.</p>
 <p>Since <code>Encounters</code> can be 0, use Yeo-Johnson
-transformation instead of Box-Cox transformation.</p>
+transformation instead of Box-Cox transformation. Apply the following
+transformation for <span class="math inline">\(y\ge 0\)</span>: <span
+class="math display">\[\psi(y,\lambda)=\left\{
+\begin{aligned}
+&amp;\frac{(y+1)^\lambda-1}{\lambda}, \quad &amp;\lambda\neq 0\\
+&amp;\log(y+1), \quad &amp;\lambda = 0
+\end{aligned}
+\right.\]</span></p>
+<p>As with the Box-Cox transformation, the value of <span
+class="math inline">\(\lambda\)</span> is chosen via maximum likelihood
+estimation.</p>
 <pre class="r"><code># Shift the response variable to ensure all values are positive
 shift_constant &lt;- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
 dat$Encounters_shifted &lt;- dat$Encounters + shift_constant
@@ -818,7 +833,7 @@ fit2_shifted &lt;- lm(Encounters_shifted ~ ed_visit + government+investor + rura
 
 # Apply Box-Cox transformation on the shifted response variable
 bc_shifted &lt;- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))</code></pre>
-<p><img src="reg-models_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /></p>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" /></p>
 <p>Yeo-Johnson method applies a transformation by raising
 <code>Encounters_shifted</code> to different power, as we can see above,
 <span class="math inline">\(\lambda\)</span> is close to 0, so we need
@@ -1004,7 +1019,7 @@ the model.</li>
 <h2>Model Diagnostics</h2>
 <pre class="r"><code>par(mfrow = c(2,2))
 plot(fit)</code></pre>
-<p><img src="reg-models_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="reg-models_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><strong>Description</strong></p>
 <p>The quartet of plots above demonstrates consistent variance of
 residuals across different fitted values, indicating homoscedasticity.

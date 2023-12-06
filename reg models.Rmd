@@ -153,7 +153,22 @@ corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "
 * Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
 
 ## Yeo-Johnson transformation$^1$
-Since `Encounters` can be 0, use Yeo-Johnson transformation instead of Box-Cox transformation.
+First check `Encounters`
+```{r}
+summary(dat$Encounters)
+```
+We observe that `Encounters` is non-negative.
+
+Since `Encounters` can be 0, use Yeo-Johnson transformation instead of Box-Cox transformation. Apply the following transformation for $y\ge 0$:
+$$\psi(y,\lambda)=\left\{
+\begin{aligned}
+&\frac{(y+1)^\lambda-1}{\lambda}, \quad &\lambda\neq 0\\
+&\log(y+1), \quad &\lambda = 0
+\end{aligned}
+\right.$$
+
+As with the Box-Cox transformation, the value of $\lambda$ is chosen via maximum likelihood estimation.
+
 ```{r,fig.width = 9, fig.height = 6,out.width= "60%", fig.align = 'center'}
 # Shift the response variable to ensure all values are positive
 shift_constant <- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at least 1
