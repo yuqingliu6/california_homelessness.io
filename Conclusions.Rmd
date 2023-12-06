@@ -375,3 +375,17 @@ Our findings can inform policymaking aimed at addressing the needs of the more v
 
 The comparison between investor-owned hospitals, receiving fewer homeless patient visits than non-profit hospitals, suggests the need for targeted interventions. This insight informs resource distribution policies among hospitals. For instance, recognizing the higher likelihood of homeless patients visiting urban hospitals, additional resources, funding, and support could be allocated to enhance their capacity for homeless patient care. Acknowledging the higher number of homeless patient visits in governmental hospitals, policies providing financial incentives or additional resources can support their role in serving homeless populations. Since there may be fewer homeless encounters, possibly due to higher expenses, strategies such as introducing incentives for investor-owned hospitals to actively engage in initiatives addressing homelessness, including tax benefits, grants, or partnerships with non-profit organizations, could be explored.
 
+
+
+<br>
+---
+### References
+1. https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m<br>
+2. https://data.ca.gov/dataset/homelessness-demographics<br>
+3. https://youtu.be/QIS0UjpYjOg<br>
+4. https://abcnews.go.com/US/new-report-paints-stark-picture-homeless-housing-crises/story?id=100249518<br>
+5. https://share.america.gov/zh-hans/hispanic-enrollment-reaches-new-high-at-four-year-colleges-in-the-u-s/<br>
+6. Franco, A., Meldrum, J. & Ngaruiya, C. Identifying homeless population needs in the Emergency Department using Community-Based Participatory Research. BMC Health Serv Res 21, 428 (2021). https://doi.org/10.1186/s12913-021-06426-z<br>
+7. Mitchell, E., Waring, T., Ahern, E. et al. Predictors and consequences of homelessness in whole-population observational studies that used administrative data: a systematic review. BMC Public Health 23, 1610 (2023). https://doi.org/10.1186/s12889-023-16503-z
+
+
