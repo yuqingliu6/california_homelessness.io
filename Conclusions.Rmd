@@ -523,7 +523,7 @@ knitr::kable(model)
 * Model Fit: The Multiple R-squared value of 0.5897 suggests that approximately 58.97% of the variability in Encounters is explained by the model.
 
 ### Model Diagnostics
-```{r, fig.align= "center"}
+```{r, fig.align= "center",fig.width = 9,fig.height = 9,out.width = "80%"}
 par(mfrow = c(2,2))
 plot(fit)
 ```
