@@ -3,12 +3,6 @@ output_dir: "."
 navbar:
   title: "Home"
   left:
-    - text: "Overview"
-      menu:
-      - text: "california homelessness"
-        href: california_homelessness.html
-      - text: "Description2"
-        href: 20192020-homeless.html
     - text: "Exploratory Data Analysis"
       href: EDA_demo_data.html
     - text: "Regression Analysis"

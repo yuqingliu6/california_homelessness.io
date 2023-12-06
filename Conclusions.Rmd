@@ -1,6 +1,5 @@
 ---
 title: "Final Report"
-date: "2023-11-27"
 output: 
   html_document:
     code_folding: hide
@@ -237,7 +236,7 @@ gender_plot  |>
     title = "Total Homelessness by Year and gender")
 ```
 
-According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are women, indicating that homelessness is a problem that affects more women than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
+According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are men, indicating that homelessness is a problem that affects more men than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
 #### Total Homelessness by Year and Race
 ```{r}

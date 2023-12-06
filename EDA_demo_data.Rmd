@@ -1,7 +1,5 @@
 ---
 title: "Exploratory Data Analysis"
-author: "Yuhan Wang, Jiatong Li "
-date: "2023-11-04"
 output: 
   html_document:
     code_folding: hide
@@ -171,7 +169,7 @@ The data visualization serves as a foundation for a more in-depth investigation 
 
 #### Total Homelessness by Year and Age Group
 ```{r}
-# line plot for "Total Homelessness by Year and Age Group"
+# line plot for "Total Number of Homeless People by Year and Age Group from 2017 to 2023"
 library(plotly)
 age_plot <- age_clean |>
   dplyr::select(-location) |>
@@ -201,7 +199,7 @@ ethnicity_plot |>
     title = "Total Homelessness by Year and ethnicity")
 ```
 
-From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large percentage of people receiving homeless response services, approximately 35%. However, based on the 2020 Census data, the Latino population in the United States totals 62.1 million, constituting 18.9% of the overall population. This demographic group stands as the second-largest ethnic or racial category in the country.So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
+From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large proportion of people receiving homeless response services, approximately 35%. However, based on the 2020 Census data, the Latino population in the United States totals 62.1 million, constituting 18.9% of the overall population. This demographic group stands as the second-largest ethnic or racial category in the country.So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
 
 #### Total Homelessness by Year and Gender
 ```{r}
@@ -218,7 +216,7 @@ gender_plot  |>
     title = "Total Homelessness by Year and gender")
 ```
 
-According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are women, indicating that homelessness is a problem that affects more women than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
+According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are men, indicating that homelessness is a problem that affects more men than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
 #### Total Homelessness by Year and Race
 ```{r}
