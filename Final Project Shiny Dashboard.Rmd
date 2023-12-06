@@ -45,13 +45,13 @@ radioButtons(
   choices = DemoValue2,
   selected = "Government")
 
-DemoValue3 = homeless_data |> distinct(HospitalCounty) |> pull()
+DemoValue3 = homeless_data |> distinct(Demographic) |> pull()
 
 selectInput(
-  inputId = "Demovalue3",
+  inputId = "DemoValue3",
   label = h3("Select the type of Demographic Value for Homelessnes (for Pie Chart)"),
   choices = DemoValue3,
-  selected = "Alameda")
+  selected = "Age")
 ```
 
 Column {data-height=350}
@@ -60,19 +60,21 @@ Column {data-height=350}
 ### Pie Chart
 
 ```{r}
-# homeless_pie =
-#   homeless_data |>
-#   group_by(HospitalCounty, DemographicValue) |>
-#   summarise(total_homelessness = sum(Encounters))
-# 
-# renderPlotly({
-#   homeless_pie |>
-#     filter(HospitalCounty == input$DemoValue3) |>
-#     plot_ly(label = ~DemographicValue, values = ~total_homelessness, type ="pie") |>
-#      layout(title = "Total Homelessness by Different Types of Demographic Parameters",
-#          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-#          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-# })
+homeless_pie =
+  homeless_data |>
+  group_by(Demographic, DemographicValue) |>
+  summarise(total_homelessness = sum(Encounters))
+
+renderPlotly({
+  homeless_pie |>
+    filter(Demographic == input$DemoValue3) |>
+    plot_ly(labels = ~DemographicValue, values = ~total_homelessness, type ="pie") |>
+     layout(
+       title = list(text = "Total Homelessness by Different Types of Demographic Parameters", font = list(size = 14)),
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
+         )
+})
 ```
 
 
@@ -114,7 +116,7 @@ max_year = 2023
 
 sliderInput(
   inputId = "year",
-  label = h4("Select Year"),
+  label = h4("Choose Year"),
   min = min_year, max = max_year, value = c(2018, 2019))
 
 loc = age_clean |> distinct(location) |> pull() 
@@ -178,7 +180,7 @@ max_year = 2023
 
 sliderInput(
   inputId = "year2",
-  label = h4("Select Year"),
+  label = h4("Choose Year"),
   min = min_year, max = max_year, value = c(2018, 2019))
 
 loc = race_clean |> distinct(location) |> pull() 
@@ -242,7 +244,7 @@ max_year = 2023
 
 sliderInput(
   inputId = "year3",
-  label = h4("Select Year"),
+  label = h4("Choose Year"),
   min = min_year, max = max_year, value = c(2018, 2019))
 
 loc = ethnicity_clean |> distinct(location) |> pull() 

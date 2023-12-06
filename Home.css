@@ -501,7 +501,7 @@
     min-height: 239px;
   }
 } .u-section-7 {
-  min-height: 708px;
+  min-height: 692px;
 }
 
 .u-section-7 .u-image-1 {
@@ -526,7 +526,7 @@
 .u-section-7 .u-list-1 {
   grid-template-rows: auto auto;
   width: 1140px;
-  margin: -115px auto 60px;
+  margin: -116px auto 60px;
 }
 
 .u-section-7 .u-repeater-1 {
@@ -537,7 +537,7 @@
 }
 
 .u-section-7 .u-container-layout-2 {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .u-section-7 .u-image-2 {
@@ -545,7 +545,7 @@
   height: 180px;
   background-image: url("images/8c4522f3be7bda4af8bf63e611b779aa.jpg");
   background-position: 50% 50%;
-  margin: 8px auto 0;
+  margin: 0 auto;
 }
 
 .u-section-7 .u-text-2 {
@@ -553,8 +553,15 @@
   margin: 20px auto 0;
 }
 
+.u-section-7 .u-icon-1 {
+  width: 31px;
+  height: 31px;
+  margin: 11px auto 0;
+  padding: 0;
+}
+
 .u-section-7 .u-container-layout-3 {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .u-section-7 .u-image-3 {
@@ -562,7 +569,7 @@
   height: 180px;
   background-image: url("images/yiying.jpeg");
   background-position: 50% 50%;
-  margin: 8px auto 0;
+  margin: 0 auto;
 }
 
 .u-section-7 .u-text-3 {
@@ -570,8 +577,15 @@
   margin: 20px auto 0;
 }
 
+.u-section-7 .u-icon-2 {
+  width: 31px;
+  height: 31px;
+  margin: 11px auto 0;
+  padding: 0;
+}
+
 .u-section-7 .u-container-layout-4 {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .u-section-7 .u-image-4 {
@@ -580,7 +594,7 @@
   object-position: 50% 0%;
   background-image: url("images/fc1128682e63659adb0b4cbfccfc286a2.jpg");
   background-position: 50% 50%;
-  margin: 8px auto 0;
+  margin: 0 auto;
 }
 
 .u-section-7 .u-text-4 {
@@ -588,8 +602,15 @@
   margin: 20px auto 0;
 }
 
+.u-section-7 .u-icon-3 {
+  width: 31px;
+  height: 31px;
+  margin: 11px auto 0;
+  padding: 0;
+}
+
 .u-section-7 .u-container-layout-5 {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .u-section-7 .u-image-5 {
@@ -598,7 +619,7 @@
   object-position: 50% 0%;
   background-image: url("images/beauty_17006209466771.JPG");
   background-position: 50% 50%;
-  margin: 8px auto 0;
+  margin: 0 auto;
 }
 
 .u-section-7 .u-text-5 {
@@ -606,8 +627,15 @@
   margin: 20px auto 0;
 }
 
+.u-section-7 .u-icon-4 {
+  width: 31px;
+  height: 31px;
+  margin: 11px auto 0;
+  padding: 0;
+}
+
 .u-section-7 .u-container-layout-6 {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .u-section-7 .u-image-6 {
@@ -616,12 +644,19 @@
   object-position: 50% 0%;
   background-image: url("images/932181240461e9db3e5ca75210bc36484.jpg");
   background-position: 50% 50%;
-  margin: 8px auto 0;
+  margin: 0 auto;
 }
 
 .u-section-7 .u-text-6 {
   font-weight: 700;
   margin: 20px auto 0;
+}
+
+.u-section-7 .u-icon-5 {
+  width: 31px;
+  height: 31px;
+  margin: 11px auto 0;
+  padding: 0;
 }
 
 @media (max-width: 1199px) {
@@ -650,10 +685,6 @@
 }
 
 @media (max-width: 991px) {
-   .u-section-7 {
-    min-height: 1157px;
-  }
-
   .u-section-7 .u-container-layout-1 {
     padding-left: 30px;
   }
@@ -674,10 +705,6 @@
 }
 
 @media (max-width: 767px) {
-   .u-section-7 {
-    min-height: 1531px;
-  }
-
   .u-section-7 .u-container-layout-1 {
     padding-left: 10px;
   }
@@ -695,46 +722,9 @@
     min-height: 1044px;
     grid-auto-columns: calc(50% - 5px);
   }
-
-  .u-section-7 .u-container-layout-2 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .u-section-7 .u-image-2 {
-    margin-top: 21px;
-  }
-
-  .u-section-7 .u-container-layout-3 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .u-section-7 .u-image-3 {
-    margin-top: 18px;
-  }
-
-  .u-section-7 .u-container-layout-4 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .u-section-7 .u-container-layout-5 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .u-section-7 .u-container-layout-6 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
 }
 
 @media (max-width: 575px) {
-   .u-section-7 {
-    min-height: 1575px;
-  }
-
   .u-section-7 .u-text-1 {
     font-size: 2.25rem;
     margin-left: 106px;
@@ -747,21 +737,5 @@
   .u-section-7 .u-repeater-1 {
     grid-template-columns: 100%;
     grid-auto-columns: calc(100% - 0px);
-  }
-
-  .u-section-7 .u-image-2 {
-    margin-top: 18px;
-  }
-
-  .u-section-7 .u-image-4 {
-    margin-top: 18px;
-  }
-
-  .u-section-7 .u-image-5 {
-    margin-top: 18px;
-  }
-
-  .u-section-7 .u-image-6 {
-    margin-top: 18px;
   }
 }

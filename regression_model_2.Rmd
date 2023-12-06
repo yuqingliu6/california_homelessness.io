@@ -1,7 +1,5 @@
 ---
 title: "Regression Analysis2"
-author: "Yuhan Wang "
-date: "2023-12-6"
 output: 
   html_document:
     code_folding: hide
