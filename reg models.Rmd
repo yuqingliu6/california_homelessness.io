@@ -205,3 +205,16 @@ plot(fit)
 **Description**
 
 The quartet of plots above demonstrates consistent variance of residuals across different fitted values, indicating homoscedasticity. The spread of residuals remains stable across the range of predictions, and their mean hovers around zero, indicating no systematic bias. Although there are minor fluctuations around the zero line, they are within an acceptable range, suggesting that the residuals are well-behaved. Additionally, the distribution of residuals appears to be normal, with no single observation exerting undue influence on the model. These observations collectively suggest that the key assumptions required for a valid linear regression model have been met.
+
+## Conclusions
+Our comprehensive regression analysis has successfully identified several key drivers influencing healthcare encounters. The utilization of dummy variables has allowed for a nuanced understanding of how categorical variables such as EncounterType, Ownership, Urban vs. Rural location, and Payer types correlate with the frequency of healthcare encounters.
+
+From the univariate analyses, we discerned that emergency department visits significantly increase healthcare encounters. Ownership type, particularly government-owned facilities, showed an increase in encounters, whereas investor-owned facilities displayed a decrease when compared to non-profit entities. Rural locations, in contrast to urban areas, tend to have fewer encounters.
+
+The multivariable regression model revealed a strong, positive correlation between the number of licensed beds in a facility and the encounter rate. Interestingly, while Medicare, private coverage, and uninsured statuses led to fewer encounters compared to Medi-Cal, being in a primary care shortage area also negatively impacted the encounter rate. However, a mental health shortage area showed a positive impact on encounters, suggesting a potential increase in service demand in such regions.
+
+The correlation matrix further illuminated these relationships, showing a moderate to strong correlation between being in a rural area and facing primary care shortages, while also indicating a tendency for rural facilities to have fewer licensed beds.
+
+Our model diagnostics confirmed the homoscedasticity of residuals, showing that the variability of residuals is consistent across the spectrum of fitted values. This indicates that the model's assumptions are satisfied, and the predictions made can be considered reliable.
+
+In summary, our analysis has highlighted the multifaceted nature of healthcare encounters, revealing how facility type, geographic location, bed size, and insurance coverage collectively shape healthcare service utilization. These insights can serve as a foundation for policymakers and healthcare administrators to optimize resource allocation and improve healthcare delivery across diverse settings.
