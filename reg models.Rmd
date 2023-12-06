@@ -148,8 +148,8 @@ corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "
 
 **Description**
 
-* the variable `ordered_LicensedBedSize` seems to have a moderately positive correlation with `Encounters` (0.41), suggesting that facilities with more licensed beds tend to have more encounters.
-* rural has a strong negative correlation with `ordered_LicensedBedSize` (-0.45), implying that rural facilities are likely to have fewer licensed beds.
+* the variable `rural` seems to have a moderately positive correlation with `PrimaryCareShortageArea` (0.5), suggesting that rural areas are more likely to be primary care shortage area.
+* `rural` has a strong negative correlation with `ordered_LicensedBedSize` (-0.45), implying that rural facilities are likely to have fewer licensed beds.
 * Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
 
 ## Yeo-Johnson transformation
@@ -183,15 +183,18 @@ knitr::kable(model)
 **Description**
 
 * **Coefficients**:
-  * `ed_visit`: This predictor has a positive estimated coefficient of 1.2819, suggesting that there is a positive association between ed_visit and the response variable. Given the p-value is practically zero, this relationship is statistically significant.
-  * `government`: The positive coefficient of 0.2311 for government implies a positive effect on the response variable, which is statistically significant based on the p-value.
-  * `investor`: This predictor has a negative coefficient of -0.1235, suggesting a negative association with the response variable. The p-value indicates this effect is statistically significant, although it is less significant than some other predictors given the higher (but still <0.05) p-value.
-  * `rural`: The coefficient of -0.9272 indicates a strong negative relationship with the response variable, and the p-value confirms that this relationship is statistically significant.
-  * `ordered_LicensedBedSize.L` (Linear term): The positive coefficient of 1.4611 for this term suggests a significant positive linear trend related to ordered_LicensedBedSize and the response variable.
-  * `ordered_LicensedBedSize.Q` (Quadratic term): The negative coefficient of -0.4487 suggests that the relationship between ordered_LicensedBedSize and the response variable has a significant quadratic component, indicating a curved relationship.
-  * `ordered_LicensedBedSize.C` (Cubic term): The cubic term has a positive coefficient of 0.2347 and a statistically significant p-value, indicating a cubic relationship is present.
-  * `ordered_LicensedBedSize^4`: The fourth-degree polynomial term is not statistically significant (p-value 0.2121) and has a small estimated effect (0.0518), suggesting that it may not be a useful predictor in the model.
-* Model Fit: The Multiple R-squared value of 0.2684 suggests that approximately 26.84% of the variability in Encounters is explained by the model.
+  * `ed_visit`: This predictor has a positive estimated coefficient of 1.4324, suggesting that there is a positive association between ed_visit and the response variable. Given the p-value is practically zero, this relationship is statistically significant.
+  * `government`: The positive coefficient of 0.2086 for government implies a positive effect on the response variable, which is statistically significant based on the p-value (p=0.0024).
+  * `investor`: This predictor has a negative coefficient of -0.1227, suggesting a negative association with the response variable, which is statistically significant based on the p-value (p=0.0307).
+  * `rural`: The coefficient of -0.8228 indicates a strong negative relationship with the response variable, and the p-value confirms that this relationship is statistically significant.
+  * `ordered_LicensedBedSize.L` (Linear term): The positive coefficient of 1.5354 for this term suggests a significant positive linear trend related to ordered_LicensedBedSize and the response variable.
+  * `ordered_LicensedBedSize.Q` (Quadratic term): The negative coefficient of -0.4421 suggests that the relationship between ordered_LicensedBedSize and the response variable has a significant quadratic component, indicating a curved relationship.
+  * `ordered_LicensedBedSize.C` (Cubic term): The cubic term has a positive coefficient of 0.2738 and a statistically significant p-value, indicating a cubic relationship is present.
+  * `ordered_LicensedBedSize^4`: The fourth-degree polynomial term is not statistically significant (p-value=0.2577) and has a small estimated effect (0.0633), suggesting that it may not be a useful predictor in the model.
+  * `Medicare`, `Other_Payer`, `Private_Coverage`, `Uninsured`: All payer types show a negative association with the number of encounters compared to Medi-Cal, with very strong statistical significance.
+  * `PrimaryCareShortageArea`: Being in a primary care shortage area is negatively associated with the number of encounters, which is statistically significant.
+  * `MentalHealthShortageArea`: Being in a mental health shortage area is positively associated with the number of encounters, which is statistically significant.
+* Model Fit: The Multiple R-squared value of 0.5897 suggests that approximately 58.97% of the variability in Encounters is explained by the model.
 
 ## Model Diagnostics
 ```{r, fig.align= "center"}
@@ -201,7 +204,4 @@ plot(fit)
 
 **Description**
 
-* The "Residuals vs Fitted" plot shows a funnel-like shape, suggesting potential heteroscedasticity.
-* The "Normal Q-Q" plot has deviations from normality, especially in the tails.
-* The "Scale-Location" plot shows some signs of heteroscedasticity as the spread of residuals increases with the fitted values.
-* The "Residuals vs Leverage" plot indicates a few points with high leverage, but without knowing the Cook's distance threshold, it's unclear if these are problematic.
+The quartet of plots above demonstrates consistent variance of residuals across different fitted values, indicating homoscedasticity. The spread of residuals remains stable across the range of predictions, and their mean hovers around zero, indicating no systematic bias. Although there are minor fluctuations around the zero line, they are within an acceptable range, suggesting that the residuals are well-behaved. Additionally, the distribution of residuals appears to be normal, with no single observation exerting undue influence on the model. These observations collectively suggest that the key assumptions required for a valid linear regression model have been met.

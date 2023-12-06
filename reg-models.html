@@ -793,11 +793,10 @@ corrplot(correlation_matrix, method = &quot;color&quot;, addCoef.col = &quot;bla
 <p><img src="reg-models_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><strong>Description</strong></p>
 <ul>
-<li>the variable <code>ordered_LicensedBedSize</code> seems to have a
-moderately positive correlation with <code>Encounters</code> (0.41),
-suggesting that facilities with more licensed beds tend to have more
-encounters.</li>
-<li>rural has a strong negative correlation with
+<li>the variable <code>rural</code> seems to have a moderately positive
+correlation with <code>PrimaryCareShortageArea</code> (0.5), suggesting
+that rural areas are more likely to be primary care shortage area.</li>
+<li><code>rural</code> has a strong negative correlation with
 <code>ordered_LicensedBedSize</code> (-0.45), implying that rural
 facilities are likely to have fewer licensed beds.</li>
 <li>Correlation between all variables are below 70%, indicating that it
@@ -957,38 +956,46 @@ knitr::kable(model)</code></pre>
 <li><strong>Coefficients</strong>:
 <ul>
 <li><code>ed_visit</code>: This predictor has a positive estimated
-coefficient of 1.2819, suggesting that there is a positive association
+coefficient of 1.4324, suggesting that there is a positive association
 between ed_visit and the response variable. Given the p-value is
 practically zero, this relationship is statistically significant.</li>
-<li><code>government</code>: The positive coefficient of 0.2311 for
+<li><code>government</code>: The positive coefficient of 0.2086 for
 government implies a positive effect on the response variable, which is
-statistically significant based on the p-value.</li>
+statistically significant based on the p-value (p=0.0024).</li>
 <li><code>investor</code>: This predictor has a negative coefficient of
--0.1235, suggesting a negative association with the response variable.
-The p-value indicates this effect is statistically significant, although
-it is less significant than some other predictors given the higher (but
-still &lt;0.05) p-value.</li>
-<li><code>rural</code>: The coefficient of -0.9272 indicates a strong
+-0.1227, suggesting a negative association with the response variable,
+which is statistically significant based on the p-value (p=0.0307).</li>
+<li><code>rural</code>: The coefficient of -0.8228 indicates a strong
 negative relationship with the response variable, and the p-value
 confirms that this relationship is statistically significant.</li>
 <li><code>ordered_LicensedBedSize.L</code> (Linear term): The positive
-coefficient of 1.4611 for this term suggests a significant positive
+coefficient of 1.5354 for this term suggests a significant positive
 linear trend related to ordered_LicensedBedSize and the response
 variable.</li>
 <li><code>ordered_LicensedBedSize.Q</code> (Quadratic term): The
-negative coefficient of -0.4487 suggests that the relationship between
+negative coefficient of -0.4421 suggests that the relationship between
 ordered_LicensedBedSize and the response variable has a significant
 quadratic component, indicating a curved relationship.</li>
 <li><code>ordered_LicensedBedSize.C</code> (Cubic term): The cubic term
-has a positive coefficient of 0.2347 and a statistically significant
+has a positive coefficient of 0.2738 and a statistically significant
 p-value, indicating a cubic relationship is present.</li>
 <li><code>ordered_LicensedBedSize^4</code>: The fourth-degree polynomial
-term is not statistically significant (p-value 0.2121) and has a small
-estimated effect (0.0518), suggesting that it may not be a useful
+term is not statistically significant (p-value=0.2577) and has a small
+estimated effect (0.0633), suggesting that it may not be a useful
 predictor in the model.</li>
+<li><code>Medicare</code>, <code>Other_Payer</code>,
+<code>Private_Coverage</code>, <code>Uninsured</code>: All payer types
+show a negative association with the number of encounters compared to
+Medi-Cal, with very strong statistical significance.</li>
+<li><code>PrimaryCareShortageArea</code>: Being in a primary care
+shortage area is negatively associated with the number of encounters,
+which is statistically significant.</li>
+<li><code>MentalHealthShortageArea</code>: Being in a mental health
+shortage area is positively associated with the number of encounters,
+which is statistically significant.</li>
 </ul></li>
-<li>Model Fit: The Multiple R-squared value of 0.2684 suggests that
-approximately 26.84% of the variability in Encounters is explained by
+<li>Model Fit: The Multiple R-squared value of 0.5897 suggests that
+approximately 58.97% of the variability in Encounters is explained by
 the model.</li>
 </ul>
 </div>
@@ -998,17 +1005,16 @@ the model.</li>
 plot(fit)</code></pre>
 <p><img src="reg-models_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p><strong>Description</strong></p>
-<ul>
-<li>The “Residuals vs Fitted” plot shows a funnel-like shape, suggesting
-potential heteroscedasticity.</li>
-<li>The “Normal Q-Q” plot has deviations from normality, especially in
-the tails.</li>
-<li>The “Scale-Location” plot shows some signs of heteroscedasticity as
-the spread of residuals increases with the fitted values.</li>
-<li>The “Residuals vs Leverage” plot indicates a few points with high
-leverage, but without knowing the Cook’s distance threshold, it’s
-unclear if these are problematic.</li>
-</ul>
+<p>The quartet of plots above demonstrates consistent variance of
+residuals across different fitted values, indicating homoscedasticity.
+The spread of residuals remains stable across the range of predictions,
+and their mean hovers around zero, indicating no systematic bias.
+Although there are minor fluctuations around the zero line, they are
+within an acceptable range, suggesting that the residuals are
+well-behaved. Additionally, the distribution of residuals appears to be
+normal, with no single observation exerting undue influence on the
+model. These observations collectively suggest that the key assumptions
+required for a valid linear regression model have been met.</p>
 </div>
 
 
