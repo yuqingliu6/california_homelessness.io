@@ -27,12 +27,14 @@ library(MASS)
 First import data and create dummy variables for categorical variables.
 ```{r, message=FALSE}
 dat <- read_csv("2019-2020-homeless-ip-and-ed-by-facility.csv")|>
-  filter(HomelessIndicator == "Homeless") 
+  filter(HomelessIndicator == "Homeless")|>
+  filter(Demographic=="Payer")
 
 ### EncounterType
 dat$ed_visit <- ifelse(dat$EncounterType=="ED Visits",1,0)
 
 ### Ownership
+# dat$Ownership_type <- as.factor(dat$Ownership)
 dat$government <- ifelse(dat$Ownership=="Government",1,0)
 dat$investor <- ifelse(dat$Ownership=="Investor",1,0)
 
@@ -44,15 +46,37 @@ dat$rural <- ifelse(dat$Urban_Rural=="Rural/Frontier",1,0)
 dat$LicensedBedSize <- as.factor(dat$LicensedBedSize)
 dat$ordered_LicensedBedSize <- ordered(dat$LicensedBedSize, 
                              levels = c("1-99","100-199","200-299","300-399","400+"))
+
+## Payer
+# unique(dat$DemographicValue)
+# "Medi-Cal"  "Medicare"  "Other Payer" "Private Coverage" "Uninsured"    
+# dat$Payer_type <- as.factor(dat$DemographicValue)
+dat$Medicare <- ifelse(dat$DemographicValue=="Medicare",1,0)
+dat$Other_Payer <- ifelse(dat$DemographicValue=="Other Payer",1,0)
+dat$Private_Coverage <- ifelse(dat$DemographicValue=="Private Coverage",1,0)
+dat$Uninsured <- ifelse(dat$DemographicValue=="Uninsured",1,0)
+
+# PrimaryCareShortageArea
+dat$PrimaryCareShortageArea <- ifelse(dat$PrimaryCareShortageArea == "Yes",1,0)
+
+# MentalHealthShortageArea
+dat$MentalHealthShortageArea = ifelse(dat$MentalHealthShortageArea == "Yes",1,0)
+
 ```
-The variables and corresponding descriptions are as follows.
+The dummy variables and corresponding descriptions are as follows.
 
 | Variable | Description | Value |
 |-------|-----------|-----------|
 | ed_visit | Dummy variable for EncounterType  | 1=ED Visits, 0=Inpatient Hospitalizations   |
-| government | Dummy variable for Ownership | 1=Government, 0=Otherwise |
-| investor | Dummy variable for Ownership | 1=Investor, 0=Otherwise |
+| government | Dummy variable for Ownership, reference group: Non-Profit | 1=Government, 0=Otherwise |
+| investor | Dummy variable for Ownership, reference group: Non-Profit | 1=Investor, 0=Otherwise |
 | rural | Dummy variable for Urban_Rural | 1=Rural/Frontier, 0=Urban |
+| Medicare | Dummy variable for Payer, reference group: Medi-Cal | 1=Medicare, 0=Otherwise |
+| Other_Payer | Dummy variable for Payer, reference group: Medi-Cal | 1=Other Payer, 0=Otherwise |
+| Private_Coverage | Dummy variable for Payer, reference group: Medi-Cal | 1=Private Coverage, 0=Otherwise |
+| Uninsured | Dummy variable for Payer, reference group: Medi-Cal | 1=Uninsured, 0=Otherwise |
+| PrimaryCareShortageArea | Dummy variable for Primary Care Shortage Area | 1=Yes, 0=No |
+| MentalHealthShortageArea | Dummy variable for Mental Health Shortage Area | 1=Yes, 0=No |
 
 ## Univariate Analysis
 We conducted univariate analyses to identify individual factors associated with outcomes `Encounters`. 
@@ -69,7 +93,7 @@ tidy_ed_visit <- round_df(broom::tidy(lm(Encounters ~ ed_visit, data = dat)), 4)
   mutate(Model = "EncounterType")
 
 ### Ownership
-tidy_Ownership <- round_df(broom::tidy(lm(Encounters ~ government + investor, data = dat)), 4) %>%
+tidy_Ownership <- round_df(broom::tidy(lm(Encounters ~ government+investor, data = dat)), 4) %>%
   mutate(Model = "Ownership")
 
 ### Urban_Rural
@@ -80,8 +104,20 @@ tidy_Urban_Rural <- round_df(broom::tidy(lm(Encounters ~ rural, data = dat)), 4)
 tidy_LicensedBedSize <- round_df(broom::tidy(lm(Encounters ~ ordered_LicensedBedSize, data = dat)), 4) %>%
   mutate(Model = "LicensedBedSize")
 
+## Payer
+tidy_Payer <- round_df(broom::tidy(lm(Encounters ~ Medicare+Other_Payer+Private_Coverage+Uninsured, data = dat)), 4) %>%
+  mutate(Model = "Payer")
+
+## PrimaryCareShortageArea
+tidy_PrimaryCareShortageArea <- round_df(broom::tidy(lm(Encounters ~ PrimaryCareShortageArea, data = dat)), 4) %>%
+  mutate(Model = "PrimaryCareShortageArea")
+
+## MentalHealthShortageArea
+tidy_MentalHealthShortageArea <- round_df(broom::tidy(lm(Encounters ~ MentalHealthShortageArea, data = dat)), 4) %>%
+  mutate(Model = "MentalHealthShortageArea")
+
 # Combine all tidied summaries into one table
-combined_table <- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, tidy_LicensedBedSize)
+combined_table <- bind_rows(tidy_ed_visit, tidy_Ownership, tidy_Urban_Rural, tidy_LicensedBedSize,tidy_Payer,tidy_PrimaryCareShortageArea,tidy_MentalHealthShortageArea)
 
 # Output the table
 knitr::kable(combined_table)
@@ -92,6 +128,9 @@ knitr::kable(combined_table)
 * **Ownership Model**: The differences in the number of encounters for government-owned and investor-owned facilities compared to the Non-Profit facilities. Both coefficients are significant (p < 0.0001), indicating that ownership type is an important predictor of encounters. 
 * **Urban_Rural Model**: The difference in the number of encounters between Rural/Frontier and Urban facilities. The negative coefficient suggests that Rural/Frontier facilities have fewer encounters than urban ones, and this is highly significant (p < 0.0001).
 * **LicensedBedSize Model**: Coefficients (L, Q, C, ^4) represent the linear, quadratic, cubic, and quartic terms in a polynomial regression model for ordered bed sizes. The 'L' term has a highly significant positive coefficient, indicating an initial increase in encounters with bed size. However, the lack of significance in the cubic ('C') terms, and the non-significant quadratic ('Q') and quartic term ('^4'), suggests that the relationship might not be strongly non-linear or that there is insufficient data to detect higher-order non-linearities.
+* **Payer Model**: The differences in the number of encounters for Medicare payers, private coverage payers, uninsured payers, and other payers compared to Medi-Cal payers. All coefficients are significant (p < 0.0001), indicating that payer type is an important predictor of encounters. 
+* **PrimaryCareShortageArea Model**: The differences in the number of encounters between primary care shortage areas and the areas without primary care shortage. The negative coefficient suggests that primary care shortage area have fewer encounters , and this is highly significant (p = 0.0018).
+* **MentalHealthShortageArea Model**: The differences in the number of encounters between mental health shortage areas and the areas without mental health shortage. The negative coefficient suggests that mental health shortage have fewer encounters , and this is highly significant (p < 0.0001).
 
 
 ## Correlation Matrix
@@ -99,7 +138,7 @@ Since `ordered_LicensedBedSize` is ordinal data, we use Spearman correlation coe
 ```{r,message=FALSE}
 dat1 <- dat %>%
   mutate(ordered_LicensedBedSize = as.numeric(ordered_LicensedBedSize)) %>%
-  dplyr::select(ed_visit, government, investor, rural, ordered_LicensedBedSize, Encounters)
+  dplyr::select(Encounters,ed_visit, government, investor, rural, ordered_LicensedBedSize, Medicare,Other_Payer,Private_Coverage,Uninsured,PrimaryCareShortageArea,MentalHealthShortageArea)
 
 correlation_matrix <- cor(dat1, method = "spearman", use = "complete.obs")
 
@@ -121,7 +160,7 @@ shift_constant <- abs(min(dat$Encounters)) + 1  # Ensure the minimum value is at
 dat$Encounters_shifted <- dat$Encounters + shift_constant
 
 # Fit the model with the shifted response variable
-fit2_shifted <- lm(Encounters_shifted ~ ed_visit + government + investor + rural + ordered_LicensedBedSize, data = dat)
+fit2_shifted <- lm(Encounters_shifted ~ ed_visit + government+investor + rural + ordered_LicensedBedSize +  Medicare+Other_Payer+Private_Coverage+Uninsured+PrimaryCareShortageArea+MentalHealthShortageArea, data = dat)
 
 # Apply Box-Cox transformation on the shifted response variable
 bc_shifted <- MASS::boxcox(fit2_shifted, lambda = seq(-2, 2, by = 0.1))
@@ -135,8 +174,8 @@ Yeo-Johnson method applies a transformation by raising `Encounters_shifted` to d
 ```{r}
 dat = dat %>%
   mutate(ln_Encounters = log(Encounters_shifted, base = exp(1)))
-model = round_df(broom::tidy(lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)) ,4)
-fit= lm(ln_Encounters ~  ed_visit+government + investor+rural+ordered_LicensedBedSize, data = dat)
+model = round_df(broom::tidy(lm(ln_Encounters ~ ed_visit + government+investor + rural + ordered_LicensedBedSize +  Medicare+Other_Payer+Private_Coverage+Uninsured+PrimaryCareShortageArea+MentalHealthShortageArea, data = dat)) ,4)
+fit= lm(ln_Encounters ~ ed_visit + government+investor + rural + ordered_LicensedBedSize +  Medicare+Other_Payer+Private_Coverage+Uninsured+PrimaryCareShortageArea+MentalHealthShortageArea, data = dat)
 
 knitr::kable(model)
 ```
