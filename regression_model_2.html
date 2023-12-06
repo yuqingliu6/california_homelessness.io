@@ -871,8 +871,17 @@ indicates that the corresponding independent variable is more likely to
 be influenced by other independent variables. Typically, VIF values
 exceeding 10 or 20 are considered indicative of the presence of
 multicollinearity.</p>
-<pre class="r"><code>library(car)
-vif_values &lt;- vif(model_stepwise)
+<pre class="r"><code>library(car)</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## 
+## Attaching package: &#39;car&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     some</code></pre>
+<pre class="r"><code>vif_values &lt;- vif(model_stepwise)
 print(vif_values)</code></pre>
 <pre><code>##                                 GVIF Df GVIF^(1/(2*Df))
 ## ownership                   1.325356  2        1.072959
@@ -896,8 +905,7 @@ dat_clean %&gt;%
        x = &quot;Predicted values&quot;, 
        y = &quot;Residuals&quot;) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula
-## = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="regression_model_2_files/figure-html/unnamed-chunk-5-1.png" width="80%" /></p>
 <p>We observe a plot of model residuals against fitted values in
 regression analysis and notice that the slope is close to zero, it
