@@ -184,7 +184,7 @@ gender_clean = read.csv("./processed data/demo/cleaned_gender_demo.csv")
 race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 ```
 
-### Data visualization
+#### Data visualization
 
 The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
 
