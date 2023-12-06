@@ -69,9 +69,11 @@ renderPlotly({
   homeless_pie |>
     filter(Demographic == input$DemoValue3) |>
     plot_ly(labels = ~DemographicValue, values = ~total_homelessness, type ="pie") |>
-     layout(title = "Total Homelessness by Different Types of Demographic Parameters",
+     layout(
+       title = list(text = "Total Homelessness by Different Types of Demographic Parameters", font = list(size = 14)),
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
+         )
 })
 ```
 
