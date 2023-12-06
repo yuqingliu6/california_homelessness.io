@@ -41,9 +41,9 @@ The current research questions are:
 
 In this project, we used two datasets to address our research question. One dataset features demographic characteristics of homeless people who are receiving homelessness response services and number of them over the year. Another dataset features characteristics of hospital encounters of homeless people and information about which type of hospital they visits.
 
-We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m) from Homelessness Data Integration System (HDIS) that include homeless patients information in all 44 Continuums of Care (CoC) in California. This dataset includes characteristics of hospital encounters of homeless people and information about which type of hospital they visits among all CoC registries in California from 2019 to 2020. 
+We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m) from Homelessness Data Integration System (HDIS) that include homeless patients information in all 44 Continuums of Care (CoC) in California. We downloaded the data from the website. This dataset includes characteristics of hospital encounters of homeless people and information about which type of hospital they visits among all CoC registries in California from 2019 to 2020. 
 
-We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset to have a more recent estimate. 
+We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal and we downloaded data from the website. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset to have a more recent estimate. 
 
 ## Exploratory Analysis\
 ### Part1: datasets "People Receiving Homeless Response Services"
@@ -841,20 +841,33 @@ From the violin plot, we can know that the stepwise regression model has relativ
 
 * From the visualization from the Shiny dashboard, it is observed that Los Angeles, followed by other cities including San Diego and San Francisco, contains a high proportion of homeless people receiving various hospitals’ services. This shows the trend that large cities in California usually carry much of the medical resources and accommodate the largest proportion of homelessness. 
 
-Our findings can inform policymaking aimed at addressing the needs of the more vulnerable populations experiencing homelessness. For instance, given the higher prevalence of homelessness among the younger demographic, targeted strategies could include implementing programs to support at-risk youth, creating shelters tailored to their specific needs for a safe and supportive environment, and developing educational and vocational training initiatives to enhance the skills and employability of young individuals experiencing homelessness.
-
-The comparison between investor-owned hospitals, receiving fewer homeless patient visits than non-profit hospitals, suggests the need for targeted interventions. This insight informs resource distribution policies among hospitals. For instance, recognizing the higher likelihood of homeless patients visiting urban hospitals, additional resources, funding, and support could be allocated to enhance their capacity for homeless patient care. Acknowledging the higher number of homeless patient visits in governmental hospitals, policies providing financial incentives or additional resources can support their role in serving homeless populations. Since there may be fewer homeless encounters, possibly due to higher expenses, strategies such as introducing incentives for investor-owned hospitals to actively engage in initiatives addressing homelessness, including tax benefits, grants, or partnerships with non-profit organizations, could be explored.
-
 
 ### Statistical Anaylsis
 
 * Based on the statistical anaylsis of first datasets, we employ Kruskal-Wallis test to compare differences among groups. The results show that the distribution of number of experiencing homelessness is the same across gender groups, while at least one group has a different distribution in the whole age groups, ethnicity groups and race groups, which means there is a statistically significant correlation observed between the variables `age`, `race`, and `ethnicity` with `experiencing homelessness`.
 
 ### Regression Analysis
+* Based on the statistical anaylsis of first datasets, we employ Kruskal-Wallis test to compare differences among groups. The results show that the distribution of number of experiencing homelessness is the same across gender groups, while at least one group has a different distribution in the whole age groups, ethnicity groups and race groups, which means there is a statistically significant correlation observed between the variables `age`, `race`, and `ethnicity` with `experiencing homelessness`.
 
-* Based on the results of regression analysis 1, univariate analyses underscored the significant impact of emergency department visits, while ownership type, particularly government-owned facilities, demonstrated an increase in encounters, and rural locations exhibited fewer encounters compared to urban areas. The multivariable regression model unveiled a strong positive correlation between licensed bed numbers and encounter rates. Notably, Medicare, private coverage, and uninsured statuses correlated with fewer encounters, while primary care shortage areas negatively influenced encounter rates. Conversely, mental health shortage areas positively impacted encounters, suggesting increased service demand. Model diagnostics affirmed the reliability of predictions, confirming homoscedasticity of residuals.
+### Regression Analysis
+
+* Based on the results of regression analysis 1, we found: 
+
+  *Ownership Influence: Government-owned facilities reported more encounters than non-profit ones, while investor-owned facilities had fewer encounters.
+Urban vs Rural Dynamics: Urban areas consistently showed more encounters compared to rural areas.
+
+  * Multivariable Model Insights: A positive correlation between the number of licensed beds and encounter rates was identified. Trends in payer types showed Medicare, private coverage, and uninsured statuses leading to fewer encounters compared to Medi-Cal. Additionally, primary care shortage areas negatively impacted encounters, while mental health shortage areas showed an increased rate.
+
+  * Model diagnostics confirmed the homoscedasticity of residuals, indicating a consistent spread across fitted values, thus validating the reliability of the model's assumptions. This analysis provides a nuanced view of how the count of inpatient hospitalizations is influenced by various factors, especially in the context of homelessness.
 
 * Based on the results of regression analysis 2, stepwise regression model, incorporating various hospital and encounter-related factors, demonstrated strong statistical significance (p-value < 2.2e-16) and a moderate explanatory power with an adjusted R-squared of approximately 59.12%. In terms of cross validation, the rmse is relative low, approximately 1.43. The regression model provides valuable insights into the factors influencing healthcare utilization. Larger bed sizes, government ownership, ED visits, teaching environments, and certain payer types are associated with increased healthcare encounters, while rural areas, primary care shortage areas, and specific payer types are associated with decreased encounters. These findings can inform healthcare resource allocation, policy decisions, and strategies to address healthcare disparities in different regions and settings.
+
+## Policy Implication
+
+Our findings can inform policymaking aimed at addressing the needs of the more vulnerable populations experiencing homelessness. For instance, given the higher prevalence of homelessness among the younger demographic, targeted strategies could include implementing programs to support at-risk youth, creating shelters tailored to their specific needs for a safe and supportive environment, and developing educational and vocational training initiatives to enhance the skills and employability of young individuals experiencing homelessness.
+
+The comparison between investor-owned hospitals, receiving fewer homeless patient visits than non-profit hospitals, suggests the need for targeted interventions. This insight informs resource distribution policies among hospitals. For instance, recognizing the higher likelihood of homeless patients visiting urban hospitals, additional resources, funding, and support could be allocated to enhance their capacity for homeless patient care. Acknowledging the higher number of homeless patient visits in governmental hospitals, policies providing financial incentives or additional resources can support their role in serving homeless populations. Since there may be fewer homeless encounters, possibly due to higher expenses, strategies such as introducing incentives for investor-owned hospitals to actively engage in initiatives addressing homelessness, including tax benefits, grants, or partnerships with non-profit organizations, could be explored.
+
 
 ## Limitations and Expectations
 
