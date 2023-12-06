@@ -37,7 +37,7 @@ The current research questions are:
 * How well is our model at predicting the number of homeless people?
 
 
-## Data Source & Cleaning
+## Data Source
 
 In this project, we used two datasets to address our research question. One dataset features demographic characteristics of homeless people who are receiving homelessness response services and number of them over the year. Another dataset features characteristics of hospital encounters of homeless people and information about which type of hospital they visits.
 
@@ -45,103 +45,38 @@ We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Pat
 
 We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset to have a more recent estimate. 
 
-In the data cleaning process, we first converted all the variable names to lowercase. Then, we removed the unneeded variable `location_id`, and removed the null value of `experiencing_homelessness`.Finally, we batch export the four cleaned csv files into datasets. 
-
-
-The final dataset of demographic data of homeless people from 2017 to 2023 included the following variables. 
-
-* `CALENDAR_YEAR`: Calendar Year\
-* `LOCATION`: Location\
-* `ETHNICITY`: Ethnicity\
-* `AGE_GROUP_PUBLIC`: Age Group\
-* `GENDER`: Gender\
-* `RACE`: Race\
-* `EXPERIENCING_HOMELESSNESS`: Number of people receiving homelessness services
-
-
-The final dataset of hospital encounters of homeless people in 44 CoC from 2019 to 2020 included major variables as following: 
-
-* `Licensed Bed Size`: the hospital's number of licensed beds.                        
-* `Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
-* `Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
-* `Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
-* `Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.  
-
-
 ## Exploratory Analysis\
-### EDA for datasets "Hospital Encounters for Homeless Patients"
-```{r message=FALSE}
-library(tidyverse)
-library(knitr)
-homeless_ip<-read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv")
-homeless_data<-homeless_ip %>% 
-  filter(HomelessIndicator == "Homeless")
-```
+### Part1: datasets "People Receiving Homeless Response Services"
 
-#### Correlation Matrix of Homeless Data
+#### Description of datasets
 
-```{r}
-# Correlation matrix
-numeric_data <- homeless_data %>% select(Encounters, TotalEncounters, Percent)
-correlation_matrix <- cor(numeric_data, method = "pearson")
-correlation_table <- kable(correlation_matrix, caption = "Correlation Matrix of Homeless Data")
-correlation_table
-```
-**Encounters and TotalEncounters**: There is a moderate positive correlation of approximately 0.67. This suggests that as the total number of encounters at a facility increases, the number of homeless encounters also tends to increase. This could be expected as larger facilities might see more patients overall, including homeless individuals.
+![](image/datasource.png)
 
+The `demo` datasets are defined as "People Receiving Homeless Response Services by Age, Race, Ethnicity, and Gender".
 
-#### Homeless Encounters by Bed Size
-```{r}
-plot2<-homeless_ip %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = LicensedBedSize, y = Encounters, fill = LicensedBedSize)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Homeless Encounters by Bed Size",
-       x = "Licensed Bed Size",
-       y = "Number of Homeless Encounters") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-plot2
-```
+This data set gives annual statistics by age group, race, ethnicity, and gender on the number of people who have benefited from homelessness assistance services.
 
-Among the variable Bed Size, the category of 400+ Licensed Bed Size shows a high number of encounters of homelessness as compared to other groups, indicating that larger hospitals may have a higher number of such encounters. This could be due to a larger capacity to serve more patients or a higher likelihood of being located in urban areas where homelessness rates may be higher. The second leading category is the 100-199 Licensed Bed Size which was relatively high, because hospitals with 100-199 beds might be specialized in services that are more frequently utilized by the homeless population, such as mental health or substance abuse treatment and these medium-sized hospitals could be strategically located in areas where the homeless population is higher. 
+The Homelessness Data Integration System (HDIS), an extensive data repository that compiles and examines information from each of California's 44 Continuums of Care (CoC), is the source of this information. Every Community of Communities (CoC) collects and disseminates information on the people it serves via a range of programs, such as those aimed at ending homelessness, offering outreach services to the homeless, assisting with permanent housing solutions, and other projects in line with California's Housing First objectives.
 
-#### Homeless Encounters by Area
-```{r}
-plot3<-homeless_data %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = Urban_Rural, y = Encounters, fill = Urban_Rural)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Homeless Encounters in Urban vs. Rural Areas",
-       x = "Urban/Rural",
-       y = "Number of Homeless Encounters") +
-  theme_minimal()
-plot3
-```
+-   Important Variables:
 
-This plot help us gain the understanding of the relationship between the number of homelessness encounters and rural/ urban settlement. It is evident that in urban areas there are many people who tend to be homeless due to various reasons such as poverty. Urban hospitals are often larger and have more comprehensive services, which might also contribute to the higher number of encounters. On the other hand, in rural areas less people tend to be homeless since life there is cheap and easily affordable. The more the population in a certain place the higher the chances of homelessness encounters.
+`CALENDAR_YEAR`: Calendar Year\
+`LOCATION`: Location\
+`ETHNICITY`: Ethnicity\
+`AGE_GROUP_PUBLIC`: Age Group\
+`GENDER`: Gender\
+`RACE`: Race\
+`EXPERIENCING_HOMELESSNESS`: Number of people receiving homelessness services
 
-#### Homeless Encounters by Ownership Type
-```{r}
-plot4<-homeless_ip %>%
-  filter(HomelessIndicator == "Homeless" & EncounterType == "Inpatient Hospitalizations") %>%
-  ggplot(aes(x = Ownership, y = Percent, fill = Ownership)) +
-  geom_bar(stat = "identity") +
-  scale_fill_brewer(palette = "Set3") +
-  labs(title = "Percentage of Homeless Encounters by Ownership Type",
-       x = "Ownership",
-       y = "Percentage of Homeless Encounters") +
-  theme_minimal()
-plot4
-```
+#### Data Process
 
-When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
+First, we converted all the variable names to lowercase.
 
+Then we removed the unneeded variable "location_id", and removed the null value of "experiencing_homelessness".
 
+Finally, we batch export and import the four cleaned csv files into datasets.
 
-```{r}
+```{r, message=FALSE}
 # import data
 library(tidyverse)
 age_demo = read.csv("./original data/demo/age_demo.csv")
@@ -161,7 +96,7 @@ clean_csv <- function(input_file, output_file) {
   data <- read.csv(input_file)
   data_cleaned <- data |> 
     filter(EXPERIENCING_HOMELESSNESS != "*") |>
-    select(-LOCATION_ID) |>
+    dplyr::select(-LOCATION_ID) |>
     janitor::clean_names() 
    write.csv(data_cleaned, file = output_file, row.names = FALSE)
    #return(data_cleaned)
@@ -183,16 +118,88 @@ gender_clean = read.csv("./processed data/demo/cleaned_gender_demo.csv")
 race_clean = read.csv("./processed data/demo/cleaned_race_demo.csv")
 ```
 
+#### Summary
+
+To begin with the analyzing process, we first summarize the counts and percentages of Californian homeless people from 2017 to 2023, stratified by age, ethnicity, gender, race, separately for each of the four datasets:
+
+Dataset categorized by age:
+
+```{r}
+age_clean_for_summary = 
+  age_clean |>
+  dplyr::select(-location)
+
+age_clean_for_summary |>
+  group_by(age_group_public) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by ethnicity:
+
+```{r}
+ethnicity_clean_for_summary = 
+  ethnicity_clean |>
+  dplyr::select(-location)
+
+ethnicity_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+ethnicity_clean_for_summary |>
+  group_by(ethnicity) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by gender:
+
+```{r}
+gender_clean_for_summary = 
+  gender_clean |>
+  dplyr::select(-location)
+
+gender_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+gender_clean_for_summary |>
+  group_by(gender) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+Dataset categorized by race:
+
+```{r}
+race_clean_for_summary = 
+  race_clean |>
+  dplyr::select(-location)
+
+race_clean_for_summary |>
+  group_by(calendar_year) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+race_clean_for_summary |>
+  group_by(race) |>
+  summarize(Homelessness = sum(experiencing_homelessness)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+
 #### Data visualization
 
 The data visualization serves as a foundation for a more in-depth investigation by providing us with a preliminary understanding of the relationship between the variables (age, gender, ethnicity, and race) and the number of homeless people and how that relationship has evolved over time.
 
-#### Total Homelessness by Year and Age
-```{r, message= FALSE, warning=FALSE}
-# line plot for "Total Homelessness by Year and Age Group"
+##### Total Homelessness by Year and Age
+```{r,message=FALSE}
+# line plot for "Total Number of Homeless People by Year and Age Group from 2017 to 2023"
 library(plotly)
 age_plot <- age_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,age_group_public) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -204,11 +211,11 @@ age_plot |>
 
 The above graph shows that the majority of homeless individuals who have received assistance are under the age of 18. The proportion of homeless people who have received assistance overall is higher among lower age groups. So we should pay attention to younger group to give them broader help. The overall trend of the homeless population receiving assistance is rising between 2021 and 2022, which is probably because of the potential effects of the COVID-19 pandemic.
 
-#### Total Homelessness by Year and Ethnicity
-```{r, message= FALSE, warning=FALSE}
+##### Total Homelessness by Year and Ethnicity
+```{r,message=FALSE}
 # bar chart for "Total Homelessness by Year and ethnicity"
 ethnicity_plot <- ethnicity_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,ethnicity) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -219,13 +226,13 @@ ethnicity_plot |>
     title = "Total Homelessness by Year and Ethnicity")
 ```
 
-From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large percentage of people receiving homeless response services. So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
+From the bar chart above we can see that people whose race are Hispanic/Latinx make up a large proportion of people receiving homeless response services, approximately 35%. However, based on the 2020 Census data, the Latino population in the United States totals 62.1 million, constituting 18.9% of the overall population. This demographic group stands as the second-largest ethnic or racial category in the country.So we need to focus on the vulnerable groups in ethnicity based on the problem of homelessness.
 
-#### Total Homelessness by Year and Gender
-```{r, message= FALSE, warning=FALSE}
+##### Total Homelessness by Year and Gender
+```{r,message=FALSE}
 # bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,gender) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -238,11 +245,11 @@ gender_plot  |>
 
 According to the bar chart by sex, we can know that the majority of people in need of assistance who are homeless are men, indicating that homelessness is a problem that affects more men than men and is rising annually for all genders from 2017 to 2022. The trend is downward and more controlled in 2023.
 
-#### Total Homelessness by Year and Race
-```{r, message= FALSE, warning=FALSE}
+##### Total Homelessness by Year and Race
+```{r,message=FALSE}
 # line plot for "Total Homelessness by Year and race"
 race_plot <- race_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,race) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -271,13 +278,46 @@ race_clean |>
 
 Based on the percentage of total homeless by race, we can see that white people accounted for the largest percentage of homeless people receiving help at 55.1%, followed by Black, African American or African, the next largest group at 29.3%. This suggests that there is a relationship between race and Number of people receiving homelessness services, and that there is a need to focus on these two groups of people.
 
-### EDA for datasets "Hospital Encounters for Homeless Patients"
+#### Kruskal-Wallis test
+Next, we employ hypothesis testing as a method to more accurately assess the significance of relationships between variables. Through hypothesis testing, we aim to rigorously determine whether observed associations or differences between variables are statistically significant, providing a robust means to infer the presence of genuine relationships in our data.
+
+When data does not meet the assumption of normality and involves multiple groups, we can consider using a non-parametric method for analysis, such as the Kruskal-Wallis test. The Kruskal-Wallis test is a non-parametric test used to compare differences among three or more groups, and it is less restrictive in terms of assumptions about the distribution of the data.
+
+$H_0$: the distribution of Y is the same across all groups.\
+$H_1$: At least one group has a different distribution.
+
+If the test result is significant, it indicates that at least one group's median is different. However, it does not specify which groups are significantly different from each other. In such cases, you might need to perform multiple comparisons or follow-up pairwise tests to identify specific group differences.
+
+```{r}
+# 'data' with 'Y' (continuous) and 'Group' (categorical)
+kruskal.test(experiencing_homelessness ~ age_group_public, data = age_clean)
+kruskal.test(experiencing_homelessness ~ gender, data = gender_clean)
+kruskal.test(experiencing_homelessness ~ ethnicity, data = ethnicity_clean)
+kruskal.test(experiencing_homelessness ~ race, data = race_clean)
+```
+* statistic: The test statistic (H).\
+* parameter: The degrees of freedom (df) associated with the test.\
+* p.value: The p-value of the test.
+
+If the p-value is less than chosen significance level (0.05), we reject the null hypothesis.
+
+According to the results, the p-value of experiencing_homelessness by gender is greater than 0.05, which means the distribution of number of experiencing homelessness is the same across gender groups. However, all other tests' p-value is smaller than 0.01, which means at least one group has a different distribution in the whole age groups, ethnicity groups and race groups.
+
+### Part2: datasets "Hospital Encounters for Homeless Patients"
 
 #### Description of datasets
 
-While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
+While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population.
 
+-   Important Variables:
 
+`2019-2020-homeless-ip-and-ed-by-facility` contains 17 variables, some of which are listed below:
+
+`Licensed Bed Size`: the hospital's number of licensed beds.                        
+`Homeless Indicator`: indicates if the data is for Homeless or Non-Homeless encounters.  
+`Demographic Category`: Age, Race, Sex, or (Expected) Payer.       
+`Encounters`: Count of inpatient hospitalizations (i.e., discharges) or emergency department visits.         
+`Total Hospital Encounters`: Total inpatient hospitalizations or emergency department visits per hospital.     
 ```{r}
 library(tidyverse)
 library(knitr)
@@ -286,26 +326,90 @@ homeless_data<-homeless_ip %>%
   filter(HomelessIndicator == "Homeless")
 ```
 
+#### Summary
+
+Again, To begin with the analysis process, we summarized the counts of Californian homeless people receiving appropriate health services from 2019 to 2020 of the `2019-2020-homeless-ip-and-ed-by-facility.csv` dataset.
+
+-   Important Variables:
+
+`EncounterType`: whether receiving ED Visits or Inpatient Hospitalizations.
+`FacilityName` :name of hospitals and systems the hospitals belong to.
+`Ownership`: type of ownership that hospitals belong to.
+
+`Urban_Rural`: whether hospitals locate in urban or rural areas.
+
+`LicensedBedSize`: size of licensed beds per hospital.
+
+`PrimaryCareShortageArea`: whether hospitals locate in area with limited primary care.
+
+`MentalHealthShortageArea`: whether hospitals locate in area with limited mental health care.
+
+```{r}
+homeless_data_for_summary =
+  homeless_data |>
+  filter(HomelessIndicator == "Homeless") |>
+  dplyr::select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
+
+homeless_data_for_summary |>
+  group_by(EncounterType) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(FacilityName) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100)
+
+homeless_data_for_summary |>
+  group_by(Ownership) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(Urban_Rural) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(LicensedBedSize) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(PrimaryCareShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+
+homeless_data_for_summary |>
+  group_by(MentalHealthShortageArea) |>
+  summarize(Homelessness = sum(Encounters)) |>
+  mutate(Percent = (Homelessness / sum(Homelessness)) * 100) |> knitr::kable()
+```
+
+
+
 
 #### Data Visualization
 
-#### Homeless Encounters by Demographic Group (Age, Payer, Race, Sex)
+##### Homeless Encounters by Payer
 
 ```{r}
-combined_plot <- plot_ly(homeless_data, x = ~DemographicValue, y = ~Encounters, 
-                         type = 'bar', color = ~DemographicValue, 
-                         colors = 'viridis') %>%
-  add_bars(width = 1) %>%
-  layout(title = "Homeless Encounters by Demographic Group",
-         xaxis = list(title = "Demographic Value", tickangle = 45),
+payer_data <- homeless_data %>% 
+  filter(Demographic == "Payer")
+payer_plot <- plot_ly(payer_data, x = ~DemographicValue, y = ~Encounters, 
+                      type = 'bar', color = ~DemographicValue, 
+                      colors = 'viridis') %>%
+  layout(title = "Homeless Encounters by Payer Group",
+         xaxis = list(title = "Payer Group", tickangle = 45),
          yaxis = list(title = "Number of Homeless Encounters"),
-         barmode = 'group')
-combined_plot
+         barmode = 'group',
+         bargap = 0.01)
+payer_plot
 ```
 
 This analysis provides a breakdown of homeless encounters by different demographic facets and indicates which groups have higher or lower counts of encounters. It suggests that middle-aged individuals, those covered by Medi-Cal, white individuals, and males have higher numbers of homeless encounters. These findings could point towards specific demographic groups that may require more focused services and interventions. 
 
-#### Homeless Encounters by Bed Size
+##### Homeless Encounters by Bed Size
 ```{r}
 plot2 <- plot_ly(homeless_data, x = ~LicensedBedSize, y = ~Encounters, 
                  type = 'bar', color = ~LicensedBedSize, 
@@ -318,7 +422,7 @@ plot2
 
 Among the variable Bed Size, the category of 400+ Licensed Bed Size shows a high number of encounters of homelessness as compared to other groups, indicating that larger hospitals may have a higher number of such encounters. This could be due to a larger capacity to serve more patients or a higher likelihood of being located in urban areas where homelessness rates may be higher. The second leading category is the 100-199 Licensed Bed Size which was relatively high, because hospitals with 100-199 beds might be specialized in services that are more frequently utilized by the homeless population, such as mental health or substance abuse treatment and these medium-sized hospitals could be strategically located in areas where the homeless population is higher. 
 
-#### Homeless Encounters by Area
+##### Homeless Encounters by Area
 ```{r}
 plot3 <- plot_ly(homeless_data, x = ~Urban_Rural, y = ~Encounters, 
                  type = 'bar', color = ~Urban_Rural, 
@@ -332,18 +436,18 @@ plot3
 
 This plot help us gain the understanding of the relationship between the number of homelessness encounters and rural/ urban settlement. It is evident that in urban areas there are many people who tend to be homeless due to various reasons such as poverty. Urban hospitals are often larger and have more comprehensive services, which might also contribute to the higher number of encounters. On the other hand, in rural areas less people tend to be homeless since life there is cheap and easily affordable. The more the population in a certain place the higher the chances of homelessness encounters.
 
-#### Homeless Encounters by Ownership Type
+##### Homeless Encounters by Ownership Type
 ```{r}
 plot4 <- plot_ly(homeless_data, x = ~Ownership, y = ~Percent, 
                  type = 'bar', color = ~Ownership, 
                  colors = 'viridis') %>%
-  layout(title = "Percentage of Homeless Encounters by Ownership Type",
+  layout(title = "Number of Homeless Encounters by Ownership Type",
          xaxis = list(title = "Ownership"),
-         yaxis = list(title = "Percentage of Homeless Encounters"))
+         yaxis = list(title = "Number of Homeless Encounters"))
 plot4
 ```
 
-When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
+When comparing the number of homeless encounters by ownership the non-profit category showed the highest number in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher number of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest number could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
 
 
 ## Regression Analysis
