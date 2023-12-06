@@ -464,14 +464,19 @@ corrplot(correlation_matrix, method = "color", addCoef.col = "black", tl.col = "
 * `rural` has a strong negative correlation with `ordered_LicensedBedSize` (-0.45), implying that rural facilities are likely to have fewer licensed beds.
 * Correlation between all variables are below 70%, indicating that it is less likely that collinearity will pose a problem for the regression model.
 
-### Yeo-Johnson transformation$^8$
+### Yeo-Johnson transformation
 First check `Encounters`
 ```{r}
-summary(dat$Encounters)
+sum_Encounters <- summary(dat$Encounters)
+sum_Encounters_df <- as.data.frame(t(sum_Encounters))
 ```
+| Min | 1st Qu. | Median | Mean | 3rd Qu. | Max |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+|`r round(sum_Encounters_df$Freq[1])`| `r round(sum_Encounters_df$Freq[2])` | `r round(sum_Encounters_df$Freq[3])`| `r round(sum_Encounters_df$Freq[4])`| `r round(sum_Encounters_df$Freq[5])`|`r format(sum_Encounters_df$Freq[6], scientific = FALSE)`|
+
 We observe that `Encounters` is non-negative.
 
-Since `Encounters` can be 0, use Yeo-Johnson transformation instead of Box-Cox transformation. Apply the following transformation for $y\ge 0$:
+Since `Encounters` can be 0, use Yeo-Johnson transformation$^8$ instead of Box-Cox transformation. Apply the following transformation for $y\ge 0$:
 $$\psi(y,\lambda)=\left\{
 \begin{aligned}
 &\frac{(y+1)^\lambda-1}{\lambda}, \quad &\lambda\neq 0\\

@@ -804,17 +804,38 @@ is less likely that collinearity will pose a problem for the regression
 model.</li>
 </ul>
 </div>
-<div id="yeo-johnson-transformation1" class="section level2">
-<h2>Yeo-Johnson transformation<span
-class="math inline">\(^1\)</span></h2>
+<div id="yeo-johnson-transformation" class="section level2">
+<h2>Yeo-Johnson transformation</h2>
 <p>First check <code>Encounters</code></p>
-<pre class="r"><code>summary(dat$Encounters)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     0.0     4.0    30.0   244.2   173.0 17485.0</code></pre>
+<pre class="r"><code>sum_Encounters &lt;- summary(dat$Encounters)
+sum_Encounters_df &lt;- as.data.frame(t(sum_Encounters))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Min</th>
+<th align="center">1st Qu.</th>
+<th align="center">Median</th>
+<th align="center">Mean</th>
+<th align="center">3rd Qu.</th>
+<th align="center">Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">30</td>
+<td align="center">244</td>
+<td align="center">173</td>
+<td align="center">17485</td>
+</tr>
+</tbody>
+</table>
 <p>We observe that <code>Encounters</code> is non-negative.</p>
 <p>Since <code>Encounters</code> can be 0, use Yeo-Johnson
-transformation instead of Box-Cox transformation. Apply the following
-transformation for <span class="math inline">\(y\ge 0\)</span>: <span
+transformation<span class="math inline">\(^1\)</span> instead of Box-Cox
+transformation. Apply the following transformation for <span
+class="math inline">\(y\ge 0\)</span>: <span
 class="math display">\[\psi(y,\lambda)=\left\{
 \begin{aligned}
 &amp;\frac{(y+1)^\lambda-1}{\lambda}, \quad &amp;\lambda\neq 0\\
