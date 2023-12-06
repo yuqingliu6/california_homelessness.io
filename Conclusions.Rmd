@@ -536,22 +536,225 @@ plot(fit)
 
 The quartet of plots above demonstrates consistent variance of residuals across different fitted values, indicating homoscedasticity. The spread of residuals remains stable across the range of predictions, and their mean hovers around zero, indicating no systematic bias. Although there are minor fluctuations around the zero line, they are within an acceptable range, suggesting that the residuals are well-behaved. Additionally, the distribution of residuals appears to be normal, with no single observation exerting undue influence on the model. These observations collectively suggest that the key assumptions required for a valid linear regression model have been met.
 
+## Regression Analysis 2
+
+```{r}
+library(tidyverse)
+library(corrplot)
+library(MASS)
+```
+
+### Import and Tidy Datasets
+
+First, we import data and filter homeless people and only focus on the Demographic "Payer". Then we change several variables into factors and tidy the data.
+Explanation for factor variables:\
+LicensedBedSize: 1 = "1-99", 2 = "100-199", 3 = "200-299", 4 = "300-399", 5 = "400+"\
+Ownership: 1 = "Investor", 2 = "Non-Profit", 3 = "Government"\
+EncounterType:1 = "ED Visits", 0 = "Inpatient Hospitalizations"\
+Urban_Rural: 1 = "Rural/Frontier", 0 = "Urban"\
+Teaching: 1 = "Teaching", 0 = "Non-Teaching"\
+PrimaryCareShortageArea: 1 = "Yes", 0 = "No"\
+MentalHealthShortageArea: 1 = "Yes", 0 = "No"\
+Payer: 1 = "Medi-Cal", 2 = "Medicare", 3 = "Other Payer", 4 = "Private Coverage", 5 = "Uninsured"
+
+```{r, message=FALSE}
+dat <- read.csv("2019-2020-homeless-ip-and-ed-by-facility.csv") |>
+   filter(HomelessIndicator == "Homeless" & Demographic == "Payer")
+
+dat_clean <- dat |> 
+  dplyr::select(HomelessIndicator,Ownership, Urban_Rural, Teaching, EncounterType, LicensedBedSize, PrimaryCareShortageArea,
+                MentalHealthShortageArea, DemographicValue, Encounters) |>
+  mutate(LicensedBedSize = match(LicensedBedSize,c("1-99","100-199","200-299","300-399","400+")),
+         Ownership = match(Ownership, c("Investor", "Non-Profit", "Government")),
+         EncounterType = ifelse(EncounterType == "ED Visits",1,0),
+         Urban_Rural = ifelse(Urban_Rural == "Rural/Frontier",1,0),
+         Teaching = ifelse(Teaching == "Teaching",1,0),
+         PrimaryCareShortageArea = ifelse(PrimaryCareShortageArea == "Yes",1,0),
+         MentalHealthShortageArea = ifelse(MentalHealthShortageArea == "Yes",1,0),
+         Payer = match(DemographicValue, c("Medi-Cal", "Medicare", "Other Payer", "Private Coverage", "Uninsured"))
+         )|>
+           mutate(across(-Encounters, as.factor)) |> 
+  dplyr::select(-DemographicValue,-HomelessIndicator) |>
+           janitor::clean_names() 
+         
+summary(dat_clean)
+```
+
+```{r}
+library(ggplot2)
+
+# Histogram
+ggplot(dat_clean, aes(x = encounters)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Histogram of encounters", x = "encounters", y = "Frequency")
+
+# Kernel Density Plot
+ggplot(dat_clean, aes(x = log(encounters))) +
+  geom_density(fill = "blue", alpha = 0.7) +
+  labs(title = "Kernel Density Plot of log(encounters)", x = "log(encounters)", y = "Density")
+```
+
+Then we consider a model with the main effects of all variables and then use stepwise regression to select appropriate variables
+
+### Method
+#### Multiple Linear Regression:
+
+Multiple Linear Regression (MLR) is a statistical technique that extends the concept of simple linear regression to analyze the relationship between multiple independent variables and a dependent variable. In MLR, the model is represented as:
+
+MLR allows us to assess the individual and collective impact of each independent variable on the dependent variable, providing valuable insights into the underlying relationships within the data. Assumptions, such as linearity, independence, homoscedasticity, and normality of residuals, are crucial for the validity of MLR results.
+
+#### Stepwise Regression:
+
+Stepwise Regression is a variable selection technique used in the context of multiple regression analysis. It systematically selects a subset of independent variables from a larger set, either by adding or removing variables based on specific criteria. There are two main types of stepwise regression: forward selection and backward elimination.
+
+Backward Elimination:
+Beginning with a model that includes all variables, backward elimination removes variables one at a time, excluding the variable that contributes the least to the model's explanatory power. The process continues until no more variables meet the exclusion criteria.
+
+Stepwise Regression is employed to streamline the model by selecting the most influential variables while minimizing overfitting. 
+
+```{r}
+# full model
+model_all <- lm(log1p(encounters) ~ ., data = dat_clean)
+
+# stepwise regression
+model_stepwise <- step(model_all, direction = "backward")
+
+model_all |> 
+  broom::tidy() |>
+  knitr::kable(digits = 3)
+
+summary(model_stepwise)
+
+model_stepwise |> 
+  broom::tidy() |> 
+  knitr::kable(digits = 3)
+
+```
+The stepwise regression model indicates that all variables that are important, the p-value of the model is < 2.2e-16, and Adjusted R-squared is 0.5912, which means approximately 59.12% of the variability in the log-transformed encounters can be explained by the predictor variables in your model.
+
+* Licensed Bed Size:
+
+The estimated coefficients (1.057, 1.534, 1.645, 1.971) indicate the change in log-transformed encounters associated with different licensed bed sizes. All coefficients are positive and statistically significant, suggesting that larger bed sizes are associated with higher log-transformed encounters.
+
+* Ownership:
+
+The estimated coefficients (0.101, 0.233) represent the change in log-transformed encounters associated with different ownership types.\
+Interpreting each level:\
+"Non-Profit" (2): +0.101 (not statistically significant)\
+"Government" (3): +0.233 (statistically significant)\
+"Investor" is the reference category.\
+The "Government" ownership type is associated with a statistically significant increase in log-transformed encounters.
+
+* Encounter Type:
+
+The estimated coefficient (1.432) indicates the change in log-transformed encounters associated with "ED Visits" compared to "Inpatient Hospitalizations."\
+"ED Visits" (1): +1.432\
+"Inpatient Hospitalizations" (0) is the reference category.\
+"ED Visits" are associated with a statistically significant increase in log-transformed encounters.
+
+* Urban/Rural:
+
+The estimated coefficient (-0.780) represents being in a "Rural/Frontier" area is associated with a statistically significant decrease in log-transformed encounters.
+
+* Teaching:
+
+The estimated coefficient (0.502) represents the change in log-transformed encounters associated with being in a "Teaching" environment compared to a "Non-Teaching" environment. Being in a "Teaching" environment is associated with a statistically significant increase in log-transformed encounters.
+
+* Primary Care Shortage Area:
+
+The estimated coefficient (-0.203) represents the change in log-transformed encounters associated with being in a "Primary Care Shortage Area" compared to a "Non-Shortage Area." Being in a "Primary Care Shortage Area" is associated with a statistically significant decrease in log-transformed encounters.
+
+* Mental Health Shortage Area:
+
+The estimated coefficient (0.250) represents the change in log-transformed encounters associated with being in a "Mental Health Shortage Area" compared to a "Non-Shortage Area." Being in a "Mental Health Shortage Area" is associated with a statistically significant increase in log-transformed encounters.
+
+* Payer:
+
+The estimated coefficients (-1.087, -3.410, -2.625, -2.005) represent the change in log-transformed encounters associated with different payer types compared to "Medi-Cal." All coefficients are negative and statistically significant, suggesting that compared to "Medi-Cal," other payer types are associated with a decrease in log-transformed encounters.
+
+#### Variance Inflation Factor (VIF)
+
+The Variance Inflation Factor (VIF) is a common indicator used to detect multicollinearity in regression models. A higher VIF value indicates that the corresponding independent variable is more likely to be influenced by other independent variables. Typically, VIF values exceeding 10 or 20 are considered indicative of the presence of multicollinearity.
+
+```{r}
+library(car)
+vif_values <- vif(model_stepwise)
+print(vif_values)
+# The result is no multicollinearity.
+```
+We show a plot of model residuals against fitted values.
+
+```{r}
+library(modelr)
+dat_clean %>% 
+    add_predictions(model_stepwise) %>% 
+    add_residuals(model_stepwise) %>% 
+    ggplot(aes(x = pred, y = resid)) +
+    geom_point()  + 
+    geom_smooth(method = "lm") + 
+    labs(title = "Model residuals against fitted values", 
+       x = "Predicted values", 
+       y = "Residuals") +
+  theme_minimal()
+```
+
+We observe a plot of model residuals against fitted values in regression analysis and notice that the slope is close to zero, it suggests that there is homoscedasticity in the residuals. Homoscedasticity means that the variability of the residuals (or errors) is approximately constant across all levels of the independent variable(s) or across the range of predicted values, which is a desirable assumption in regression analysis. 
+
+#### Cross validation
+
+In cross-validation, the root mean squared error (RMSE) is a measure of the average magnitude of prediction errors made by a model. A lower RMSE indicates that the model has better predictive accuracy, as it means the model's predictions are closer to the true values.
+```{r}
+cv_df = 
+  crossv_mc(dat_clean, 100)
+
+cv_df <- cv_df |>
+  mutate(train = map(train, as_tibble),
+         test = map(test, as_tibble)) |>
+ mutate(
+    stepwise_mod  = map(train, ~model_stepwise)) |> 
+  mutate(
+    rmse_stepwise = map2_dbl(stepwise_mod, test, \(mod, df) rmse(model = mod, data = df)))
+
+cv_df |>
+  dplyr::select(starts_with("rmse")) |>
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") |> 
+  mutate(model = fct_inorder(model)) |> 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() +
+  theme_minimal()
+
+```
+From the violin plot, we can know that the stepwise regression model has relative low rmse, approximately 1.43, which means the model has better predictive accuracy
+
 ## Discussion
 
-Some of our major findings are:
+### EDA & Shiny App
 
-* Males and individuals under 18 years old constitute a higher percentage within the population receiving assistance from Continuums of Care (CoC).
+* Based on the EDA of datasets, males and individuals under 18 years old constitute a higher percentage within the population receiving assistance from Continuums of Care (CoC). The proportion of Hispanic individuals among those who received assistance from Continuums of Care (CoC) is higher than the percentage of Hispanics in the general population. This suggests a greater likelihood for the Hispanic population to experience homelessness and be registered as homeless in CoC. Additionally, among races other than Hispanic, Whites represent a higher percentage of registered homelessness encounters at CoC.
 
-* The proportion of Hispanic individuals among those who received assistance from Continuums of Care (CoC) is higher than the percentage of Hispanics in the general population. This suggests a greater likelihood for the Hispanic population to experience homelessness and be registered as homeless in CoC. Additionally, among races other than Hispanic, Whites represent a higher percentage of registered homelessness encounters at CoC.
-
-* From the regression results, we know that homeless patients are more likely to visit urban hospitals compared to rural hospitals. Being a governmental hospital would increase the number of homeless patients visits and being an investor hospital would decrease the number of homeless patients visits compared to the non-profit hospital.
-
-* Hospitals with more beds are more likely to have larger capicity to help with homeless people's encounters. 
+* From the visualization from the Shiny dashboard, it is observed that Los Angeles, followed by other cities including San Diego and San Francisco, contains a high proportion of homeless people receiving various hospitals’ services. This shows the trend that large cities in California usually carry much of the medical resources and accommodate the largest proportion of homelessness. 
 
 Our findings can inform policymaking aimed at addressing the needs of the more vulnerable populations experiencing homelessness. For instance, given the higher prevalence of homelessness among the younger demographic, targeted strategies could include implementing programs to support at-risk youth, creating shelters tailored to their specific needs for a safe and supportive environment, and developing educational and vocational training initiatives to enhance the skills and employability of young individuals experiencing homelessness.
 
 The comparison between investor-owned hospitals, receiving fewer homeless patient visits than non-profit hospitals, suggests the need for targeted interventions. This insight informs resource distribution policies among hospitals. For instance, recognizing the higher likelihood of homeless patients visiting urban hospitals, additional resources, funding, and support could be allocated to enhance their capacity for homeless patient care. Acknowledging the higher number of homeless patient visits in governmental hospitals, policies providing financial incentives or additional resources can support their role in serving homeless populations. Since there may be fewer homeless encounters, possibly due to higher expenses, strategies such as introducing incentives for investor-owned hospitals to actively engage in initiatives addressing homelessness, including tax benefits, grants, or partnerships with non-profit organizations, could be explored.
 
+
+### Statistical Anaylsis
+
+* Based on the statistical anaylsis of first datasets, we employ Kruskal-Wallis test to compare differences among groups. The results show that the distribution of number of experiencing homelessness is the same across gender groups, while at least one group has a different distribution in the whole age groups, ethnicity groups and race groups, which means there is a statistically significant correlation observed between the variables `age`, `race`, and `ethnicity` with `experiencing homelessness`.
+
+### Regression Analysis
+
+* Based on the results of regression analysis 1, univariate analyses underscored the significant impact of emergency department visits, while ownership type, particularly government-owned facilities, demonstrated an increase in encounters, and rural locations exhibited fewer encounters compared to urban areas. The multivariable regression model unveiled a strong positive correlation between licensed bed numbers and encounter rates. Notably, Medicare, private coverage, and uninsured statuses correlated with fewer encounters, while primary care shortage areas negatively influenced encounter rates. Conversely, mental health shortage areas positively impacted encounters, suggesting increased service demand. Model diagnostics affirmed the reliability of predictions, confirming homoscedasticity of residuals.
+
+* Based on the results of regression analysis 2, stepwise regression model, incorporating various hospital and encounter-related factors, demonstrated strong statistical significance (p-value < 2.2e-16) and a moderate explanatory power with an adjusted R-squared of approximately 59.12%. In terms of cross validation, the rmse is relative low, approximately 1.43. The regression model provides valuable insights into the factors influencing healthcare utilization. Larger bed sizes, government ownership, ED visits, teaching environments, and certain payer types are associated with increased healthcare encounters, while rural areas, primary care shortage areas, and specific payer types are associated with decreased encounters. These findings can inform healthcare resource allocation, policy decisions, and strategies to address healthcare disparities in different regions and settings.
+
+## Limitations and Expectations
+
+Despite the valuable insights gained, our analysis has limitations. The datasets, while comprehensive, may not capture all nuances of homelessness and healthcare utilization. The observational nature of the data limits causal inferences. Additionally, regional variations may influence results. Expectations for this project include informing targeted interventions, resource allocation strategies, and policy decisions. Ongoing refinement and expansion of datasets can enhance the robustness of future analyses, contributing to more effective strategies in addressing homelessness and healthcare disparities.
 
 
 <br>
