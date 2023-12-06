@@ -42574,9 +42574,9 @@ a.u-link.u-text-hover-grey-90:hover {
   white-space: nowrap;
   height: 26px;
   min-height: 16px;
-  width: 74px;
-  min-width: 54px;
-  margin: 27px 0 0 auto;
+  width: 76px;
+  min-width: 56px;
+  margin: 27px -19px 0 auto;
 }
 
 .u-header .u-icon-1 {
@@ -42588,7 +42588,7 @@ a.u-link.u-text-hover-grey-90:hover {
 }
 
 .u-header .u-menu-1 {
-  margin: -33px 104px 16px auto;
+  margin: -33px auto 16px 0;
 }
 
 .u-header .u-nav-1 {
@@ -42609,7 +42609,6 @@ a.u-link.u-text-hover-grey-90:hover {
 
   .u-header .u-menu-1 {
     margin-top: -33px;
-    margin-right: auto;
     margin-bottom: 18px;
   }
 }
