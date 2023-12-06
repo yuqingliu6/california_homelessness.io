@@ -12,19 +12,19 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Movitation
+## Movitation
 
 Our motivation stems from the urgent need to comprehensively examine and address homelessness in California. By harnessing the power of data science and leveraging the rich information within HDIS, our project aspires to contribute valuable insights that can inform evidence-based policies and interventions by analyzing the demographic composition of all register homeless people in California and what types of hospital would homeless people more likely to visit.  
 
 
 
-### Related Work
+## Related Work
 
 We are inspired to do this because homelessness has been a long term problem in the United States, which negatively affects cityscape and poses threats to residents’ life and property. Additionally, California has the largest homeless population in the nation. Learning statistical analysis tools from this class, we are motivated to investigate the homelessness situation in California and what are some factors that influence homelessness. 
 
 
 
-### Initial Questions
+## Initial Questions
 
 The initial questions centered around understanding the sociodemographic attributes of homeless individuals in California and identifying predictors for the frequency of encounters with homeless patients.
 
@@ -70,7 +70,7 @@ The final dataset of hospital encounters of homeless people in 44 CoC from 2019 
 
 
 ## Exploratory Analysis\
-
+### EDA for datasets "Hospital Encounters for Homeless Patients"
 ```{r message=FALSE}
 library(tidyverse)
 library(knitr)
@@ -272,9 +272,9 @@ race_clean |>
 
 Based on the percantage of total homeless by race, we can see that white people accounted for the largest percentage of homeless people receiving help at 55.1%, followed by Black, Afircan American or African, the next largest group at 29.3%. This suggests that there is a relationship between race and Number of people receiving homelessness services, and that there is a need to focus on these two groups of people.
 
-## Part2: datasets "Hospital Encounters for Homeless Patients"
+### EDA for datasets "Hospital Encounters for Homeless Patients"
 
-### Description of datasets
+#### Description of datasets
 
 While this dataset is rich in hospital encounter information, it seems to differ from the 'demo' datasets described earlier. The 'demo' datasets focus on broader statistics of people receiving homeless response services across various dimensions such as age, race, ethnicity, and gender, and are sourced from the Homelessness Data Integration System (HDIS) which compiles data from California's Continuums of Care. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. While this dataset is rich in hospital encounter information, it differs from the 'demo' datasets described earlier. In contrast, the provided dataset is more focused on hospital encounters of homeless individuals, offering a detailed view of healthcare utilization among this population. 
 
@@ -296,7 +296,7 @@ homeless_data<-homeless_ip %>%
 ```
 
 
-### Data Visualization
+#### Data Visualization
 
 #### Homeless Encounters by Demographic Group (Age, Payer, Race, Sex)
 
@@ -355,11 +355,11 @@ plot4
 When comparing the percentage of homeless encounters by ownership the non-profit category showed the highest percentage in homeless encounters. Non-Profit hospitals may have more encounters with homeless individuals possibly due to their mission-driven approach, which may include providing care to underserved populations. Investor-owned hospitals, while having a higher percentage of encounters than government hospitals, may still be less than Non-Profit hospitals, potentially due to different operational goals and priorities. Government-owned hospitals having the lowest percentage could be a result of factors such as location, size, the scope of services offered, or specific governmental policies and funding for homeless services.
 
 
-### Additional Analysis
+## Additional Analysis
 
 regression part
 
-### Discussion
+## Discussion
 
 Some of our major findings are:
 
@@ -379,7 +379,7 @@ The comparison between investor-owned hospitals, receiving fewer homeless patien
 
 <br>
 ---
-### References
+## References
 1. https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m<br>
 2. https://data.ca.gov/dataset/homelessness-demographics<br>
 3. https://youtu.be/QIS0UjpYjOg<br>
