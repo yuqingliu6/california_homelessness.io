@@ -429,7 +429,7 @@ limited mental health care).</p>
 <pre class="r"><code>homeless_data_for_summary =
   homeless_data |&gt;
   filter(HomelessIndicator == &quot;Homeless&quot;) |&gt;
-  select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
+  dplyr::select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
 
 homeless_data_for_summary |&gt;
   group_by(EncounterType) |&gt;
@@ -624,7 +624,7 @@ Californian homeless people from 2017 to 2023, stratified by age,
 ethnicity, gender, race, separately.</p>
 <pre class="r"><code>age_clean_for_summary = 
   age_clean |&gt;
-  select(-location)
+  dplyr::select(-location)
 
 age_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
@@ -733,7 +733,7 @@ age_clean_for_summary |&gt;
 </table>
 <pre class="r"><code>ethnicity_clean_for_summary = 
   ethnicity_clean |&gt;
-  select(-location)
+  dplyr::select(-location)
 
 ethnicity_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
@@ -817,7 +817,7 @@ ethnicity_clean_for_summary |&gt;
 </table>
 <pre class="r"><code>gender_clean_for_summary = 
   gender_clean |&gt;
-  select(-location)
+  dplyr::select(-location)
 
 gender_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;
@@ -916,7 +916,7 @@ gender_clean_for_summary |&gt;
 </table>
 <pre class="r"><code>race_clean_for_summary = 
   race_clean |&gt;
-  select(-location)
+  dplyr::select(-location)
 
 race_clean_for_summary |&gt;
   group_by(calendar_year) |&gt;

@@ -325,7 +325,7 @@ or emergency department visits per hospital.</p>
 <div id="correlation-matrix-of-homeless-data" class="section level4">
 <h4>Correlation Matrix of Homeless Data</h4>
 <pre class="r"><code># Correlation matrix
-numeric_data &lt;- homeless_data %&gt;% select(Encounters, TotalEncounters, Percent)
+numeric_data &lt;- homeless_data %&gt;% dplyr::select(Encounters, TotalEncounters, Percent)
 correlation_matrix &lt;- cor(numeric_data, method = &quot;pearson&quot;)
 correlation_table &lt;- kable(correlation_matrix, caption = &quot;Correlation Matrix of Homeless Data&quot;)
 correlation_table</code></pre>

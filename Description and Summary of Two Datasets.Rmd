@@ -56,7 +56,7 @@ MentalHealthShortageArea (whether hospitals locate in area with limited mental h
 homeless_data_for_summary =
   homeless_data |>
   filter(HomelessIndicator == "Homeless") |>
-  select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
+  dplyr::select(EncounterType, FacilityName, System, Ownership, Urban_Rural, LicensedBedSize, PrimaryCareShortageArea, MentalHealthShortageArea, Encounters)
 
 homeless_data_for_summary |>
   group_by(EncounterType) |>
@@ -100,7 +100,7 @@ Furthermore, we also summarize the counts and percentages of Californian homeles
 ```{r}
 age_clean_for_summary = 
   age_clean |>
-  select(-location)
+  dplyr::select(-location)
 
 age_clean_for_summary |>
   group_by(calendar_year) |>
@@ -116,7 +116,7 @@ age_clean_for_summary |>
 ```{r}
 ethnicity_clean_for_summary = 
   ethnicity_clean |>
-  select(-location)
+  dplyr::select(-location)
 
 ethnicity_clean_for_summary |>
   group_by(calendar_year) |>
@@ -132,7 +132,7 @@ ethnicity_clean_for_summary |>
 ```{r}
 gender_clean_for_summary = 
   gender_clean |>
-  select(-location)
+  dplyr::select(-location)
 
 gender_clean_for_summary |>
   group_by(calendar_year) |>
@@ -148,7 +148,7 @@ gender_clean_for_summary |>
 ```{r}
 race_clean_for_summary = 
   race_clean |>
-  select(-location)
+  dplyr::select(-location)
 
 race_clean_for_summary |>
   group_by(calendar_year) |>

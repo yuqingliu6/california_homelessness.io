@@ -65,7 +65,7 @@ clean_csv <- function(input_file, output_file) {
   data <- read.csv(input_file)
   data_cleaned <- data |> 
     filter(EXPERIENCING_HOMELESSNESS != "*") |>
-    select(-LOCATION_ID) |>
+    dplyr::select(-LOCATION_ID) |>
     janitor::clean_names() 
    write.csv(data_cleaned, file = output_file, row.names = FALSE)
    #return(data_cleaned)
@@ -95,7 +95,7 @@ The data visualization serves as a foundation for a more in-depth investigation 
 # line plot for "Total Homelessness by Year and Age Group"
 library(plotly)
 age_plot <- age_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,age_group_public) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -110,7 +110,7 @@ The above graph shows that the majority of homeless individuals who have receive
 ```{r}
 # bar chart for "Total Homelessness by Year and ethnicity"
 ethnicity_plot <- ethnicity_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,ethnicity) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -126,7 +126,7 @@ From the bar chart above we can see that people whose race are Hispanic/Latinx m
 ```{r}
 # bar chart for "Total Homelessness by Year and gender"
 gender_plot <- gender_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,gender) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 
@@ -143,7 +143,7 @@ According to the bar chart by sex, we can know that the majority of people in ne
 ```{r}
 # line plot for "Total Homelessness by Year and gender"
 race_plot <- race_clean |>
-  select(-location) |>
+  dplyr::select(-location) |>
   group_by(calendar_year,race) |>
   summarise(total_homelessness = sum(experiencing_homelessness))
 

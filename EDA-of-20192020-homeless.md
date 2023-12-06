@@ -29,7 +29,7 @@ emergency department visits per hospital.
 
 ``` r
 # Correlation matrix
-numeric_data <- homeless_data %>% select(Encounters, TotalEncounters, Percent)
+numeric_data <- homeless_data %>% dplyr::select(Encounters, TotalEncounters, Percent)
 correlation_matrix <- cor(numeric_data, method = "pearson")
 correlation_table <- kable(correlation_matrix, caption = "Correlation Matrix of Homeless Data")
 correlation_table
