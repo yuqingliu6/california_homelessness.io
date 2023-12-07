@@ -19,8 +19,9 @@ Our motivation stems from the urgent need to comprehensively examine and address
 
 ## Related Work
 
-We are inspired to do this because homelessness has been a long term problem in the United States, which negatively affects cityscape and poses threats to residents’ life and property. Additionally, California has the largest homeless population in the nation. Learning statistical analysis tools from this class, we are motivated to investigate the homelessness situation in California and what are some factors that influence homelessness. 
+We are inspired to research the persistent issue of homelessness in the United States, recognizing its detrimental impact on urban landscapes and the potential threats it poses to residents' safety and property. Notably, California harbors the largest homeless population in the nation. Our motivation stems from a [study](https://www.cambridge.org/core/journals/epidemiology-and-infection/article/communicable-disease-among-people-experiencing-homelessness-in-california/01D82460F7E8092791D0C5B1B94C8343) by Liu et al (2020) highlighting the health challenges faced by individuals experiencing homelessness. This research underscores the heightened susceptibility to communicable diseases, attributed to various interconnected factors such as increased exposures, coexisting conditions like substance use disorder and mental illness, and limited access to hygiene and healthcare facilities.
 
+Drawing insights from a ABC [report](https://abcnews.go.com/US/new-report-paints-stark-picture-homeless-housing-crises/story?id=100249518) emphasizing the necessity of comprehending the homelessness situation for effective crisis resolution using available data, we are inspired to leverage statistical analysis tools acquired in this P8105 Data Science [class](https://p8105.com/). Our aim is to delve into the homelessness scenario in California, exploring the influencing factors that contribute to this crisis.
 
 
 ## Initial Questions
@@ -43,7 +44,7 @@ In this project, we used two datasets to address our research question. One data
 
 We used [data](https://healthdata.gov/State/Hospital-Encounters-for-Homeless-Patients/6ew5-yd9m) from Homelessness Data Integration System (HDIS) that include homeless patients information in all 44 Continuums of Care (CoC) in California. We downloaded the data from the website. This dataset includes characteristics of hospital encounters of homeless people and information about which type of hospital they visits among all CoC registries in California from 2019 to 2020. 
 
-We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal and we downloaded data from the website. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset to have a more recent estimate. 
+We also used another [dataset](https://data.ca.gov/dataset/homelessness-demographics) from California Open Data Portal and we downloaded data from the website. This dataset contains demographic variables including age, race, ethnicity, and gender among from people who are receiving homeless response services in Homelessness Data Integration System. Since this data is from 2017 to 2023, we can conduct number of homeless people estimate by year. This data could also complement the previous dataset with a more recent estimate. 
 
 ## Exploratory Analysis\
 ### Part1: datasets "People Receiving Homeless Response Services"
@@ -883,5 +884,6 @@ Despite the valuable insights gained, our analysis has limitations. The datasets
 4. https://abcnews.go.com/US/new-report-paints-stark-picture-homeless-housing-crises/story?id=100249518<br>
 5. https://share.america.gov/zh-hans/hispanic-enrollment-reaches-new-high-at-four-year-colleges-in-the-u-s/<br>
 6. Franco, A., Meldrum, J. & Ngaruiya, C. Identifying homeless population needs in the Emergency Department using Community-Based Participatory Research. BMC Health Serv Res 21, 428 (2021). https://doi.org/10.1186/s12913-021-06426-z<br>
-7. Mitchell, E., Waring, T., Ahern, E. et al. Predictors and consequences of homelessness in whole-population observational studies that used administrative data: a systematic review. BMC Public Health 23, 1610 (2023). https://doi.org/10.1186/s12889-023-16503-z
-8. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908). Biometrika, 87(4), 954-959.
+7. Liu, C. Y., Chai, S. J., & Watt, J. P. (2020). Communicable disease among people experiencing homelessness in California. Epidemiology & Infection, 148.
+8. Mitchell, E., Waring, T., Ahern, E. et al. Predictors and consequences of homelessness in whole-population observational studies that used administrative data: a systematic review. BMC Public Health 23, 1610 (2023). https://doi.org/10.1186/s12889-023-16503-z
+9. Yeo, I. K., and Johnson, R. A. (2000). [A new family of power transformations to improve normality or symmetry.](https://academic.oup.com/biomet/article/87/4/954/232908). Biometrika, 87(4), 954-959.
