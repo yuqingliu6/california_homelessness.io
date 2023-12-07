@@ -380,9 +380,9 @@ div.tocify {
 
 <div id="import-datasets" class="section level2">
 <h2>Import Datasets</h2>
-<p>First, we import data and filter homeless people and only focus on
-the Demographic “Payer”. Then we change several variables into factors
-and tidy the data. Explanation for factor variables:<br />
+<p>First, we imported data and filtered homeless people and only focused
+on the Demographic “Payer”. Then we changed several variables into
+factors and tidy the data. Explanation for factor variables:<br />
 LicensedBedSize: 1 = “1-99”, 2 = “100-199”, 3 = “200-299”, 4 =
 “300-399”, 5 = “400+”<br />
 Ownership: 1 = “Investor”, 2 = “Non-Profit”, 3 = “Government”<br />
@@ -446,8 +446,8 @@ ggplot(dat_clean, aes(x = log(encounters))) +
   geom_density(fill = &quot;blue&quot;, alpha = 0.7) +
   labs(title = &quot;Kernel Density Plot of log(encounters)&quot;, x = &quot;log(encounters)&quot;, y = &quot;Density&quot;)</code></pre>
 <p><img src="regression_model_2_files/figure-html/unnamed-chunk-2-2.png" width="80%" /></p>
-<p>Then we consider a model with the main effects of all variables and
-then use stepwise regression to select appropriate variables</p>
+<p>Then we considered a model with the main effects of all variables and
+then used stepwise regression to select appropriate variables</p>
 </div>
 <div id="method" class="section level2">
 <h2>Method</h2>
