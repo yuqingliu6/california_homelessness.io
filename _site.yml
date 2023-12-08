@@ -3,6 +3,8 @@ output_dir: "."
 navbar:
   title: "Home"
   left:
+    - text: "Video"
+      href: https://www.youtube.com/watch?v=eGQ0h6zoYtc
     - text: "Exploratory Data Analysis"
       href: EDA_demo_data.html
     - text: "Regression Analysis 1"
